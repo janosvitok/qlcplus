@@ -268,12 +268,20 @@ QSet <quint32> Fixture::channels(QLCChannel::Group group, QLCChannel::PrimaryCol
     return set;
 }
 
-quint32 Fixture::channelNumber(int type, int controlByte, int head) const
+quint32 Fixture::channelNumber(int type, int head) const
 {
     if (m_fixtureMode == NULL || head < 0 || head >= m_fixtureMode->heads().size())
         return QLCChannel::invalid();
 
-    return m_fixtureMode->heads().at(head).channelNumber(type, controlByte);
+    return m_fixtureMode->heads().at(head).channelNumber(type);
+}
+
+quint32 Fixture::lsbChannelfor(quint32 msbChannelIndex) const
+{
+    if (m_fixtureMode == NULL)
+        return QLCChannel::invalid();
+
+    return m_fixtureMode->lsbFor(msbChannelIndex);
 }
 
 quint32 Fixture::masterIntensityChannel() const

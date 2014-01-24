@@ -478,8 +478,138 @@ bool QLCFixtureDef::loadXML(QXmlStreamReader& doc)
     }
 
     if (retval == true)
+    {
         m_isLoaded = true;
+        fixLsbChannels();
+    }
+
     return retval;
+}
+
+void QLCFixtureDef::fixLsbChannels()
+{
+    QListIterator <QLCChannel*> it(m_channels);
+
+    while (it.hasNext() == true)
+    {
+        QLCChannel* ch = it.next();
+        if (ch->controlByte() != QLCChannel::LSB)
+            continue;
+
+        if (!ch->msbChannel().isEmpty())
+        {
+            QLCChannel* msbChannel = channel(ch->msbChannel());
+            if (channelsMatch(ch, msbChannel))
+                continue;
+        }
+
+        QListIterator <QLCChannel*> msbIt(m_channels);
+        QStringList candidates;
+
+        while (msbIt.hasNext() == true)
+        {
+            QLCChannel* msbChannel = msbIt.next();
+            if (!channelsMatch(ch, msbChannel))
+                continue;
+
+            if (lsbFor(msbChannel) != 0)
+                continue;
+
+            candidates.append(msbChannel->name());
+        }
+
+        if (candidates.isEmpty())
+        {
+            continue; // not found
+        }
+        else if (candidates.size() == 1)
+        {
+            ch->setMsbChannel(candidates.first());
+        }
+        else
+        {
+            ch->setMsbChannel(findMostSimilar(ch->name(), candidates));
+        }
+    }
+}
+
+QLCChannel* QLCFixtureDef::lsbFor(QLCChannel* msbChannel) const
+{
+    QListIterator <QLCChannel*> lsbIt(m_channels);
+    while (lsbIt.hasNext() == true)
+    {
+        QLCChannel* lsbChannel = lsbIt.next();
+        if (!channelsMatch(lsbChannel, msbChannel))
+            continue;
+
+        if (lsbChannel->msbChannel() != msbChannel->name())
+            continue;
+
+        return lsbChannel;       
+    }
+
+    return 0;
+}
+
+bool QLCFixtureDef::channelsMatch(QLCChannel* lsb, QLCChannel* msb) const
+{
+    if (lsb->controlByte() != QLCChannel::LSB || msb->controlByte() != QLCChannel::MSB)
+        return false;
+
+    if (!lsb->isSameKind(msb))
+        return false;
+
+    QListIterator <QLCFixtureMode*> it(m_modes);
+    while (it.hasNext())
+    {
+        QLCFixtureMode * mode = it.next();
+
+        const quint32 msbIndex = mode->channelNumber(msb);
+        const quint32 lsbIndex = mode->channelNumber(lsb);
+
+        if (lsbIndex == QLCChannel::invalid())
+            continue; // this mode doesn't contain LSB channel
+
+        if (msbIndex == QLCChannel::invalid())
+            return false; // this channel is not OK for this LSB channel
+
+        const int msbHead = mode->headForChannel(msbIndex);
+        const int lsbHead = mode->headForChannel(msbIndex);
+
+        if (msbHead != lsbHead)
+            return false;
+    }
+
+    return true; 
+}
+
+QString QLCFixtureDef::findMostSimilar(QString name, QStringList candidates) const
+{
+    QString result;
+    int bestScore = INT_MIN;
+    QStringList nameWords = name.split(' ', QString::SkipEmptyParts);
+
+    QStringListIterator it(candidates);
+    while (it.hasNext())
+    {
+        QString candidate = it.next();
+        QStringList candidateWords = candidate.split(' ', QString::SkipEmptyParts);
+        int score = 0;
+        QStringListIterator it2(candidateWords);
+        while (it2.hasNext())
+        {
+            if (nameWords.contains(it2.next(), Qt::CaseInsensitive))
+                ++score;
+        }
+
+        if (score > bestScore)
+        {
+            result = candidate;
+            bestScore = score;
+        }
+    }
+
+    return result;
 }
 
 bool QLCFixtureDef::loadCreator(QXmlStreamReader &doc)

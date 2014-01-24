@@ -83,6 +83,7 @@ elementFormDefault="qualified"
     <xs:simpleContent>
         <xs:extension base="groupEnumType">
             <xs:attribute name="Byte" type="groupByteType" use="required"/>
+            <xs:attribute name="MsbChannel" type="xs:string"/>
         </xs:extension>
      </xs:simpleContent>
 </xs:complexType>

@@ -63,6 +63,7 @@ extern int errno;
 
 #define CH_COL_NAME 0
 #define CH_COL_GRP  1
+#define CH_COL_BYTE  2
 
 #define MODE_COL_NAME 0
 #define MODE_COL_CHS  1
@@ -410,7 +411,7 @@ void QLCFixtureEditor::slotChannelListSelectionChanged(QTreeWidgetItem* item)
 
 void QLCFixtureEditor::slotAddChannel()
 {
-    EditChannel ec(this);
+    EditChannel ec(this, m_fixtureDef);
 
     bool ok = false;
     while (ok == false)
@@ -499,7 +500,7 @@ void QLCFixtureEditor::slotEditChannel()
     if (real == NULL)
         return;
 
-    EditChannel ec(this, real);
+    EditChannel ec(this, m_fixtureDef, real);
     if (ec.exec() == QDialog::Accepted)
     {
         if (m_fixtureDef->channel(ec.channel()->name()) != NULL && ec.channel()->name() != real->name())
@@ -588,6 +589,7 @@ void QLCFixtureEditor::refreshChannelList()
 
     m_channelList->resizeColumnToContents(CH_COL_NAME);
     m_channelList->resizeColumnToContents(CH_COL_GRP);
+    m_channelList->resizeColumnToContents(CH_COL_BYTE);
 }
 
 void QLCFixtureEditor::updateChannelItem(const QLCChannel* channel, QTreeWidgetItem* item)
@@ -601,6 +603,7 @@ void QLCFixtureEditor::updateChannelItem(const QLCChannel* channel, QTreeWidgetI
     item->setIcon(CH_COL_NAME, channel->getIcon());
     item->setText(CH_COL_GRP, QLCChannel::groupToString(channel->group()));
     item->setData(CH_COL_NAME, PROP_PTR, (qulonglong) channel);
+    item->setText(CH_COL_BYTE, (channel->controlByte() == QLCChannel::MSB) ? tr("MSB") : tr("LSB"));
 
     /* Destroy the existing list of children */
     QList <QTreeWidgetItem*> children(item->takeChildren());

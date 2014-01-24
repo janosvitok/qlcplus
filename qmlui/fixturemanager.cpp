@@ -436,7 +436,7 @@ QList<SceneValue> FixtureManager::getFixturePosition(quint32 fxID, int type, int
 
         for (int i = 0; i < fixture->heads(); i++)
         {
-            quint32 panMSB = fixture->channelNumber(QLCChannel::Pan, QLCChannel::MSB, i);
+            quint32 panMSB = fixture->channelNumber(QLCChannel::Pan, i);
             if (panMSB == QLCChannel::invalid() || chDone.contains(panMSB))
                 continue;
 
@@ -445,7 +445,7 @@ QList<SceneValue> FixtureManager::getFixturePosition(quint32 fxID, int type, int
 
             qDebug() << "[getFixturePosition] Pan MSB:" << dmxValue;
 
-            quint32 panLSB = fixture->channelNumber(QLCChannel::Pan, QLCChannel::LSB, i);
+            quint32 panLSB = fixture->lsbChannelfor(panMSB);
 
             if (panLSB != QLCChannel::invalid())
             {
@@ -466,7 +466,7 @@ QList<SceneValue> FixtureManager::getFixturePosition(quint32 fxID, int type, int
 
         for (int i = 0; i < fixture->heads(); i++)
         {
-            quint32 tiltMSB = fixture->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, i);
+            quint32 tiltMSB = fixture->channelNumber(QLCChannel::Tilt, i);
             if (tiltMSB == QLCChannel::invalid() || chDone.contains(tiltMSB))
                 continue;
 
@@ -475,7 +475,7 @@ QList<SceneValue> FixtureManager::getFixturePosition(quint32 fxID, int type, int
 
             qDebug() << "[getFixturePosition] Tilt MSB:" << dmxValue;
 
-            quint32 tiltLSB = fixture->channelNumber(QLCChannel::Tilt, QLCChannel::LSB, i);
+            quint32 tiltLSB = fixture->lsbChannelfor(tiltMSB);
 
             if (tiltLSB != QLCChannel::invalid())
             {

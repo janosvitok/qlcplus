@@ -321,10 +321,8 @@ void VCXYPadProperties::slotAddClicked()
             QVector <QLCFixtureHead> const& heads = fixture->fixtureMode()->heads();
             for (int i = 0; i < heads.size(); ++i)
             {
-                if (heads[i].channelNumber(QLCChannel::Pan, QLCChannel::MSB) == QLCChannel::invalid() &&
-                    heads[i].channelNumber(QLCChannel::Tilt, QLCChannel::MSB) == QLCChannel::invalid() &&
-                    heads[i].channelNumber(QLCChannel::Pan, QLCChannel::LSB) == QLCChannel::invalid() &&
-                    heads[i].channelNumber(QLCChannel::Tilt, QLCChannel::LSB) == QLCChannel::invalid())
+                if (heads[i].channelNumber(QLCChannel::Pan) == QLCChannel::invalid() &&
+                    heads[i].channelNumber(QLCChannel::Tilt) == QLCChannel::invalid())
                 {
                     // Disable heads without pan or tilt channels
                     disabled << GroupHead(fixture->id(), i);

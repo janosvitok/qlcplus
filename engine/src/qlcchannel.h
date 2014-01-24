@@ -43,6 +43,7 @@ class QXmlStreamWriter;
 #define KXMLQLCChannelName      QString("Name")
 #define KXMLQLCChannelGroup     QString("Group")
 #define KXMLQLCChannelGroupByte QString("Byte")
+#define KXMLQLCChannelGroupMsbChannel QString("MsbChannel")
 #define KXMLQLCChannelColour    QString("Colour")
 
 /* Compound strings used by PaletteGenerator to identify
@@ -163,9 +164,19 @@ public:
     /** Get the channel's control byte */
     ControlByte controlByte() const;
 
+    /** Set the channel's MSB channel name (for LSB channels) */
+    void setMsbChannel(const QString& msbChannel);
+
+    /** Get the channel's MSB channel name (for LSB channels) */
+    QString msbChannel() const;
+
+    /** Used to match LSB and MSB channels together */
+    bool isSameKind(QLCChannel * other) const;
+
 protected:
     QString m_name;
     ControlByte m_controlByte;
+    QString m_msbChannel;
 
     /*************************************************************************
      * Colours

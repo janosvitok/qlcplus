@@ -33,6 +33,7 @@
 #include <QPoint>
 #include <QSize>
 
+#include "qlcfixturedef.h"
 #include "qlccapability.h"
 #include "qlcconfig.h"
 #include "qlcfile.h"
@@ -49,8 +50,9 @@
 #define COL_MAX  1
 #define COL_NAME 2
 
-EditChannel::EditChannel(QWidget* parent, QLCChannel* channel)
+EditChannel::EditChannel(QWidget* parent, QLCFixtureDef * fixtureDef, QLCChannel* channel)
     : QDialog(parent)
+    , m_fixtureDef(fixtureDef)
 {
     m_channel = new QLCChannel(channel);
     m_currentCapability = NULL;
@@ -107,6 +109,8 @@ void EditChannel::init()
             this, SLOT(slotMsbRadioToggled(bool)));
     connect(m_lsbRadio, SIGNAL(toggled(bool)),
             this, SLOT(slotLsbRadioToggled(bool)));
+    connect(m_msbChannelCombo, SIGNAL(activated(const QString&)),
+            this, SLOT(slotMsbChannelActivated(const QString&)));
 
     /* Select the channel's group */
     for (int i = 0; i < m_groupCombo->count(); i++)
@@ -249,6 +253,21 @@ void EditChannel::slotGroupActivated(const QString& group)
     else
         m_lsbRadio->click();
 
+    m_msbChannelCombo->clear();
+    for (int i = 0; i < m_fixtureDef->channels().count(); ++i)
+    {
+        QLCChannel * channel = m_fixtureDef->channels()[i];
+        if (channel->isSameKind(m_channel)
+            && channel->controlByte() == QLCChannel::MSB)
+        {
+            m_msbChannelCombo->addItem(channel->name());
+        }
+    }
+   
+    int i = m_msbChannelCombo->findText(m_channel->msbChannel());
+    if (i != 0)
+        m_msbChannelCombo->setCurrentIndex(i);
+
     if (m_channel->group() == QLCChannel::Intensity)
     {
         m_colourLabel->show();
@@ -275,6 +294,20 @@ void EditChannel::slotLsbRadioToggled(bool toggled)
         m_channel->setControlByte(QLCChannel::LSB);
     else
         m_channel->setControlByte(QLCChannel::MSB);
+
+    m_msbChannelLabel->setEnabled(toggled);
+    m_msbChannelCombo->setEnabled(toggled);
+}
+
+void EditChannel::slotMsbChannelActivated(const QString& msbChannel)
+{
+    if (m_channel->controlByte() == QLCChannel::MSB)
+        return;
+
+    if (m_channel->name() == msbChannel)
+        return;
+
+    m_channel->setMsbChannel(msbChannel);
 }
 
 void EditChannel::slotColourActivated(const QString& colour)

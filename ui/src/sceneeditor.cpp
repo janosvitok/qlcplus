@@ -576,10 +576,10 @@ void SceneEditor::slotPositionTool()
              if (!range.isValid())
                  range = fxi->degreesRange(i);
 
-             quint32 panMsbChannel = fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, i);
-             quint32 panLsbChannel = fxi->channelNumber(QLCChannel::Pan, QLCChannel::LSB, i);
-             quint32 tiltMsbChannel = fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, i);
-             quint32 tiltLsbChannel = fxi->channelNumber(QLCChannel::Tilt, QLCChannel::LSB, i);
+             quint32 panMsbChannel = fxi->channelNumber(QLCChannel::Pan, i);
+             quint32 panLsbChannel = fxi->lsbChannelfor(panMsbChannel);
+             quint32 tiltMsbChannel = fxi->channelNumber(QLCChannel::Tilt, i);
+             quint32 tiltLsbChannel = fxi->lsbChannelfor(tiltMsbChannel);
 
              if (panMsbChannel != QLCChannel::invalid())
              {
@@ -751,10 +751,10 @@ void SceneEditor::slotPositionSelectorChanged(const QPointF& position)
 
         for (int i = 0; i < fxi->heads(); ++i )
         {
-             quint32 panMsbChannel = fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, i);
-             quint32 panLsbChannel = fxi->channelNumber(QLCChannel::Pan, QLCChannel::LSB, i);
-             quint32 tiltMsbChannel = fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, i);
-             quint32 tiltLsbChannel = fxi->channelNumber(QLCChannel::Tilt, QLCChannel::LSB, i);
+             quint32 panMsbChannel = fxi->channelNumber(QLCChannel::Pan, i);
+             quint32 panLsbChannel = fxi->lsbChannelfor(panMsbChannel);
+             quint32 tiltMsbChannel = fxi->channelNumber(QLCChannel::Tilt, i);
+             quint32 tiltLsbChannel = fxi->lsbChannelfor(tiltMsbChannel);
 
              if (panMsbChannel != QLCChannel::invalid())
              {
@@ -1068,9 +1068,9 @@ bool SceneEditor::isPositionToolAvailable()
 
         for (int i = 0; i < fxi->heads(); ++i)
         {
-            if (fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, i) != QLCChannel::invalid())
+            if (fxi->channelNumber(QLCChannel::Pan, i) != QLCChannel::invalid())
                 return true;
-            if (fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, i) != QLCChannel::invalid())
+            if (fxi->channelNumber(QLCChannel::Tilt, i) != QLCChannel::invalid())
                 return true;
         } 
     }

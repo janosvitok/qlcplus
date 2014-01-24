@@ -215,12 +215,41 @@ quint32 QLCFixtureMode::channelNumber(QLCChannel* channel) const
     return QLCChannel::invalid();
 }
 
-quint32 QLCFixtureMode::channelNumber(QLCChannel::Group group, QLCChannel::ControlByte cByte) const
+quint32 QLCFixtureMode::channelNumber(QLCChannel::Group group) const
 {
     for (int i = 0; i < m_channels.size(); i++)
     {
         if (m_channels.at(i)->group() == group &&
-            m_channels.at(i)->controlByte() == cByte)
+            m_channels.at(i)->controlByte() == QLCChannel::MSB)
+            return i;
+    }
+
+    return QLCChannel::invalid();
+}
+
+quint32 QLCFixtureMode::lsbFor(quint32 msbChannelIndex) const
+{
+    if (msbChannelIndex >= static_cast<quint32>(m_channels.size()))
+        return QLCChannel::invalid();
+
+    QLCChannel* msbChannel = m_channels.at(msbChannelIndex);
+
+    if (msbChannel == 0)
+        return QLCChannel::invalid();
+
+    if (msbChannel->controlByte() != QLCChannel::MSB)
+        return QLCChannel::invalid();
+
+    int msbHead = headForChannel(msbChannelIndex);
+
+    for (int i = 0; i < m_channels.size(); i++)
+    {
+        QLCChannel * channel = m_channels.at(i);
+
+        if (channel->isSameKind(msbChannel) &&
+            channel->controlByte() == QLCChannel::LSB &&
+            channel->msbChannel() == msbChannel->name() &&
+            (msbHead == -1 || m_heads[msbHead].channels().contains(i)))
             return i;
     }
 
@@ -282,9 +311,10 @@ void QLCFixtureMode::cacheHeads()
 
     for (int i = 0; i < m_channels.size(); i++)
     {
-        if (m_channels.at(i)->group() == QLCChannel::Intensity &&
-            m_channels.at(i)->controlByte() == QLCChannel::MSB &&
-            m_channels.at(i)->colour() == QLCChannel::NoColour &&
+        QLCChannel* ch = m_channels.at(i);
+        if (ch->group() == QLCChannel::Intensity &&
+            ch->controlByte() == QLCChannel::MSB &&
+            ch->colour() == QLCChannel::NoColour &&
             headForChannel(i) == -1)
         {
             m_masterIntensityChannel = i;

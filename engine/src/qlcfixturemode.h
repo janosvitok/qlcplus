@@ -188,13 +188,14 @@ public:
 
     /**
      * Get the channel's index (i.e. the DMX channel number) for the specified
-     * $group and $cByte within a mode
+     * $group within a mode. Only MSB channels are considered.
      *
      * @param group the channel's group (e.g. Pan, Intensity, Gobo, etc)
-     * @param cByte the channel's control byte. Can be MSB or LSB
      * @return the channel's number or QLCChannel::invalid()
      */
-    quint32 channelNumber(QLCChannel::Group group, QLCChannel::ControlByte cByte = QLCChannel::MSB) const;
+    quint32 channelNumber(QLCChannel::Group group) const;
+
+    quint32 lsbFor(quint32 msbChannelIndex) const;
 
     quint32 masterIntensityChannel() const;
 

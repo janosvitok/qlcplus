@@ -27,6 +27,7 @@
 class QTreeWidgetItem;
 class QString;
 
+class QLCFixtureDef;
 class QLCCapability;
 
 /** @addtogroup fixtureeditor Fixture Editor
@@ -37,12 +38,14 @@ class EditChannel : public QDialog, public Ui_EditChannel
 {
     Q_OBJECT
 public:
-    EditChannel(QWidget* parent, QLCChannel* channel = NULL);
+    EditChannel(QWidget* parent, QLCFixtureDef * fixtureDef, QLCChannel* channel = NULL);
     ~EditChannel();
 
 protected:
     void init();
     void setupCapabilityGroup();
+
+    QLCFixtureDef * m_fixtureDef;
 
     /*********************************************************************
      * Channel
@@ -64,6 +67,7 @@ protected slots:
     void slotGroupActivated(const QString& group);
     void slotMsbRadioToggled(bool toggled);
     void slotLsbRadioToggled(bool toggled);
+    void slotMsbChannelActivated(const QString& msbChannel);
     void slotColourActivated(const QString& colour);
 
     /*********************************************************************

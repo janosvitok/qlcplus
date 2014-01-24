@@ -72,10 +72,10 @@ private:
      ************************************************************************/
 public:
     /**
-     * Get the channel number for the specified channel $type and $controlByte
+     * Get the channel number for the specified channel $type
      * @return The channel number or QLCChannel::invalid() if not applicable.
      */
-    quint32 channelNumber(int type, int controlByte) const;
+    quint32 channelNumber(int type) const;
 
     /**
      * Get a list of RGB channels. If the fixture doesn't support RGB mixing,
@@ -107,15 +107,13 @@ public:
     void cacheChannels(const QLCFixtureMode* mode);
 
 private:
-    void setMapIndex(int chType, int controlByte,  quint32 index);
+    void setMapIndex(int chType, quint32 index);
 
 protected:
     /** Indicates, whether cacheChannels() has already been called */
     bool m_channelsCached;
 
-    /** A map of the cached channel indices, organized as follows:
-     *  <int> channel type: @see QLCChannel::Group and QLCChannel::PrimaryColour
-     *  <quint32> channel MSB index << 16 | channel LSB index
+    /** A map of the cached channel indices,
      */
     QMap<int, quint32> m_channelsMap;
 

@@ -255,7 +255,9 @@ public:
                     QLCChannel::PrimaryColour color = QLCChannel::NoColour) const;
 
     /** @see QLCFixtureHead */
-    quint32 channelNumber(int type, int controlByte, int head = 0) const;
+    quint32 channelNumber(int type, int head = 0) const;
+
+    quint32 lsbChannelfor(quint32 msbChannelIndex) const;
 
     /** @see QLCFixtureMode */
     quint32 masterIntensityChannel() const;

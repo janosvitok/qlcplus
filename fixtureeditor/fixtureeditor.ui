@@ -284,6 +284,11 @@
            <string>Group</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>Byte</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item row="0" column="1">

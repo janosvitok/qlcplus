@@ -193,6 +193,14 @@ protected:
     /** Load fixture contents from an XML document */
     bool loadXML(QXmlStreamReader &doc);
 
+    void fixLsbChannels();
+
+    QLCChannel* lsbFor(QLCChannel* msbChannel) const;
+
+    bool channelsMatch(QLCChannel* lsb, QLCChannel* msb) const;
+
+    QString findMostSimilar(QString name, QStringList candidates) const;
+
     /** Load <Creator> information */
     bool loadCreator(QXmlStreamReader &doc);
 };

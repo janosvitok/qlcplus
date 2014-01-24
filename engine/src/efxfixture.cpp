@@ -95,12 +95,12 @@ void EFXFixture::setHead(GroupHead const & head)
 
     QList<Mode> modes;
 
-    if (fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, head.head) != QLCChannel::invalid() ||
-        fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, head.head) != QLCChannel::invalid())
+    if (fxi->channelNumber(QLCChannel::Pan, head.head) != QLCChannel::invalid() ||
+        fxi->channelNumber(QLCChannel::Tilt, head.head) != QLCChannel::invalid())
         modes << PanTilt;
 
     if (fxi->masterIntensityChannel() != QLCChannel::invalid() ||
-        fxi->channelNumber(QLCChannel::Intensity, QLCChannel::MSB, head.head) != QLCChannel::invalid())
+        fxi->channelNumber(QLCChannel::Intensity, head.head) != QLCChannel::invalid())
         modes << Dimmer;
 
     if (fxi->rgbChannels(head.head).size() >= 3)
@@ -158,12 +158,12 @@ bool EFXFixture::isValid() const
     else if (head().head >= fxi->heads())
         return false;
     else if (m_mode == PanTilt &&
-             fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, head().head) == QLCChannel::invalid() && // Maybe a device can pan OR tilt
-             fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, head().head) == QLCChannel::invalid())   // but not both
+             fxi->channelNumber(QLCChannel::Pan, head().head) == QLCChannel::invalid() && // Maybe a device can pan OR tilt
+             fxi->channelNumber(QLCChannel::Tilt, head().head) == QLCChannel::invalid())   // but not both
         return false;
     else if (m_mode == Dimmer &&
              fxi->masterIntensityChannel() == QLCChannel::invalid() &&
-             fxi->channelNumber(QLCChannel::Intensity, QLCChannel::MSB, head().head) == QLCChannel::invalid())
+             fxi->channelNumber(QLCChannel::Intensity, head().head) == QLCChannel::invalid())
         return false;
     else if (m_mode == RGB && fxi->rgbChannels(head().head).size () == 0)
         return false;
@@ -197,12 +197,12 @@ QStringList EFXFixture::modeList()
 
     QStringList modes;
 
-    if(fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, head().head) != QLCChannel::invalid() ||
-       fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, head().head) != QLCChannel::invalid())
+    if(fxi->channelNumber(QLCChannel::Pan, head().head) != QLCChannel::invalid() ||
+       fxi->channelNumber(QLCChannel::Tilt, head().head) != QLCChannel::invalid())
         modes << KXMLQLCEFXFixtureModePanTilt;
 
     if(fxi->masterIntensityChannel() != QLCChannel::invalid() ||
-       fxi->channelNumber(QLCChannel::Intensity, QLCChannel::MSB, head().head) != QLCChannel::invalid())
+       fxi->channelNumber(QLCChannel::Intensity, head().head) != QLCChannel::invalid())
         modes << KXMLQLCEFXFixtureModeDimmer;
 
     if(fxi->rgbChannels(head().head).size() >= 3)
@@ -453,10 +453,10 @@ void EFXFixture::setPointPanTilt(QList<Universe *> universes, float pan, float t
     Q_ASSERT(fxi != NULL);
 
     /* Write coarse point data to universes */
-    quint32 panMsbChannel = fxi->channelNumber(QLCChannel::Pan, QLCChannel::MSB, head().head);
-    quint32 panLsbChannel = fxi->channelNumber(QLCChannel::Pan, QLCChannel::LSB, head().head);
-    quint32 tiltMsbChannel = fxi->channelNumber(QLCChannel::Tilt, QLCChannel::MSB, head().head);
-    quint32 tiltLsbChannel = fxi->channelNumber(QLCChannel::Tilt, QLCChannel::LSB, head().head);
+    quint32 panMsbChannel = fxi->channelNumber(QLCChannel::Pan, head().head);
+    quint32 panLsbChannel = fxi->lsbChannelfor(panMsbChannel);
+    quint32 tiltMsbChannel = fxi->channelNumber(QLCChannel::Tilt, head().head);
+    quint32 tiltLsbChannel = fxi->lsbChannelfor(tiltMsbChannel);
 
     if (panMsbChannel != QLCChannel::invalid())
     {
@@ -502,7 +502,7 @@ void EFXFixture::setPointDimmer(QList<Universe *> universes, float dimmer)
     Fixture* fxi = doc()->fixture(head().fxi);
     Q_ASSERT(fxi != NULL);
 
-    quint32 intChannel = fxi->channelNumber(QLCChannel::Intensity, QLCChannel::MSB, head().head);
+    quint32 intChannel = fxi->channelNumber(QLCChannel::Intensity, head().head);
 
     /* Don't write dimmer data directly to universes but use FadeChannel to avoid steps at EFX loop restart */
     if (intChannel != QLCChannel::invalid())

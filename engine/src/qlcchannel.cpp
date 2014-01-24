@@ -87,6 +87,7 @@ QLCChannel& QLCChannel::operator=(const QLCChannel& channel)
         m_name = channel.m_name;
         m_group = channel.m_group;
         m_controlByte = channel.m_controlByte;
+        m_msbChannel = channel.m_msbChannel;
         m_colour = channel.m_colour;
 
         /* Clear old capabilities */
@@ -349,6 +350,21 @@ QLCChannel::ControlByte QLCChannel::controlByte() const
     return m_controlByte;
 }
 
+void QLCChannel::setMsbChannel(const QString& msbChannel)
+{
+    m_msbChannel = msbChannel;
+}
+
+QString QLCChannel::msbChannel() const
+{
+    return m_msbChannel;
+}
+
+bool QLCChannel::isSameKind(QLCChannel* other) const
+{
+    return group() == other->group() && (group() != Intensity || colour() == other->colour());
+}
+
 /*****************************************************************************
  * Colours
  *****************************************************************************/
@@ -565,6 +581,9 @@ bool QLCChannel::saveXML(QXmlStreamWriter *doc) const
     doc->writeStartElement(KXMLQLCChannelGroup);
     /* Group control byte */
     doc->writeAttribute(KXMLQLCChannelGroupByte, QString::number(controlByte()));
+    /* Main channel */
+    if (controlByte() == LSB && !m_msbChannel.isEmpty())
+        doc->writeAttribute(KXMLQLCChannelGroupMsbChannel, msbChannel());
     /* Group name */
     doc->writeCharacters(groupToString(m_group));
     doc->writeEndElement();
@@ -623,6 +642,18 @@ bool QLCChannel::loadXML(QXmlStreamReader &doc)
         {
             str = doc.attributes().value(KXMLQLCChannelGroupByte).toString();
             setControlByte(ControlByte(str.toInt()));
+            if (controlByte() == LSB)
+            {
+                str = doc.attributes().value(KXMLQLCChannelGroupMsbChannel).toString();
+                if (!str.isEmpty())
+                {
+                    setMsbChannel(str);
+                }
+                else
+                {
+                    qWarning() << Q_FUNC_INFO << "Missing MsbChannel tag! " << name();
+                }
+            }
             setGroup(stringToGroup(doc.readElementText()));
         }
         else if (doc.name() == KXMLQLCChannelColour)
