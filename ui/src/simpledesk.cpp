@@ -207,6 +207,7 @@ void SimpleDesk::initTopSide()
 
     DmxKeyPad* keyPad = new DmxKeyPad(m_topSplitter);
     m_topSplitter->addWidget(keyPad);
+    connect(keyPad, SIGNAL(newChanValue(uint,uchar)), this, SLOT(slotKeyPadNewChanValue(uint,uchar)));
 
     QHBoxLayout* uniLay = new QHBoxLayout;
     uniLay->setContentsMargins(1, 1, 1, 1);
@@ -871,6 +872,12 @@ void SimpleDesk::slotUniversesWritten(int idx, const QByteArray& ua)
             }
         }
     }
+}
+
+void SimpleDesk::slotKeyPadNewChanValue(uint channel, uchar value)
+{
+    m_engine->setValue(channel, value);
+    slotUpdateUniverseSliders();
 }
 
 void SimpleDesk::slotUpdateUniverseSliders()
