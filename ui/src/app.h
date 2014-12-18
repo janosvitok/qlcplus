@@ -136,6 +136,7 @@ public slots:
     QFile::FileError slotFileSaveAs();
 
     void slotControlMonitor();
+    void slotControlMonitor3d();
     void slotAddressTool();
     void slotControlFullScreen();
     void slotControlFullScreen(bool usingGeometry);
@@ -161,6 +162,7 @@ private:
 
     QAction* m_modeToggleAction;
     QAction* m_controlMonitorAction;
+    QAction* m_controlMonitor3dAction;
     QAction* m_addressToolAction;
     QAction* m_controlFullScreenAction;
     QAction* m_controlBlackoutAction;
