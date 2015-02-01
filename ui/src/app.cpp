@@ -46,6 +46,7 @@
 #include "docbrowser.h"
 #include "aboutbox.h"
 #include "monitor.h"
+#include "Monitor3d/dialog3d.h"
 #include "vcframe.h"
 #include "app.h"
 #include "doc.h"
@@ -1001,7 +1002,8 @@ void App::slotControlMonitor()
 
 void App::slotControlMonitor3d()
 {
- //   Monitor::createAndShow(this, m_doc); //treba zmenit na monitor3d
+    Dialog3d* dialog = new Dialog3d( m_doc, this ); //treba zmenit na monitor3d
+    dialog->show();
 }
 
 void App::slotAddressTool()

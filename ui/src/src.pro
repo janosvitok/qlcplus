@@ -9,7 +9,7 @@ CONFIG += qt
 QT     += core xml gui script
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets
 
-INCLUDEPATH     += monitor showmanager virtualconsole
+INCLUDEPATH     += monitor monitor3d showmanager virtualconsole
 
 # Engine
 INCLUDEPATH     += ../../engine/src ../../engine/src/audio
@@ -23,6 +23,11 @@ INCLUDEPATH += ../../plugins/interfaces
 
 # Web Access
 INCLUDEPATH     += ../../webaccess
+
+# monitor3d - osg
+INCLUDEPATH += . /usr/include
+LIBS += -Lusr/lib -losg -losgViewer -lOpenThreads -losgUtil -losgDB -losgGA -losgQt
+QT       += opengl
 
 # Resources
 RESOURCES    += qlcui.qrc
@@ -95,7 +100,10 @@ HEADERS += aboutbox.h \
            simpledeskengine.h \
            speeddial.h \
            speeddialwidget.h \
-           universeitemwidget.h
+           universeitemwidget.h \
+    Monitor3d/dialog3d.h \
+    Monitor3d/osgviewerwidget.h \
+    Monitor3d/myscene.h
 
 # Monitor headers
 HEADERS += monitor/fixturehead.h \
@@ -190,7 +198,8 @@ FORMS += aboutbox.ui \
          sceneeditor.ui \
          scripteditor.ui \
          selectinputchannel.ui \
-         showmanager/showeditor.ui
+         showmanager/showeditor.ui \
+    Monitor3d/dialog3d.ui
 
 # Virtual Console Forms
 FORMS += virtualconsole/addvcbuttonmatrix.ui \
@@ -268,7 +277,10 @@ SOURCES += aboutbox.cpp \
            simpledeskengine.cpp \
            speeddial.cpp \
            speeddialwidget.cpp \
-           universeitemwidget.cpp
+           universeitemwidget.cpp \
+    Monitor3d/dialog3d.cpp \
+    Monitor3d/osgviewerwidget.cpp \
+    Monitor3d/myscene.cpp
 
 # Monitor sources
 SOURCES += monitor/fixturehead.cpp \
