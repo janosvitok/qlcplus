@@ -103,7 +103,8 @@ HEADERS += aboutbox.h \
            universeitemwidget.h \
     Monitor3d/dialog3d.h \
     Monitor3d/osgviewerwidget.h \
-    Monitor3d/myscene.h
+    Monitor3d/myscene.h \
+    Monitor3d/fixture3d.h
 
 # Monitor headers
 HEADERS += monitor/fixturehead.h \
@@ -280,7 +281,8 @@ SOURCES += aboutbox.cpp \
            universeitemwidget.cpp \
     Monitor3d/dialog3d.cpp \
     Monitor3d/osgviewerwidget.cpp \
-    Monitor3d/myscene.cpp
+    Monitor3d/myscene.cpp \
+    Monitor3d/fixture3d.cpp
 
 # Monitor sources
 SOURCES += monitor/fixturehead.cpp \

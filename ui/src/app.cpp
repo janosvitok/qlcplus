@@ -1002,8 +1002,7 @@ void App::slotControlMonitor()
 
 void App::slotControlMonitor3d()
 {
-    Dialog3d* dialog = new Dialog3d( m_doc, this ); //treba zmenit na monitor3d
-    dialog->show();
+    Dialog3d::createAndShow(this, m_doc);
 }
 
 void App::slotAddressTool()

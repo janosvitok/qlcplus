@@ -19,7 +19,51 @@ osgQt::GraphicsWindowQt* createGraphicsWindow( int x, int y, int w, int h )
     return new osgQt::GraphicsWindowQt(traits.get());
 }
 
-Dialog3d::Dialog3d(Doc *doc, QWidget *parent) :
+Dialog3d* Dialog3d::s_instance = NULL;
+
+Dialog3d *Dialog3d::instance()
+{
+    return s_instance;
+}
+
+void Dialog3d::createAndShow(QWidget *parent, Doc *doc)
+{
+    QDialog* window = NULL;
+
+    /* Must not create more than one instance */
+    if (s_instance == NULL)
+    {
+        /* Create a separate window for OSX */
+        s_instance = new Dialog3d(parent, doc);
+        window = s_instance;
+
+//        /* Set some common properties for the window and show it */
+//        window->setAttribute(Qt::WA_DeleteOnClose);
+//        window->setWindowIcon(QIcon(":/monitor.png"));
+//        window->setWindowTitle(tr("Fixture Monitor"));
+//        window->setContextMenuPolicy(Qt::CustomContextMenu);
+
+//        QSettings settings;
+//        QVariant var = settings.value(SETTINGS_GEOMETRY);
+//        if (var.isValid() == true)
+//            window->restoreGeometry(var.toByteArray());
+//        else
+//        {
+//            window->resize(800, 600);
+//            window->move(50, 50);
+//        }
+//        AppUtil::ensureWidgetIsVisible(window);
+    }
+    else
+    {
+        window = s_instance;
+    }
+
+    window->show();
+    window->raise();
+}
+
+Dialog3d::Dialog3d(QWidget *parent, Doc *doc) :
     QDialog(parent),
     _doc(doc),
     ui(new Ui::Dialog3d)
