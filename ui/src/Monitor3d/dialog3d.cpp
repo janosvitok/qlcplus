@@ -2,6 +2,7 @@
 #include "ui_dialog3d.h"
 
 #include <osg/Geode>
+#include <qbytearray.h>
 
 #include "osgviewerwidget.h"
 #include "myscene.h"
@@ -63,6 +64,14 @@ void Dialog3d::createAndShow(QWidget *parent, Doc *doc)
     window->raise();
 }
 
+void Dialog3d::slotUniversesWritten(int index, const QByteArray &ua)
+{
+    if(index != 0){
+        return;
+    }
+    _root->update(ua);
+}
+
 Dialog3d::Dialog3d(QWidget *parent, Doc *doc) :
     QDialog(parent),
     _doc(doc),
@@ -72,10 +81,13 @@ Dialog3d::Dialog3d(QWidget *parent, Doc *doc) :
     ui->setupUi(this);
 
     osgQt::GraphicsWindowQt* gw = createGraphicsWindow( 50, 50, 640, 480 );
-    MyScene* root = new MyScene();
-    OsgViewerWidget* widget = new OsgViewerWidget(gw, root );
+    _root = new MyScene();
+    OsgViewerWidget* widget = new OsgViewerWidget(gw, _root );
     widget->setGeometry( 100, 100, 800, 600 );
     widget->show();
+    connect(_doc->inputOutputMap(), SIGNAL(universesWritten(int, const QByteArray&)),
+            this, SLOT(slotUniversesWritten(int, const QByteArray&)));
+
 
 }
 

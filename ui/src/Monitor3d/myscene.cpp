@@ -1,6 +1,22 @@
 #include "myscene.h"
 
+class FixturesCallback : public osg::NodeCallback
+{
+public:
+   FixturesCallback( MyScene * scene )
+    : _scene(scene) {}
+
+   virtual void operator()(osg::Node* node, osg::NodeVisitor* nv){
+        _scene->urobcomas();
+        traverse(node, nv);
+    }
+
+private:
+    MyScene * _scene;
+};
+
 MyScene::MyScene()
+    : _changed(false)
 {
     _root = new osg::Group;
 
@@ -109,12 +125,41 @@ MyScene::MyScene()
     //cone.changeColor(osg::Vec3(0.4f, 0.8f, 0.2f));
         osg::ref_ptr<osg::MatrixTransform> trans = new osg::MatrixTransform;
         posX += space;
-        trans->setMatrix( osg::Matrix::rotate(osg::PI / 4, osg::Vec3d(-1, 0,  0)) * osg::Matrix::translate( osg::Vec3(posX, 8.0f, 7.0f)) );
+        trans->setMatrix( osg::Matrix::rotate(osg::PI / 4, osg::Vec3d(-1, 0,  0)) * osg::Matrix::translate( osg::Vec3(posX, 20.0f, 7.0f)) );
         trans->addChild( _fixture3d.last().getFixture() );
         _root->addChild( trans );
         _fixture3d.last().changeColor(osg::Vec3((float)(i+ 1)/(float)numberOfFixtures, 1.0f, 0.0f));
         _fixture3d.last().changeOpacity(0.6f);
     }
 
+    _root->setUpdateCallback(new FixturesCallback(this) );
+}
 
+void MyScene::update(const QByteArray &ua)
+{
+    QMutexLocker locker(&_mutex);
+    _ua = ua;
+    _changed = true;
+}
+
+void MyScene::urobcomas()
+{
+    QByteArray ua;
+
+    {
+        QMutexLocker locker(&_mutex);
+        if (!_changed)
+            return;
+        ua.swap(_ua);
+        _changed = false;
+    }
+
+    for( int i=0; i < _fixture3d.count(); ++i)
+    {
+        uchar value = 0;
+        if (ua.size() > i )
+            value = (uchar)ua.at(i);
+
+        _fixture3d[i].changeOpacity( (float)value/255.0f );
+    }
 }

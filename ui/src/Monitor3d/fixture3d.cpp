@@ -2,6 +2,8 @@
 #include <osgDB/ReadFile>
 #include <osg/BlendFunc>
 
+
+
 Fixture3d::Fixture3d()
 {
     _fixture = new osg::Group();
@@ -22,7 +24,7 @@ Fixture3d::Fixture3d()
     double partOfCircle = osg::PI * 2.0 / (double)faces ;
     double position = 0.0;
     for (int i = 0; i < faces; ++i){
-        pyramidVertices->push_back( osg::Vec3( sin(position), cos(position), -6) ); // points at base
+        pyramidVertices->push_back( osg::Vec3( sin(position), cos(position), -10) ); // points at base
         position += partOfCircle;
     }
     pyramidGeometry->setVertexArray( pyramidVertices );

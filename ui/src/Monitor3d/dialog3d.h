@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <doc.h>
+#include "myscene.h"
 
 namespace Ui {
 class Dialog3d;
@@ -19,6 +20,9 @@ public:
     /** Create or show Dialog3d */
     static void createAndShow(QWidget* parent, Doc* doc);
 
+protected slots:
+    void slotUniversesWritten(int index, const QByteArray& ua);
+
 private:
     explicit Dialog3d(QWidget *parent, Doc* doc);
     ~Dialog3d();
@@ -28,6 +32,7 @@ protected:
     static Dialog3d* s_instance;
 
     Doc* _doc;
+    MyScene* _root;
 
 private:
     Ui::Dialog3d *ui;
