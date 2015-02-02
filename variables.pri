@@ -107,6 +107,16 @@ unix:!macx:USERMIDITEMPLATEDIR = $$USERDATADIR/miditemplates
 macx:USERMIDITEMPLATEDIR       = $$USERDATADIR/MidiTemplates
 android:USERMIDITEMPLATEDIR    = $$USERDATADIR/miditemplates
 
+# Models
+win32:MODELSDIR      = Models
+unix:!macx:MODELSDIR = $$DATADIR/models
+macx:MODELSDIR       = $$DATADIR/Models
+
+# User models
+win32:USERMODELSDIR      = $$USERDATADIR/Models
+unix:!macx:USERMODELSDIR = $$USERDATADIR/models
+macx:USERMODELSDIR       = $$USERDATADIR/Models
+
 # Channel modifiers templates
 win32:MODIFIERSTEMPLATEDIR      = ModifiersTemplates
 unix:!macx:MODIFIERSTEMPLATEDIR = $$DATADIR/modifierstemplates

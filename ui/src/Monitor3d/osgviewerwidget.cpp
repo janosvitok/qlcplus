@@ -20,7 +20,6 @@ OsgViewerWidget::OsgViewerWidget(osgQt::GraphicsWindowQt *gw, MyScene *scene) :
 
     _viewer.setSceneData( scene->get() );
     _viewer.addEventHandler( new osgViewer::StatsHandler );
- //   _viewer.addEventHandler( new SetShapeColorHandler( _scene ) );
     _viewer.setCameraManipulator( new osgGA::TrackballManipulator );
     _viewer.setThreadingModel( osgViewer::Viewer::SingleThreaded );
 

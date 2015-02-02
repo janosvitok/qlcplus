@@ -1,14 +1,14 @@
 #include "fixture3d.h"
 #include <osgDB/ReadFile>
 #include <osg/BlendFunc>
-
-
+#include "qlcfile.h"
+#include "qlcconfig.h"
 
 Fixture3d::Fixture3d()
 {
     _fixture = new osg::Group();
 
-    osg::ref_ptr<osg::Node> head = osgDB::readNodeFile("/home/beki/par.osgt");
+    osg::ref_ptr<osg::Node> head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"par.osgt").toAscii().constData());
    _fixture->addChild(head);
 
     _pyramidGeode = new osg::Geode();

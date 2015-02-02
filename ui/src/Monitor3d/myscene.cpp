@@ -121,8 +121,6 @@ MyScene::MyScene()
     float posX = _stageWidth * -0.5f;
     for( int i = 0; i < numberOfFixtures; ++i){
     _fixture3d.append(Fixture3d());
-//    _root->addChild( _cone.getGeode() );
-    //cone.changeColor(osg::Vec3(0.4f, 0.8f, 0.2f));
         osg::ref_ptr<osg::MatrixTransform> trans = new osg::MatrixTransform;
         posX += space;
         trans->setMatrix( osg::Matrix::rotate(osg::PI / 4, osg::Vec3d(-1, 0,  0)) * osg::Matrix::translate( osg::Vec3(posX, 20.0f, 7.0f)) );
