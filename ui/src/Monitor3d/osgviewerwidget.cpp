@@ -18,7 +18,7 @@ OsgViewerWidget::OsgViewerWidget(osgQt::GraphicsWindowQt *gw, MyScene *scene) :
     camera->setProjectionMatrixAsPerspective(
         30.0f, static_cast<double>(traits->width)/static_cast<double>(traits->height), 1.0f, 10000.0f );
 
-    _viewer.setSceneData( scene->get() );
+    _viewer.setSceneData( scene->getRoot() );
     _viewer.addEventHandler( new osgViewer::StatsHandler );
     _viewer.setCameraManipulator( new osgGA::TrackballManipulator );
     _viewer.setThreadingModel( osgViewer::Viewer::SingleThreaded );

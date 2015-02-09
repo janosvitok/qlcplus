@@ -69,7 +69,7 @@ void Dialog3d::slotUniversesWritten(int index, const QByteArray &ua)
     if(index != 0){
         return;
     }
-    _root->update(ua);
+    _scene->update(ua);
 }
 
 Dialog3d::Dialog3d(QWidget *parent, Doc *doc) :
@@ -81,8 +81,8 @@ Dialog3d::Dialog3d(QWidget *parent, Doc *doc) :
     ui->setupUi(this);
 
     osgQt::GraphicsWindowQt* gw = createGraphicsWindow( 50, 50, 640, 480 );
-    _root = new MyScene();
-    OsgViewerWidget* widget = new OsgViewerWidget(gw, _root );
+    _scene = new MyScene();
+    OsgViewerWidget* widget = new OsgViewerWidget(gw, _scene );
     widget->setGeometry( 100, 100, 800, 600 );
     widget->show();
     connect(_doc->inputOutputMap(), SIGNAL(universesWritten(int, const QByteArray&)),

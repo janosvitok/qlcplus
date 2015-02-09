@@ -32,7 +32,7 @@ protected:
     static Dialog3d* s_instance;
 
     Doc* _doc;
-    MyScene* _root;
+    MyScene* _scene;
 
 private:
     Ui::Dialog3d *ui;
