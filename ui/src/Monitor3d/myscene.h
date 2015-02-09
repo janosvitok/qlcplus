@@ -16,7 +16,7 @@ class MyScene
 {
 public:
     MyScene();
-    osg::ref_ptr<osg::Group> get(){return _root;}
+    osg::ref_ptr<osg::Group> getRoot(){return _root;}
     QList<Fixture3d> getCone(){ return _fixture3d; }
 
 //    void doUserOperation(osg::Drawable *shape); //raz, ked bude hmatatelny priestor
