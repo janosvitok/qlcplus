@@ -15,7 +15,7 @@ public:
     void changeOpacity( float opacityValue, bool overwrite = 1 );
 private:
     osg::ref_ptr<osg::Vec4Array> _colors;
-    osg::ref_ptr<osg::Geode> _pyramidGeode;
+    osg::ref_ptr<osg::Geode> _lightConeGeode;
     osg::ref_ptr<osg::Group> _fixture;
 
 

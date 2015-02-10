@@ -11,12 +11,12 @@ Fixture3d::Fixture3d()
     osg::ref_ptr<osg::Node> head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"par.osgt").toAscii().constData());
    _fixture->addChild(head);
 
-    _pyramidGeode = new osg::Geode();
+    _lightConeGeode = new osg::Geode();
     osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry();
-    _pyramidGeode->addDrawable(pyramidGeometry);
+    _lightConeGeode->addDrawable(pyramidGeometry);
     pyramidGeometry->setDataVariance( osg::Object::DYNAMIC );
     pyramidGeometry->setUseDisplayList( false );
-    _fixture->addChild(_pyramidGeode);
+    _fixture->addChild(_lightConeGeode);
 
     osg::ref_ptr<osg::Vec3Array> pyramidVertices = new osg::Vec3Array();
     pyramidVertices->push_back( osg::Vec3(  0,  0, 0) ); // peak
@@ -50,7 +50,7 @@ Fixture3d::Fixture3d()
     pyramidGeometry->setColorArray(_colors);
     pyramidGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 
-    osg::StateSet* stateset = _pyramidGeode->getOrCreateStateSet();
+    osg::StateSet* stateset = _lightConeGeode->getOrCreateStateSet();
     stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
