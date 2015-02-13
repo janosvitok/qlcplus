@@ -5,10 +5,12 @@
 #include <osgGA/TrackballManipulator>
 #include <osg/ShapeDrawable>
 #include <osgViewer/ViewerEventHandlers>
+#include "pickhandler.h"
 
 
 OsgViewerWidget::OsgViewerWidget(osgQt::GraphicsWindowQt *gw, MyScene *scene) :
     QWidget()
+  , _scene(scene)
 {
     const osg::GraphicsContext::Traits* traits = gw->getTraits();
     osg::Camera* camera = _viewer.getCamera();
@@ -18,8 +20,9 @@ OsgViewerWidget::OsgViewerWidget(osgQt::GraphicsWindowQt *gw, MyScene *scene) :
     camera->setProjectionMatrixAsPerspective(
         30.0f, static_cast<double>(traits->width)/static_cast<double>(traits->height), 1.0f, 10000.0f );
 
-    _viewer.setSceneData( scene->getRoot() );
-    _viewer.addEventHandler( new osgViewer::StatsHandler );
+    _viewer.setSceneData( _scene->getRoot() );
+//    _viewer.addEventHandler( new osgViewer::StatsHandler );
+    _viewer.addEventHandler( new PickHandler( _scene ) );
     _viewer.setCameraManipulator( new osgGA::TrackballManipulator );
     _viewer.setThreadingModel( osgViewer::Viewer::SingleThreaded );
 

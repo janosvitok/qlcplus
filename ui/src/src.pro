@@ -26,7 +26,7 @@ INCLUDEPATH     += ../../webaccess
 
 # monitor3d - osg
 INCLUDEPATH += . /usr/include
-LIBS += -Lusr/lib -losg -losgViewer -lOpenThreads -losgUtil -losgDB -losgGA -losgQt
+LIBS += -Lusr/lib -losg -losgViewer -lOpenThreads -losgUtil -losgDB -losgGA -losgQt -losgManipulator
 QT       += opengl
 
 # Resources
@@ -104,7 +104,8 @@ HEADERS += aboutbox.h \
     Monitor3d/dialog3d.h \
     Monitor3d/osgviewerwidget.h \
     Monitor3d/myscene.h \
-    Monitor3d/fixture3d.h
+    Monitor3d/fixture3d.h \
+    Monitor3d/pickhandler.h
 
 # Monitor headers
 HEADERS += monitor/fixturehead.h \
@@ -282,7 +283,8 @@ SOURCES += aboutbox.cpp \
     Monitor3d/dialog3d.cpp \
     Monitor3d/osgviewerwidget.cpp \
     Monitor3d/myscene.cpp \
-    Monitor3d/fixture3d.cpp
+    Monitor3d/fixture3d.cpp \
+    Monitor3d/pickhandler.cpp
 
 # Monitor sources
 SOURCES += monitor/fixturehead.cpp \

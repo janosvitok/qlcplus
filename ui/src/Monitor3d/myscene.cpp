@@ -7,7 +7,7 @@ public:
     : _scene(scene) {}
 
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv){
-        _scene->urobcomas();
+        _scene->setFixturesChanges();
         traverse(node, nv);
     }
 
@@ -116,19 +116,19 @@ MyScene::MyScene()
     _root->addChild( stage );
 ////end of stage creation
 
-    int numberOfFixtures = 15;
-    float space = _stageWidth / (float)(numberOfFixtures + 1);
-    float posX = _stageWidth * -0.5f;
-    for( int i = 0; i < numberOfFixtures; ++i){
-    _fixture3d.append(Fixture3d());
-        osg::ref_ptr<osg::MatrixTransform> trans = new osg::MatrixTransform;
-        posX += space;
-        trans->setMatrix( osg::Matrix::rotate(osg::PI / 4, osg::Vec3d(-1, 0,  0)) * osg::Matrix::translate( osg::Vec3(posX, 20.0f, 7.0f)) );
-        trans->addChild( _fixture3d.last().getFixture() );
-        _root->addChild( trans );
-        _fixture3d.last().changeColor(osg::Vec3((float)(i+ 1)/(float)numberOfFixtures, 1.0f, 0.0f));
-        _fixture3d.last().changeOpacity(0.6f);
-    }
+//    int numberOfFixtures = 15;
+//    float space = _stageWidth / (float)(numberOfFixtures + 1);
+//    float posX = _stageWidth * -0.5f;
+//    for( int i = 0; i < numberOfFixtures; ++i){
+//    _fixtures3d.append(Fixture3d());
+//        osg::ref_ptr<osg::MatrixTransform> trans = new osg::MatrixTransform;
+//        posX += space;
+//        trans->setMatrix( osg::Matrix::rotate(osg::PI / 4, osg::Vec3d(-1, 0,  0)) * osg::Matrix::translate( osg::Vec3(posX, 20.0f, 7.0f)) );
+//        trans->addChild( _fixtures3d.last().getFixture() );
+//        _root->addChild( trans );
+//        _fixtures3d.last().changeColor(osg::Vec3((float)(i+ 1)/(float)numberOfFixtures, 1.0f, 0.0f));
+//        _fixtures3d.last().changeOpacity(0.6f);
+//    }
 
     _root->setUpdateCallback(new FixturesCallback(this) );
 }
@@ -140,7 +140,49 @@ void MyScene::update(const QByteArray &ua)
     _changed = true;
 }
 
-void MyScene::urobcomas()
+void MyScene::setToBeMovable(osg::Drawable *shape)
+{
+    QList<Fixture3d>::iterator i;
+    for (i = _fixtures3d.begin(); i != _fixtures3d.end(); ++i)
+    {
+        if( shape == i->getDrawable() )
+        {
+            i->setDraggerGVisibility(true);
+        }
+        else
+        {
+            i->setDraggerGVisibility(false);
+        }
+        i->setDraggerRVisibility(false);
+    }
+}
+
+void MyScene::setToBeRotatable(osg::Drawable *shape)
+{
+    QList<Fixture3d>::iterator i;
+    for (i = _fixtures3d.begin(); i != _fixtures3d.end(); ++i)
+    {
+        if( shape == i->getDrawable() )
+        {
+            i->setDraggerRVisibility(true);
+        }
+        else
+        {
+            i->setDraggerRVisibility(false);
+        }
+        i->setDraggerGVisibility(false);
+    }
+}
+
+void MyScene::addFixture(quint32 fid)
+{
+    _fixtures3d.append(Fixture3d(fid));
+    _root->addChild( _fixtures3d.last().getFixture() );
+    _fixtures3d.last().changeColor(osg::Vec3(0.4f, 0.0f, 1.0f));
+
+}
+
+void MyScene::setFixturesChanges()
 {
     QByteArray ua;
 
@@ -152,12 +194,14 @@ void MyScene::urobcomas()
         _changed = false;
     }
 
-    for( int i=0; i < _fixture3d.count(); ++i)
+    for( int i=0; i < _fixtures3d.count(); ++i)
     {
         uchar value = 0;
-        if (ua.size() > i )
-            value = (uchar)ua.at(i);
+        quint32 addressOfFicture = _fixtures3d[i].getID();
 
-        _fixture3d[i].changeOpacity( (float)value/255.0f );
+        if (ua.size() > (signed int)addressOfFicture )
+            value = (uchar)ua.at(addressOfFicture);
+
+        _fixtures3d[i].changeOpacity( (float)value/255.0f );
     }
 }

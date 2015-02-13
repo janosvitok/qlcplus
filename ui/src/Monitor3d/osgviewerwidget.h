@@ -14,7 +14,7 @@ class OsgViewerWidget : public QWidget
     Q_OBJECT
 public:
     OsgViewerWidget(osgQt::GraphicsWindowQt* gw, MyScene *scene );
-
+    MyScene *_scene;
 signals:
 
 public slots:

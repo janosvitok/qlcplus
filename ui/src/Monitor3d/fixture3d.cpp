@@ -4,19 +4,20 @@
 #include "qlcfile.h"
 #include "qlcconfig.h"
 
-Fixture3d::Fixture3d()
+Fixture3d::Fixture3d(quint32 fixID)
+    : _fixtureID(fixID)
 {
-    _fixture = new osg::Group();
+//    _fixture = new osg::Group();
 
-    osg::ref_ptr<osg::Node> head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"par.osgt").toAscii().constData());
-   _fixture->addChild(head);
+    osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"par.osgt").toAscii().constData());
+//   _fixture->addChild(head);
 
     _lightConeGeode = new osg::Geode();
     osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry();
     _lightConeGeode->addDrawable(pyramidGeometry);
     pyramidGeometry->setDataVariance( osg::Object::DYNAMIC );
     pyramidGeometry->setUseDisplayList( false );
-    _fixture->addChild(_lightConeGeode);
+//    _fixture->addChild(_lightConeGeode);
 
     osg::ref_ptr<osg::Vec3Array> pyramidVertices = new osg::Vec3Array();
     pyramidVertices->push_back( osg::Vec3(  0,  0, 0) ); // peak
@@ -58,6 +59,39 @@ Fixture3d::Fixture3d()
     blendFunc->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     stateset->setAttributeAndModes( blendFunc );
 
+    //all fixture transformations
+    _transG = new osg::MatrixTransform;
+    _transR = new osg::MatrixTransform;
+    _transQLC = new osg::MatrixTransform;
+    _transG->setMatrix(osg::Matrix::translate( osg::Vec3(0.0f, 8.0f, 7.0f) ) );
+    _transR->setMatrix( osg::Matrix::rotate( osg::PI / 4, osg::Vec3d(-1, 0,  0) ) );
+    _transQLC->addChild( head );
+    _transQLC->addChild( _lightConeGeode );
+    _transR->addChild( _transQLC );
+
+/// translation by user with mouse
+    _transR->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+    _transG->addChild( _transR );
+    _draggerG = new osgManipulator::TranslateAxisDragger();
+    _draggerG->setupDefaultGeometry();
+    _transG->addChild(_draggerG);
+//    _draggerG->setMatrix(osg::Matrix::scale(3, 3, 3));
+    _draggerG->setHandleEvents(false);
+//    _draggerG->setActivationKeyEvent('g');
+    _draggerG->addTransformUpdating( _transR );
+    _draggerG->setNodeMask(0);
+
+///// rotation by user with mouse
+    _transQLC->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+    _transR->addChild( _transQLC );
+    _draggerR = new osgManipulator::TrackballDragger();
+    _draggerR->setupDefaultGeometry();
+    _transR->addChild(_draggerR);
+    _draggerR->setHandleEvents(false);
+////    _draggerR->setActivationKeyEvent('r');
+    _draggerR->addTransformUpdating( _transQLC );
+    _draggerR->setNodeMask(0);
+
 }
 
 void Fixture3d::changeColor(osg::Vec3 colorValue, bool overwrite)
@@ -89,4 +123,33 @@ void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
     else{
         color->w() += opacityValue;
     }
+}
+
+void Fixture3d::setDraggerGVisibility(bool visible)
+{
+    if(_visibleG == visible){ return; }
+    _visibleG = visible;
+    if(_visibleG){
+        _draggerG->setNodeMask(~0);
+        setDraggerRVisibility(false);
+    }
+    else{
+        _draggerG->setNodeMask(0);
+    }
+    _draggerG->setHandleEvents(_visibleG);
+}
+
+void Fixture3d::setDraggerRVisibility(bool visible)
+{
+    if(_visibleR == visible){ return; }
+    _visibleR = visible;
+    if(_visibleR){
+        _draggerR->setNodeMask(~0);
+        setDraggerGVisibility(false);
+    }
+    else{
+        _draggerR->setNodeMask(0);
+    }
+    _draggerR->setHandleEvents(_visibleR);
+
 }

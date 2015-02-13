@@ -34,6 +34,9 @@ protected:
     Doc* _doc;
     MyScene* _scene;
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::Dialog3d *ui;
 };

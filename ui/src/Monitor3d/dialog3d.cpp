@@ -6,6 +6,7 @@
 
 #include "osgviewerwidget.h"
 #include "myscene.h"
+#include "fixtureselection.h"
 
 osgQt::GraphicsWindowQt* createGraphicsWindow( int x, int y, int w, int h )
 {
@@ -95,4 +96,21 @@ Dialog3d::Dialog3d(QWidget *parent, Doc *doc) :
 Dialog3d::~Dialog3d()
 {
     delete ui;
+}
+
+void Dialog3d::on_pushButton_clicked()
+{
+    /* Get a list of new fixtures to add to the scene */
+    FixtureSelection fs(this, _doc);
+    fs.setMultiSelection(true);
+    if (fs.exec() == QDialog::Accepted)
+    {
+        QListIterator <quint32> it(fs.selection());
+        while (it.hasNext() == true)
+        {
+            quint32 fid = it.next();
+            _scene->addFixture(fid);
+            _doc->setModified();
+        }
+    }
 }
