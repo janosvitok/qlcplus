@@ -197,7 +197,7 @@ void MyScene::setFixturesChanges()
     for( int i=0; i < _fixtures3d.count(); ++i)
     {
         uchar value = 0;
-        quint32 addressOfFicture = _fixtures3d[i].getID();
+        quint32 addressOfFixture = _fixtures3d[i].getID();
 
         if (ua.size() > (signed int)addressOfFicture )
             value = (uchar)ua.at(addressOfFicture);
