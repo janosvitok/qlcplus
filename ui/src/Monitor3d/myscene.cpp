@@ -199,8 +199,8 @@ void MyScene::setFixturesChanges()
         uchar value = 0;
         quint32 addressOfFixture = _fixtures3d[i].getID();
 
-        if (ua.size() > (signed int)addressOfFicture )
-            value = (uchar)ua.at(addressOfFicture);
+        if (ua.size() > (signed int)addressOfFixture )
+            value = (uchar)ua.at(addressOfFixture);
 
         _fixtures3d[i].changeOpacity( (float)value/255.0f );
     }

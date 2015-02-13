@@ -5,7 +5,7 @@
 #include "qlcconfig.h"
 
 Fixture3d::Fixture3d(quint32 fixID)
-    : _fixtureID(fixID)
+    : _fixtureID(fixID), _invisibleKolor(0.0f)
 {
 //    _fixture = new osg::Group();
 
@@ -97,12 +97,15 @@ Fixture3d::Fixture3d(quint32 fixID)
 void Fixture3d::changeColor(osg::Vec3 colorValue, bool overwrite)
 {
     if(_colors){
+        float maxValue = ((colorValue.x() > colorValue.y()) ? colorValue.x() : colorValue.y());
+        maxValue = ((maxValue > colorValue.z()) ? maxValue : colorValue.z());
+        _invisibleKolor = 1.0 - maxValue;
         for(unsigned int i = 0; i < _colors->size(); ++i){
             osg::Vec4 *color = &_colors->operator [](i);
             if(overwrite){
-                color->x() = colorValue.x();
-                color->y() = colorValue.y();
-                color->z() = colorValue.z();
+                color->x() = colorValue.x() + _invisibleKolor;
+                color->y() = colorValue.y() + _invisibleKolor;
+                color->z() = colorValue.z() + _invisibleKolor;
             }
             else{
                 color->x() += colorValue.x();
@@ -117,11 +120,12 @@ void Fixture3d::changeColor(osg::Vec3 colorValue, bool overwrite)
 void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
 {
     osg::Vec4 *color = &_colors->operator [](0);
+
     if (overwrite){
-        color->w() = opacityValue;
+        color->w() = opacityValue - _invisibleKolor ;
     }
     else{
-        color->w() += opacityValue;
+        color->w() = opacityValue - _invisibleKolor + _alpha;
     }
 }
 

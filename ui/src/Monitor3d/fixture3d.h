@@ -38,6 +38,8 @@ private:
     bool _visibleR;
 
     quint32 _fixtureID;
+    float _invisibleKolor; //simmilar as K in CMYK -> to avoid visible gray or black light
+    float _alpha;
 
 
 };
