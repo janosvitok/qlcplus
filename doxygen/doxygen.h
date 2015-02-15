@@ -60,7 +60,14 @@
 
 /** \defgroup ui_simpledesk Simple Desk */
 /** \defgroup ui_io Input/Output Manager */
-/** \defgroup ui_mon DMX Monitor */
+/** \defgroup ui_mon DMX Monitor
+ *  @{
+ */
+
+/** \defgroup ui_mon_dmx DMX View */
+/** \defgroup ui_mon_2d 2D View */
+
+/** @} */
 
 /** @} */
 
