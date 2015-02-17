@@ -6,6 +6,7 @@
 
 #include "osgviewerwidget.h"
 #include "myscene.h"
+#include "fixture.h"
 #include "fixtureselection.h"
 
 osgQt::GraphicsWindowQt* createGraphicsWindow( int x, int y, int w, int h )
@@ -113,4 +114,19 @@ void Dialog3d::on_pushButton_clicked()
             _doc->setModified();
         }
     }
+}
+
+void Dialog3d::on_pushButton_2_clicked()
+{
+        int numberOfFixtures = 15;
+        float stageWidth = 15.0;
+        float space = stageWidth / (float)(numberOfFixtures + 1);
+        float posX = stageWidth * -0.5f;
+        for( int i = 0; i < numberOfFixtures; ++i){
+            _scene->addFixture(i);
+            posX += space;
+            _scene->getFixtures().last().changeColor(osg::Vec3((float)(i+ 1)/(float)numberOfFixtures, 1.0f, 0.0f));
+            _scene->getFixtures().last().moveHead(posX, 4.0f + (float)i / 4, 4.0f);
+            _scene->getFixtures().last().changeOpacity(0.6);
+        }
 }

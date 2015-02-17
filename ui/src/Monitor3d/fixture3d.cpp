@@ -9,7 +9,7 @@ Fixture3d::Fixture3d(quint32 fixID)
 {
 //    _fixture = new osg::Group();
 
-    osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"par.osgt").toAscii().constData());
+    osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"PAR64.osgt").toAscii().constData());
 //   _fixture->addChild(head);
 
     _lightConeGeode = new osg::Geode();
@@ -22,10 +22,13 @@ Fixture3d::Fixture3d(quint32 fixID)
     osg::ref_ptr<osg::Vec3Array> pyramidVertices = new osg::Vec3Array();
     pyramidVertices->push_back( osg::Vec3(  0,  0, 0) ); // peak
     int faces = 16;
+    float width = 1.26492; //http://www.fas.harvard.edu/~loebinfo/loebinfo/lighting/lighting.html#PAR MFL transformed to metrics
+    float height =  1.26492;
+    float lenght = 6.096;
     double partOfCircle = osg::PI * 2.0 / (double)faces ;
     double position = 0.0;
     for (int i = 0; i < faces; ++i){
-        pyramidVertices->push_back( osg::Vec3( sin(position), cos(position), -10) ); // points at base
+        pyramidVertices->push_back( osg::Vec3( sin(position) * width, cos(position) * height, -(lenght)) ); // points at base
         position += partOfCircle;
     }
     pyramidGeometry->setVertexArray( pyramidVertices );
@@ -64,7 +67,7 @@ Fixture3d::Fixture3d(quint32 fixID)
     _transR = new osg::MatrixTransform;
     _transQLC = new osg::MatrixTransform;
     _transG->setMatrix(osg::Matrix::translate( osg::Vec3(0.0f, 8.0f, 7.0f) ) );
-    _transR->setMatrix( osg::Matrix::rotate( osg::PI / 4, osg::Vec3d(-1, 0,  0) ) );
+    _transR->setMatrix( osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0,  0) ) );
     _transQLC->addChild( head );
     _transQLC->addChild( _lightConeGeode );
     _transR->addChild( _transQLC );
@@ -75,7 +78,6 @@ Fixture3d::Fixture3d(quint32 fixID)
     _draggerG = new osgManipulator::TranslateAxisDragger();
     _draggerG->setupDefaultGeometry();
     _transG->addChild(_draggerG);
-//    _draggerG->setMatrix(osg::Matrix::scale(3, 3, 3));
     _draggerG->setHandleEvents(false);
 //    _draggerG->setActivationKeyEvent('g');
     _draggerG->addTransformUpdating( _transR );
@@ -86,11 +88,16 @@ Fixture3d::Fixture3d(quint32 fixID)
     _transR->addChild( _transQLC );
     _draggerR = new osgManipulator::TrackballDragger();
     _draggerR->setupDefaultGeometry();
+    float scale = head->getBound().radius() * 1.6;
+    _draggerR->setMatrix(osg::Matrix::scale(scale, scale, scale) *
+                       osg::Matrix::translate(head->getBound().center()));
     _transR->addChild(_draggerR);
     _draggerR->setHandleEvents(false);
 ////    _draggerR->setActivationKeyEvent('r');
     _draggerR->addTransformUpdating( _transQLC );
     _draggerR->setNodeMask(0);
+    osg::StateSet* draggerR_stateset = _draggerR->getOrCreateStateSet();
+    draggerR_stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
 }
 
@@ -127,6 +134,11 @@ void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
     else{
         color->w() = opacityValue - _invisibleKolor + _alpha;
     }
+}
+
+void Fixture3d::moveHead(float posX, float posY, float posZ)
+{
+    _transG->setMatrix( osg::Matrix::translate( osg::Vec3(posX, posY, posZ)) );
 }
 
 void Fixture3d::setDraggerGVisibility(bool visible)

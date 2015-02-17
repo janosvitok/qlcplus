@@ -19,6 +19,7 @@ public:
 
     void changeColor(osg::Vec3 colorValue, bool overwrite = 1 );
     void changeOpacity( float opacityValue, bool overwrite = 1 );
+    void moveHead(float posX, float posY, float posZ);
 
     void setDraggerGVisibility(bool visible);
     void setDraggerRVisibility(bool visible);
