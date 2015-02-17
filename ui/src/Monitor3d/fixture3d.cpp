@@ -1,6 +1,7 @@
 #include "fixture3d.h"
 #include <osgDB/ReadFile>
 #include <osg/BlendFunc>
+#include <osg/CullFace>
 #include "qlcfile.h"
 #include "qlcconfig.h"
 
@@ -62,6 +63,9 @@ Fixture3d::Fixture3d(quint32 fixID)
     blendFunc->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     stateset->setAttributeAndModes( blendFunc );
 
+    osg::CullFace* cull = new osg::CullFace();
+    cull->setMode(osg::CullFace::FRONT);
+    stateset->setAttributeAndModes(cull, osg::StateAttribute::ON);
     //all fixture transformations
     _transG = new osg::MatrixTransform;
     _transR = new osg::MatrixTransform;
