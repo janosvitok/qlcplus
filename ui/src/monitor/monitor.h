@@ -1,5 +1,5 @@
 /*
-  Q Light Controller
+  Q Light Controller Plus
   monitor.h
 
   Copyright (c) Heikki Junnila
@@ -21,26 +21,13 @@
 #define MONITOR_H
 
 #include <QWidget>
-#include <QHash>
-#include <QList>
+#include <QMap>
 
 #include "monitorproperties.h"
 
-class MonitorGraphicsView;
-class MonitorFixture;
-class MonitorLayout;
-class QDomDocument;
-class QDomElement;
-class QScrollArea;
-class QComboBox;
-class QSplitter;
-class QToolBar;
-class QSpinBox;
-class QAction;
-class Fixture;
-class Monitor;
-class QTimer;
 class Doc;
+class MonitorMode;
+class QToolBar;
 
 /** \addtogroup ui_mon DMX Monitor
  * @{
@@ -64,145 +51,30 @@ public:
     /** Normal public destructor */
     ~Monitor();
 
-    /** Initialize the monitor view */
-    void initView();
-
-    /** Initialize the monitor view in DMX mode */
-    void initDMXView();
-
-    /** Initialize the monitor view in 2D graphics mode */
-    void initGraphicsView();
-
 protected:
-    void saveSettings();
-
     /** Protected constructor to prevent multiple instances. */
     Monitor(QWidget* parent, Doc* doc, Qt::WindowFlags f = 0);
+
+    void saveSettings();
+    void initToolBar();
+    MonitorMode* currentMode();
+
+    void start(MonitorMode* mode);
+    void stop(MonitorMode* mode);
 
 protected:
     /** The singleton Monitor instance */
     static Monitor* s_instance;
     Doc* m_doc;
     MonitorProperties *m_props;
+    QMap<MonitorProperties::DisplayMode, MonitorMode*> m_modes;
 
-    /*********************************************************************
-     * Running functions
-     *********************************************************************/
-protected slots:
-    void slotFunctionStarted(quint32 id);
-
-    /*********************************************************************
-     * Menu
-     *********************************************************************/
-protected:
-
-    /** Create DMX view toolbar */
-    void initDMXToolbar();
-
-    void initGraphicsToolbar();
+    QToolBar* m_toolBar;
 
 protected slots:
-    /** Menu action slot for font selection */
-    void slotChooseFont();
-
-    /** Menu action slot for channel style selection */
-    void slotChannelStyleTriggered();
-
-    /** Menu action slot for value style selection */
-    void slotValueStyleTriggered();
 
     /** Menu action slot to trigger display mode switch */
-    void slotSwitchMode();
-
-    /********************************************************************
-     * Monitor Fixtures
-     ********************************************************************/
-public:
-    /** Update monitor fixture labels */
-    void updateFixtureLabelStyles();
-
-protected:
-    /** Create a new MonitorFixture* and append it to the layout */
-    void createMonitorFixture(Fixture* fxi);
-
-protected slots:
-    /** Slot for fixture additions (to append the new fixture to layout) */
-    void slotFixtureAdded(quint32 fxi_id);
-
-    /** Slot for fixture contents & layout changes */
-    void slotFixtureChanged(quint32 fxi_id);
-
-    /** Slot for fixture removals (to remove the fixture from layout) */
-    void slotFixtureRemoved(quint32 fxi_id);
-
-    /** Slot called when a universe combo item is selected */
-    void slotUniverseSelected(int index);
-
-    /** Slot for getting the latest values from InputOutputMap */
-    void slotUniversesWritten(int index, const QByteArray& ua);
-
-signals:
-    void channelStyleChanged(MonitorProperties::ChannelStyle style);
-    void valueStyleChanged(MonitorProperties::ValueStyle style);
-
-protected:
-    QToolBar* m_toolBar;
-    QScrollArea* m_scrollArea;
-    QWidget* m_monitorWidget;
-    MonitorLayout* m_monitorLayout;
-    QList <MonitorFixture*> m_monitorFixtures;
-    quint32 m_currentUniverse;
-
-    /********************************************************************
-     * Graphics View
-     ********************************************************************/
-protected:
-    /** Hides the Fixture Item editor on the right side of the view */
-    void hideFixtureItemEditor();
-
-    /** Shows the Fixture Item editor on the right side of the view */
-    void showFixtureItemEditor();
-
-protected slots:
-    /** Slot called when the grid width changes */
-    void slotGridWidthChanged(int value);
-
-    /** Slot called when the grid height changes */
-    void slotGridHeightChanged(int value);
-
-    /** Slot called when the unit metrics changes */
-    void slotGridUnitsChanged(int index);
-
-    /** Slot called when the user wants to add
-     *  a fixture to the graphics view */
-    void slotAddFixture();
-
-    /** Slot called when the user wants to remove
-     *  a fixture from the graphics view */
-    void slotRemoveFixture();
-
-    /** Slot called when the user wants to set
-     *  a background picture on the graphics view */
-    void slotSetBackground();
-
-    /** Slot called when the user wants to show
-     *  or hide fixtures labels */
-    void slotShowLabels(bool visible);
-
-    /** Slot called when a fixture is moved in the graphics view */
-    void slotFixtureMoved(quint32 fid, QPointF pos);
-
-    /** Slot called when the graphics view is clicked */
-    void slotViewClicked();
-
-protected:
-    QSplitter* m_splitter;
-    MonitorGraphicsView* m_graphicsView;
-    QWidget *m_fixtureItemEditor;
-    QSpinBox* m_gridWSpin;
-    QSpinBox *m_gridHSpin;
-    QComboBox *m_unitsCombo;
-    QAction *m_labelsAction;
+    void slotSwitchMode(int mode);
 };
 
 /** @} */

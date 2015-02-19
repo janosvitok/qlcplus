@@ -99,6 +99,9 @@ HEADERS += aboutbox.h \
 
 # Monitor headers
 HEADERS += monitor/monitor.h \
+           monitor/monitormode.h \
+           monitor/monitordmxmode.h \
+           monitor/monitorgraphicsmode.h \
            monitor/monitorbackgroundselection.h \
            monitor/monitorfixture.h \
            monitor/monitorfixtureitem.h \
@@ -268,6 +271,9 @@ SOURCES += aboutbox.cpp \
 
 # Monitor sources
 SOURCES += monitor/monitor.cpp \
+           monitor/monitormode.cpp \
+           monitor/monitordmxmode.cpp \
+           monitor/monitorgraphicsmode.cpp \
            monitor/monitorbackgroundselection.cpp \
            monitor/monitorfixture.cpp \
            monitor/monitorfixtureitem.cpp \
