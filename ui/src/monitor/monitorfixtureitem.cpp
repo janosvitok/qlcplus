@@ -400,31 +400,13 @@ void MonitorFixtureItem::updateValues(const QByteArray & ua)
         col.setAlpha(computeAlpha(head, ua));
         head->m_item->setBrush(QBrush(col));
 
-        if (head->m_panChannel != UINT_MAX /*QLCChannel::invalid()*/)
-        {
-            if (head->m_panChannel < (quint32)ua.size())
-            {
-                computePanPosition(head, ua.at(head->m_panChannel));
-            }
-            else
-            {
-                computePanPosition(head, 0);
-            }
+        qreal const panPosition = computePanPosition(head, ua);
+        qreal const tiltPosition = computeTiltPosition(head, ua);
 
-            needUpdate = true;
-        }
-
-        if (head->m_tiltChannel != UINT_MAX /*QLCChannel::invalid()*/)
+        if (head->m_panDegrees != panPosition || head->m_tiltDegrees != tiltPosition)
         {
-            if (head->m_tiltChannel < (quint32)ua.size())
-            {
-                computeTiltPosition(head, ua.at(head->m_tiltChannel));
-            }
-            else
-            {
-                computeTiltPosition(head, 0);
-            }
-       
+            head->m_panDegrees = panPosition;
+            head->m_tiltDegrees = tiltPosition;
             needUpdate = true;
         }
     }
@@ -517,16 +499,40 @@ void MonitorFixtureItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 {
 }
 
-void MonitorFixtureItem::computeTiltPosition(FixtureHead *h, uchar value)
+qreal MonitorFixtureItem::computeTiltPosition(FixtureHead *head, const QByteArray & ua)
 {
-    // find the TILT degrees based on value
-    h->m_tiltDegrees = ((double)value * h->m_tiltMaxDegrees) / (256.0 - 1/256) - (h->m_tiltMaxDegrees / 2);
-    //qDebug() << "TILT degrees:" << h->m_tiltDegrees;
+    qreal value = 0.0;
+    if (head->m_tiltChannel == QLCChannel::invalid())
+        return value;
+
+    if (head->m_tiltChannel < (quint32)ua.size())
+    {
+        value = ((qreal)ua.at(head->m_tiltChannel) * head->m_tiltMaxDegrees) / (256.0 - 1/256) - (head->m_tiltMaxDegrees / 2);
+    }
+    else
+    {
+        value = -(head->m_tiltMaxDegrees / 2);
+    }
+
+    //qDebug() << "TILT degrees:" << value;
+    return value;
 }
 
-void MonitorFixtureItem::computePanPosition(FixtureHead *h, uchar value)
+qreal MonitorFixtureItem::computePanPosition(FixtureHead *head, const QByteArray & ua)
 {
-    // find the PAN degrees based on value
-    h->m_panDegrees = ((double)value * h->m_panMaxDegrees) / (256.0 - 1/256) - (h->m_panMaxDegrees / 2);
-    //qDebug() << "PAN degrees:" << h->m_panDegrees;
+    qreal value = 0.0;
+    if (head->m_panChannel == QLCChannel::invalid())
+        return value;
+
+    if (head->m_panChannel < (quint32)ua.size())
+    {
+        value = ((qreal)ua.at(head->m_panChannel) * head->m_panMaxDegrees) / (256.0 - 1/256) - (head->m_panMaxDegrees / 2);
+    }
+    else
+    {
+        value = -(head->m_panMaxDegrees / 2);
+    }
+
+    //qDebug() << "PAN degrees:" << value;
+    return value;
 }

@@ -122,10 +122,10 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *);
 
 private:
-    void computeTiltPosition(FixtureHead *h, uchar value);
-    void computePanPosition(FixtureHead *h, uchar value);
-    QColor computeColor(FixtureHead *head, const QByteArray & us);
-    uchar computeAlpha(FixtureHead *head, const QByteArray & us);
+    qreal computeTiltPosition(FixtureHead *head, const QByteArray & ua);
+    qreal computePanPosition(FixtureHead *head, const QByteArray & ua);
+    QColor computeColor(FixtureHead *head, const QByteArray & ua);
+    uchar computeAlpha(FixtureHead *head, const QByteArray & ua);
 
 signals:
     void itemDropped(MonitorFixtureItem *);
