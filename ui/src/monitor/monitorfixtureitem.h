@@ -23,17 +23,33 @@
 #include <QGraphicsItem>
 #include <QFont>
 
+class QByteArray;
 class Doc;
+class Fixture;
 
 /** \addtogroup ui_mon_2d 2D View
  * @{
  */
 
-struct FixtureHead
+class FixtureHead
 {
-    QGraphicsEllipseItem *m_item;
-    QGraphicsEllipseItem *m_back;
+public:
+    FixtureHead(QGraphicsItem *parent, Fixture &fixture, int head);
 
+    qreal computeTiltPosition(const QByteArray & ua);
+    qreal computePanPosition(const QByteArray & ua);
+    QColor computeColor(const QByteArray & ua);
+    uchar computeAlpha(const QByteArray & ua);
+
+    bool hasPan() const;
+    bool hasTilt() const;
+
+    int panRange() const { return m_panMaxDegrees; }
+    int tiltRange() const { return m_tiltMaxDegrees; }
+
+    void setGelColor(QColor color) { m_gelColor = color; }
+
+private:
     //! cached rgb channels (absolute numbers)
     QList <quint32> m_rgb;
 
@@ -63,17 +79,22 @@ struct FixtureHead
     /*! map channel -> array of 256 bool values
      */
     QHash<quint32, QList<ShutterState> > m_shutterValues;
-    int m_strobePhase;
 
     quint32 m_masterDimmer;
     quint32 m_panChannel;
     int m_panMaxDegrees;
-    qreal m_panDegrees;
-    QColor m_panColor;
     quint32 m_tiltChannel;
     int m_tiltMaxDegrees;
+    int m_strobePhase;
+
+    QColor m_gelColor;
+
+public:
+
+    QGraphicsEllipseItem *m_item;
+    QGraphicsEllipseItem *m_back;
+    qreal m_panDegrees;
     qreal m_tiltDegrees;
-    QColor m_tiltColor;
 };
 
 class MonitorFixtureItem : public QObject, public QGraphicsItem
@@ -98,7 +119,7 @@ public:
     /** Sets the dimension of this fixture */
     void setSize(QSize size);
 
-    void setGelColor(QColor color) { m_gelColor = color; }
+    void setGelColor(QColor color);
     QColor getColor() { return m_gelColor; }
 
     /** Return the fixture ID associated to this item */
@@ -120,12 +141,6 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *);
-
-private:
-    qreal computeTiltPosition(FixtureHead *head, const QByteArray & ua);
-    qreal computePanPosition(FixtureHead *head, const QByteArray & ua);
-    QColor computeColor(FixtureHead *head, const QByteArray & ua);
-    uchar computeAlpha(FixtureHead *head, const QByteArray & ua);
 
 signals:
     void itemDropped(MonitorFixtureItem *);
