@@ -98,7 +98,8 @@ HEADERS += aboutbox.h \
            universeitemwidget.h
 
 # Monitor headers
-HEADERS += monitor/monitor.h \
+HEADERS += monitor/fixturehead.h \
+           monitor/monitor.h \
            monitor/monitormode.h \
            monitor/monitordmxmode.h \
            monitor/monitorgraphicsmode.h \
@@ -270,7 +271,8 @@ SOURCES += aboutbox.cpp \
            universeitemwidget.cpp
 
 # Monitor sources
-SOURCES += monitor/monitor.cpp \
+SOURCES += monitor/fixturehead.cpp \
+           monitor/monitor.cpp \
            monitor/monitormode.cpp \
            monitor/monitordmxmode.cpp \
            monitor/monitorgraphicsmode.cpp \

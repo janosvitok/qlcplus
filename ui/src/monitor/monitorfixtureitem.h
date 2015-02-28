@@ -23,74 +23,21 @@
 #include <QGraphicsItem>
 #include <QFont>
 
-class QByteArray;
+#include "fixturehead.h"
+
 class Doc;
-class Fixture;
 
 /** \addtogroup ui_mon_2d 2D View
  * @{
  */
 
-class FixtureHead
+class GraphicsFixtureHead 
+    : public FixtureHead
 {
 public:
-    FixtureHead(QGraphicsItem *parent, Fixture &fixture, int head);
-
-    qreal computeTiltPosition(const QByteArray & ua);
-    qreal computePanPosition(const QByteArray & ua);
-    QColor computeColor(const QByteArray & ua);
-    uchar computeAlpha(const QByteArray & ua);
-
-    bool hasPan() const;
-    bool hasTilt() const;
-
-    int panRange() const { return m_panMaxDegrees; }
-    int tiltRange() const { return m_tiltMaxDegrees; }
-
-    void setGelColor(QColor color) { m_gelColor = color; }
-
-private:
-    //! cached rgb channels (absolute numbers)
-    QList <quint32> m_rgb;
-
-    //! cached cmy channels (absolute numbers)
-    QList <quint32> m_cmy;
-
-    //! cached color channels (absolute numbers)
-    QList <quint32> m_colorWheels;
-
-    //! map DMX values to colors
-    /*! map channel -> array of 256 QColors
-     */
-    QHash<quint32, QList<QColor> > m_colorValues;
-
-    /*! cached shutter channels (absolute values)
-     */
-    QList <quint32> m_shutterChannels;
-
-    enum ShutterState
-    {
-        Closed,
-        Strobe,
-        Open
-    };
-
-    //! map DMX values to ON/OFF
-    /*! map channel -> array of 256 bool values
-     */
-    QHash<quint32, QList<ShutterState> > m_shutterValues;
-
-    quint32 m_masterDimmer;
-    quint32 m_panChannel;
-    int m_panMaxDegrees;
-    quint32 m_tiltChannel;
-    int m_tiltMaxDegrees;
-    int m_strobePhase;
-
-    QColor m_gelColor;
+    GraphicsFixtureHead(QGraphicsItem *parent, Fixture &fixture, int head);
 
 public:
-
     QGraphicsEllipseItem *m_item;
     QGraphicsEllipseItem *m_back;
     qreal m_panDegrees;
@@ -163,7 +110,7 @@ private:
     /** Position of the item top-left corner in millimeters */
     QPointF m_realPos;
 
-    QList <FixtureHead *> m_heads;
+    QList <GraphicsFixtureHead *> m_heads;
 
     /** In case of a dimmer, this hold the gel color to apply */
     QColor m_gelColor;
