@@ -9,7 +9,7 @@ CONFIG += qt
 QT     += core xml gui script
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets
 
-INCLUDEPATH     += monitor monitor3d showmanager virtualconsole
+INCLUDEPATH     += monitor/common monitor/dmx monitor/2d monitor3d showmanager virtualconsole
 
 # Engine
 INCLUDEPATH     += ../../engine/src ../../engine/src/audio
@@ -108,17 +108,17 @@ HEADERS += aboutbox.h \
     Monitor3d/pickhandler.h
 
 # Monitor headers
-HEADERS += monitor/fixturehead.h \
-           monitor/monitor.h \
-           monitor/monitormode.h \
-           monitor/monitordmxmode.h \
-           monitor/monitorgraphicsmode.h \
-           monitor/monitorbackgroundselection.h \
-           monitor/monitorfixture.h \
-           monitor/monitorfixtureitem.h \
-           monitor/monitorgraphicsview.h \
-           monitor/monitorlayout.h \
-           monitor/monitorfixturepropertieseditor.h
+HEADERS += monitor/common/fixturehead.h \
+           monitor/common/monitor.h \
+           monitor/common/monitormode.h \
+           monitor/dmx/monitordmxmode.h \
+           monitor/dmx/monitorfixture.h \
+           monitor/dmx/monitorlayout.h \
+           monitor/2d/monitorgraphicsmode.h \
+           monitor/2d/monitorbackgroundselection.h \
+           monitor/2d/monitorfixtureitem.h \
+           monitor/2d/monitorgraphicsview.h \
+           monitor/2d/monitorfixturepropertieseditor.h
 
 # Show Manager headers
 HEADERS += showmanager/multitrackview.h \
@@ -193,8 +193,8 @@ FORMS += aboutbox.ui \
          inputchanneleditor.ui \
          inputoutputpatcheditor.ui \
          inputprofileeditor.ui \
-         monitor/monitorbackgroundselection.ui \
-         monitor/monitorfixturepropertieseditor.ui \
+         monitor/2d/monitorbackgroundselection.ui \
+         monitor/2d/monitorfixturepropertieseditor.ui \
          positiontool.ui \
          rgbmatrixeditor.ui \
          sceneeditor.ui \
@@ -287,17 +287,17 @@ SOURCES += aboutbox.cpp \
     Monitor3d/pickhandler.cpp
 
 # Monitor sources
-SOURCES += monitor/fixturehead.cpp \
-           monitor/monitor.cpp \
-           monitor/monitormode.cpp \
-           monitor/monitordmxmode.cpp \
-           monitor/monitorgraphicsmode.cpp \
-           monitor/monitorbackgroundselection.cpp \
-           monitor/monitorfixture.cpp \
-           monitor/monitorfixtureitem.cpp \
-           monitor/monitorgraphicsview.cpp \
-           monitor/monitorlayout.cpp \
-           monitor/monitorfixturepropertieseditor.cpp
+SOURCES += monitor/common/fixturehead.cpp \
+           monitor/common/monitor.cpp \
+           monitor/common/monitormode.cpp \
+           monitor/dmx/monitordmxmode.cpp \
+           monitor/dmx/monitorfixture.cpp \
+           monitor/dmx/monitorlayout.cpp \
+           monitor/2d/monitorgraphicsmode.cpp \
+           monitor/2d/monitorbackgroundselection.cpp \
+           monitor/2d/monitorfixtureitem.cpp \
+           monitor/2d/monitorgraphicsview.cpp \
+           monitor/2d/monitorfixturepropertieseditor.cpp
 
 # Show Manager sources
 SOURCES += showmanager/multitrackview.cpp \
