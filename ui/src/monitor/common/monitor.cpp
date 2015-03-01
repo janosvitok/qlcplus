@@ -29,6 +29,7 @@
 
 #include "monitordmxmode.h"
 #include "monitorgraphicsmode.h"
+#include "monitor3dmode.h"
 
 #define SETTINGS_GEOMETRY "monitor/geometry"
 
@@ -52,6 +53,7 @@ Monitor::Monitor(QWidget* parent, Doc* doc, Qt::WindowFlags f)
 
     m_modes.insert(MonitorProperties::DMX, new MonitorDmxMode(this, doc));
     m_modes.insert(MonitorProperties::Graphics, new MonitorGraphicsMode(this, doc));
+    m_modes.insert(MonitorProperties::ThreeD, new Monitor3dMode(this, doc));
 
     start(currentMode());
 }
@@ -80,7 +82,10 @@ void Monitor::saveSettings()
     settings.setValue(SETTINGS_GEOMETRY, saveGeometry());
 
     foreach(MonitorMode* mode, m_modes)
-        mode->saveSettings();
+    {
+        if (mode != NULL)
+            mode->saveSettings();
+    }
 }
 
 void Monitor::createAndShow(QWidget* parent, Doc* doc)

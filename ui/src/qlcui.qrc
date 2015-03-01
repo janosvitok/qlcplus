@@ -86,7 +86,6 @@
         <file alias="knob.png">../../resources/icons/png/knob.png</file>
         <file alias="label.png">../../resources/icons/png/label.png</file>
         <file alias="monitor.png">../../resources/icons/png/monitor.png</file>
-        <file alias="monitor3d.png">../../resources/icons/png/monitor3d.png</file>
         <file alias="movinghead.png">../../resources/icons/png/movinghead.png</file>
         <file alias="operate.png">../../resources/icons/png/operate.png</file>
         <file alias="other.png">../../resources/icons/png/other.png</file>

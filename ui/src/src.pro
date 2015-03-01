@@ -9,7 +9,7 @@ CONFIG += qt
 QT     += core xml gui script
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets
 
-INCLUDEPATH     += monitor/common monitor/dmx monitor/2d monitor3d showmanager virtualconsole
+INCLUDEPATH     += monitor/common monitor/dmx monitor/2d monitor/3d showmanager virtualconsole
 
 # Engine
 INCLUDEPATH     += ../../engine/src ../../engine/src/audio
@@ -101,11 +101,6 @@ HEADERS += aboutbox.h \
            speeddial.h \
            speeddialwidget.h \
            universeitemwidget.h \
-    Monitor3d/dialog3d.h \
-    Monitor3d/osgviewerwidget.h \
-    Monitor3d/myscene.h \
-    Monitor3d/fixture3d.h \
-    Monitor3d/pickhandler.h
 
 # Monitor headers
 HEADERS += monitor/common/fixturehead.h \
@@ -118,7 +113,12 @@ HEADERS += monitor/common/fixturehead.h \
            monitor/2d/monitorbackgroundselection.h \
            monitor/2d/monitorfixtureitem.h \
            monitor/2d/monitorgraphicsview.h \
-           monitor/2d/monitorfixturepropertieseditor.h
+           monitor/2d/monitorfixturepropertieseditor.h \
+           monitor/3d/monitor3dmode.h \
+           monitor/3d/osgviewerwidget.h \
+           monitor/3d/myscene.h \
+           monitor/3d/fixture3d.h \
+           monitor/3d/pickhandler.h
 
 # Show Manager headers
 HEADERS += showmanager/multitrackview.h \
@@ -200,8 +200,7 @@ FORMS += aboutbox.ui \
          sceneeditor.ui \
          scripteditor.ui \
          selectinputchannel.ui \
-         showmanager/showeditor.ui \
-    Monitor3d/dialog3d.ui
+         showmanager/showeditor.ui 
 
 # Virtual Console Forms
 FORMS += virtualconsole/addvcbuttonmatrix.ui \
@@ -279,12 +278,7 @@ SOURCES += aboutbox.cpp \
            simpledeskengine.cpp \
            speeddial.cpp \
            speeddialwidget.cpp \
-           universeitemwidget.cpp \
-    Monitor3d/dialog3d.cpp \
-    Monitor3d/osgviewerwidget.cpp \
-    Monitor3d/myscene.cpp \
-    Monitor3d/fixture3d.cpp \
-    Monitor3d/pickhandler.cpp
+           universeitemwidget.cpp
 
 # Monitor sources
 SOURCES += monitor/common/fixturehead.cpp \
@@ -297,7 +291,12 @@ SOURCES += monitor/common/fixturehead.cpp \
            monitor/2d/monitorbackgroundselection.cpp \
            monitor/2d/monitorfixtureitem.cpp \
            monitor/2d/monitorgraphicsview.cpp \
-           monitor/2d/monitorfixturepropertieseditor.cpp
+           monitor/2d/monitorfixturepropertieseditor.cpp \
+           monitor/3d/monitor3dmode.cpp \
+           monitor/3d/osgviewerwidget.cpp \
+           monitor/3d/myscene.cpp \
+           monitor/3d/fixture3d.cpp \
+           monitor/3d/pickhandler.cpp
 
 # Show Manager sources
 SOURCES += showmanager/multitrackview.cpp \

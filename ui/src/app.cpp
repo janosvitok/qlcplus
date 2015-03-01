@@ -46,7 +46,6 @@
 #include "docbrowser.h"
 #include "aboutbox.h"
 #include "monitor.h"
-#include "Monitor3d/dialog3d.h"
 #include "vcframe.h"
 #include "app.h"
 #include "doc.h"
@@ -597,10 +596,6 @@ void App::initActions()
     m_controlMonitorAction->setShortcut(QKeySequence(tr("CTRL+M", "Control|Monitor")));
     connect(m_controlMonitorAction, SIGNAL(triggered(bool)), this, SLOT(slotControlMonitor()));
 
-    m_controlMonitor3dAction = new QAction(QIcon(":/monitor3d.png"), tr("&Monitor3d"), this);
-    //m_controlMonitor3dAction->setShortcut(QKeySequence(tr("CTRL+M", "Control|Monitor3d")));
-    connect(m_controlMonitor3dAction, SIGNAL(triggered(bool)), this, SLOT(slotControlMonitor3d()));
-
     m_addressToolAction = new QAction(QIcon(":/diptool.png"), tr("Address Tool"), this);
     connect(m_addressToolAction, SIGNAL(triggered()), this, SLOT(slotAddressTool()));
 
@@ -677,7 +672,6 @@ void App::initToolBar()
     m_toolbar->addAction(m_fileSaveAsAction);
     m_toolbar->addSeparator();
     m_toolbar->addAction(m_controlMonitorAction);
-    m_toolbar->addAction(m_controlMonitor3dAction);
     m_toolbar->addAction(m_addressToolAction);
     m_toolbar->addSeparator();
     m_toolbar->addAction(m_controlFullScreenAction);
@@ -998,11 +992,6 @@ QFile::FileError App::slotFileSaveAs()
 void App::slotControlMonitor()
 {
     Monitor::createAndShow(this, m_doc);
-}
-
-void App::slotControlMonitor3d()
-{
-    Dialog3d::createAndShow(this, m_doc);
 }
 
 void App::slotAddressTool()

@@ -49,7 +49,7 @@ class MonitorProperties
 public:
     MonitorProperties();
 
-    enum DisplayMode { DMX, Graphics };
+    enum DisplayMode { DMX, Graphics, ThreeD };
     enum ChannelStyle { DMXChannels, RelativeChannels };
     enum ValueStyle { DMXValues, PercentageValues };
     enum GridUnits { Meters, Feet };
