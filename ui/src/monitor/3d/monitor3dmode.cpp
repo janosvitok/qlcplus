@@ -183,6 +183,7 @@ void Monitor3dMode::slotUniversesWritten(int index, const QByteArray& ua)
         return;
     
     m_scene->update(ua);
+    m_osgWidget->update();
 }
 
 /********************************************************************

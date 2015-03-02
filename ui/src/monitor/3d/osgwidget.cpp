@@ -87,7 +87,7 @@ OSGWidget::OSGWidget( MyScene * scene,
 
   viewer_->setCamera( camera );
   viewer_->setSceneData( m_scene->getRoot() );
-  viewer_->addEventHandler( new osgViewer::StatsHandler );
+//  viewer_->addEventHandler( new osgViewer::StatsHandler );
   viewer_->addEventHandler( new PickHandler( m_scene ) );
   viewer_->setCameraManipulator( new osgGA::TrackballManipulator );
 
@@ -339,7 +339,6 @@ osgGA::EventQueue* OSGWidget::getEventQueue() const
 
 void OSGWidget::processSelection()
 {
-#if 0
   QRect selectionRectangle = makeRectangle( selectionStart_, selectionEnd_ );
   int widgetHeight         = this->height();
 
@@ -363,16 +362,21 @@ void OSGWidget::processSelection()
   osg::Camera* camera = viewer_->getCamera();
 
   if( !camera )
-    throw std::runtime_error( "Unable to obtain valid camera for selection processing" );
+  {
+    qDebug() << "Unable to obtain valid camera for selection processing";
+    return;
+  }
 
   camera->accept( iv );
 
   if( !polytopeIntersector->containsIntersections() )
     return;
 
-  auto intersections = polytopeIntersector->getIntersections();
+  osgUtil::PolytopeIntersector::Intersections intersections = polytopeIntersector->getIntersections();
 
-  for( auto&& intersection : intersections )
+  for( osgUtil::PolytopeIntersector::Intersections::const_iterator i = intersections.begin(); i != intersections.end(); ++i )
+  {
+    osgUtil::PolytopeIntersector::Intersection const & intersection = *i;
     qDebug() << "Selected a drawable:" << QString::fromStdString( intersection.drawable->getName() );
-#endif
+  }
 }

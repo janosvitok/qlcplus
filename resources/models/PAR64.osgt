@@ -8,7 +8,7 @@ osg::Geode {
   Drawables 1 {
     osg::Geometry {
       UniqueID 2
-      Name "Cylinder"
+      Name "PAR64"
       PrimitiveSetList 2 {
 	  DrawElementsUShort GL_TRIANGLES 180 {
 	    3720 3721 3722 
