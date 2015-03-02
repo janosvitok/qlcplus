@@ -41,21 +41,8 @@
 #include "qlcfile.h"
 
 #include "monitor3dmode.h"
-#include "osgviewerwidget.h"
+#include "osgwidget.h"
 #include "myscene.h"
-
-osgQt::GraphicsWindowQt* createGraphicsWindow( int x, int y, int w, int h )
-{
-    osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
-    traits->windowDecoration = false;
-    traits->x = x;
-    traits->y = y;
-    traits->width = w;
-    traits->height = h;
-    traits->doubleBuffer = true;
-
-    return new osgQt::GraphicsWindowQt(traits.get());
-}
 
 /*****************************************************************************
  * Initialization
@@ -160,20 +147,17 @@ void Monitor3dMode::destroyToolBar()
 
 void Monitor3dMode::initUi()
 {
-    m_osgWindow = createGraphicsWindow(50, 50, 640, 480);
     m_scene = new MyScene();
-    OsgViewerWidget* osgViewer = new OsgViewerWidget(m_osgWindow, m_scene);
-    osgViewer->setGeometry(100, 100, 800, 600);
-    osgViewer->show();
+    m_osgWidget = new OSGWidget(m_scene, monitor());
+    monitor()->layout()->addWidget(m_osgWidget);
 
     setMonitorUniverse(Universe::invalid());
 }
 
 void Monitor3dMode::destroyUi()
 {
-//    m_scene = NULL;
-//    delete m_osgWindow;
-//    m_osgWindow = NULL;
+    m_scene = NULL;
+    m_osgWidget->deleteLater();
 }
 
 /****************************************************************************

@@ -31,11 +31,7 @@ class Doc;
 class Fixture;
 
 class MyScene;
-
-namespace osgQt 
-{
-    class GraphicsWindowQt;
-};
+class OSGWidget;
 
 /** \addtogroup ui_mon_3d 3D View
  * @{
@@ -106,7 +102,7 @@ protected:
     QComboBox *m_unitsCombo;
     QAction *m_labelsAction;
 
-    osgQt::GraphicsWindowQt *m_osgWindow;
+    OSGWidget *m_osgWidget;
     MyScene *m_scene;
 };
 
