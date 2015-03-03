@@ -45,7 +45,6 @@
 
 #include "qlcfile.h"
 
-#define SETTINGS_GEOMETRY "monitor/geometry"
 #define SETTINGS_VSPLITTER "monitor/vsplitter"
 
 /*****************************************************************************

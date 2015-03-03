@@ -25,6 +25,7 @@
 #include <QComboBox>
 #include <QToolBar>
 #include <QAction>
+#include <QSplitter>
 #include <QLabel>
 #include <QFont>
 #include <QIcon>
@@ -43,6 +44,8 @@
 #include "monitor3dmode.h"
 #include "osgwidget.h"
 #include "myscene.h"
+
+#define SETTINGS_3D_VSPLITTER "monitor/3d_vsplitter"
 
 /*****************************************************************************
  * Initialization
@@ -92,6 +95,11 @@ void Monitor3dMode::disconnectSignals()
 
 void Monitor3dMode::saveSettings()
 {
+    if (m_splitter != NULL)
+    {
+        QSettings settings;
+        settings.setValue(SETTINGS_3D_VSPLITTER, m_splitter->saveState());
+    }
 }
 
 void Monitor3dMode::initToolBar(QToolBar* toolBar)
@@ -147,17 +155,60 @@ void Monitor3dMode::destroyToolBar()
 
 void Monitor3dMode::initUi()
 {
+    m_splitter = new QSplitter(Qt::Horizontal, monitor());
+    monitor()->layout()->addWidget(m_splitter);
+    QWidget* gcontainer = new QWidget(monitor());
+    m_splitter->addWidget(gcontainer);
+    gcontainer->setLayout(new QVBoxLayout);
+    gcontainer->layout()->setContentsMargins(0, 0, 0, 0);
+
     m_scene = new MyScene();
-    m_osgWidget = new OSGWidget(m_scene, monitor());
-    monitor()->layout()->addWidget(m_osgWidget);
+    m_osgWidget = new OSGWidget(m_scene, m_splitter->widget(0));
+    m_splitter->widget(0)->layout()->addWidget(m_osgWidget);
+
+    // add container for chaser editor
+    QWidget* econtainer = new QWidget(monitor());
+    m_splitter->addWidget(econtainer);
+    econtainer->setLayout(new QVBoxLayout);
+    econtainer->layout()->setContentsMargins(0, 0, 0, 0);
+    m_splitter->widget(1)->hide();
+
+    m_fixtureItemEditor = new QWidget(m_splitter->widget(1));
+    m_splitter->widget(1)->layout()->addWidget(m_fixtureItemEditor);
+    m_splitter->widget(1)->show();
+    m_fixtureItemEditor->show();
+
+    QSettings settings;
+    QVariant var2 = settings.value(SETTINGS_3D_VSPLITTER);
+    if (var2.isValid() == true)
+        m_splitter->restoreState(var2.toByteArray());
 
     setMonitorUniverse(Universe::invalid());
 }
 
 void Monitor3dMode::destroyUi()
 {
+    if (m_fixtureItemEditor != NULL)
+    {
+        m_splitter->widget(1)->layout()->removeWidget(m_fixtureItemEditor);
+        m_splitter->widget(1)->hide();
+        //m_fixtureItemEditor->deleteLater();
+        m_fixtureItemEditor = NULL;
+    }
+
     m_scene = NULL;
-    m_osgWidget->deleteLater();
+    if (m_osgWidget != NULL)
+    {
+        m_osgWidget->deleteLater();
+        m_osgWidget = NULL;
+    }
+
+    if (m_splitter != NULL)
+    {
+        saveSettings();
+        m_splitter->deleteLater();
+        m_splitter = NULL;
+    }
 }
 
 /****************************************************************************

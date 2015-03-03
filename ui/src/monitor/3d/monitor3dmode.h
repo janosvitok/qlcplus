@@ -26,6 +26,8 @@
 class QAction;
 class QComboBox;
 class QToolBar;
+class QWidget;
+class QSplitter;
 
 class Doc;
 class Fixture;
@@ -99,6 +101,8 @@ protected slots:
     void slotDemoButtonPushed();
 
 protected:
+    QSplitter* m_splitter;
+    QWidget *m_fixtureItemEditor;
     QComboBox *m_unitsCombo;
     QAction *m_labelsAction;
 
