@@ -1,6 +1,6 @@
 /*
   Q Light Controller Plus
-  fixturehead.cpp
+  monitorfixturehead.cpp
 
   Copyright (C) Massimo Callegari
 
@@ -20,7 +20,7 @@
 #include <qmath.h>
 #include <QDebug>
 
-#include "fixturehead.h"
+#include "monitorfixturehead.h"
 #include "qlcfixturehead.h"
 #include "qlcfixturemode.h"
 #include "qlcfixturedef.h"
@@ -29,7 +29,7 @@
 
 #define STROBE_PERIOD 30
 
-FixtureHead::FixtureHead(Fixture & fixture, int h)
+MonitorFixtureHead::MonitorFixtureHead(Fixture & fixture, int h)
     : m_masterDimmer(QLCChannel::invalid())
     , m_panChannel(QLCChannel::invalid())
     , m_panMaxDegrees(540)
@@ -151,7 +151,7 @@ FixtureHead::FixtureHead(Fixture & fixture, int h)
     }
 }
 
-QColor FixtureHead::computeColor(const QByteArray & ua)
+QColor MonitorFixtureHead::computeColor(const QByteArray & ua)
 {
     foreach (quint32 c, m_colorWheels)
     {
@@ -192,7 +192,7 @@ QColor FixtureHead::computeColor(const QByteArray & ua)
 
     return QColor(255,255,255);
 }
-uchar FixtureHead::computeAlpha(const QByteArray & ua)
+uchar MonitorFixtureHead::computeAlpha(const QByteArray & ua)
 {
     uchar alpha = 255;
     if (m_masterDimmer != QLCChannel::invalid())
@@ -241,7 +241,7 @@ uchar FixtureHead::computeAlpha(const QByteArray & ua)
     return alpha;
 }
 
-qreal FixtureHead::computeTiltPosition(const QByteArray & ua)
+qreal MonitorFixtureHead::computeTiltPosition(const QByteArray & ua)
 {
     qreal value = 0.0;
     if (hasTilt())
@@ -260,7 +260,7 @@ qreal FixtureHead::computeTiltPosition(const QByteArray & ua)
     return value;
 }
 
-qreal FixtureHead::computePanPosition(const QByteArray & ua)
+qreal MonitorFixtureHead::computePanPosition(const QByteArray & ua)
 {
     qreal value = 0.0;
     if (!hasPan())
@@ -279,17 +279,17 @@ qreal FixtureHead::computePanPosition(const QByteArray & ua)
     return value;
 }
 
-bool FixtureHead::hasPan() const
+bool MonitorFixtureHead::hasPan() const
 {
     return m_panChannel != QLCChannel::invalid();
 }
 
-bool FixtureHead::hasTilt() const
+bool MonitorFixtureHead::hasTilt() const
 {
     return m_tiltChannel != QLCChannel::invalid();
 }
 
-bool FixtureHead::hasMasterDimmer() const
+bool MonitorFixtureHead::hasMasterDimmer() const
 {
     return m_masterDimmer != QLCChannel::invalid();
 }

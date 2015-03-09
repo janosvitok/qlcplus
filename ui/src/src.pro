@@ -103,7 +103,7 @@ HEADERS += aboutbox.h \
            universeitemwidget.h \
 
 # Monitor headers
-HEADERS += monitor/common/fixturehead.h \
+HEADERS += monitor/common/monitorfixturehead.h \
            monitor/common/monitor.h \
            monitor/common/monitormode.h \
            monitor/dmx/monitordmxmode.h \
@@ -281,7 +281,7 @@ SOURCES += aboutbox.cpp \
            universeitemwidget.cpp
 
 # Monitor sources
-SOURCES += monitor/common/fixturehead.cpp \
+SOURCES += monitor/common/monitorfixturehead.cpp \
            monitor/common/monitor.cpp \
            monitor/common/monitormode.cpp \
            monitor/dmx/monitordmxmode.cpp \

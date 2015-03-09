@@ -36,7 +36,7 @@
 #define STROBE_PERIOD 30
 
 GraphicsFixtureHead::GraphicsFixtureHead(QGraphicsItem *parent, Fixture & fixture, int h)
-    : FixtureHead(fixture, h)
+    : MonitorFixtureHead(fixture, h)
     , m_item(NULL)
     , m_back(NULL)
     , m_panDegrees(0)

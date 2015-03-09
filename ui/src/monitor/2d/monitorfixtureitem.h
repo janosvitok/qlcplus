@@ -23,7 +23,7 @@
 #include <QGraphicsItem>
 #include <QFont>
 
-#include "fixturehead.h"
+#include "monitorfixturehead.h"
 
 class Doc;
 
@@ -32,7 +32,7 @@ class Doc;
  */
 
 class GraphicsFixtureHead 
-    : public FixtureHead
+    : public MonitorFixtureHead
 {
 public:
     GraphicsFixtureHead(QGraphicsItem *parent, Fixture &fixture, int head);

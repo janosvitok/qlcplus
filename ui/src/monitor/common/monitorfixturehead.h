@@ -1,6 +1,6 @@
 /*
   Q Light Controller Plus
-  fixturehead.h
+  monitorfixturehead.h
 
   Copyright (C) Massimo Callegari
 
@@ -17,8 +17,8 @@
   limitations under the License.
 */
 
-#ifndef FIXTUREITEM_H
-#define FIXTUREITEM_H
+#ifndef MONITORFIXTUREHEAD_H
+#define MONITORFIXTUREHEAD_H
 
 class QByteArray;
 class Fixture;
@@ -29,10 +29,10 @@ class Fixture;
  * @{
  */
 
-class FixtureHead
+class MonitorFixtureHead
 {
 public:
-    FixtureHead(Fixture &fixture, int head);
+    MonitorFixtureHead(Fixture &fixture, int head);
 
     qreal computeTiltPosition(const QByteArray & ua);
     qreal computePanPosition(const QByteArray & ua);
@@ -91,4 +91,4 @@ private:
 
 /** @} */
 
-#endif // FIXTUREHEAD_H
+#endif // MONITORFIXTUREHEAD_H
