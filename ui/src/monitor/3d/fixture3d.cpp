@@ -10,7 +10,7 @@ Fixture3d::Fixture3d(quint32 fixID)
 {
 //    _fixture = new osg::Group();
 
-    osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"PAR64.osgt").toAscii().constData());
+    osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"PAR64.osgt").toLatin1().constData());
 //   _fixture->addChild(head);
 
     _lightConeGeode = new osg::Geode();

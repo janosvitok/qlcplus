@@ -59,7 +59,7 @@ MyScene::MyScene()
 //////stage creation
 //    osg::ref_ptr<osg::Geode> stage = new osg::Geode();
     osg::Node* stage = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()
-                                 +QDir::separator()+"stage.osgt").toAscii().constData());
+                                 +QDir::separator()+"stage.osgt").toLatin1().constData());
 
     _stageWidth = stage->getBound().radius();
 //    _stageDepth = 20.0;
