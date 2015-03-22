@@ -24,13 +24,15 @@ class QByteArray;
 class Fixture;
 
 #include <QColor>
+#include <QHash>
 
 /** \addtogroup ui_mon DMX Monitor
  * @{
  */
 
-class MonitorFixtureHead
+class MonitorFixtureHead : public QObject
 {
+    Q_OBJECT;
 public:
     MonitorFixtureHead(Fixture &fixture, int head);
 

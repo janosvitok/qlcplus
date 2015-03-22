@@ -5,13 +5,23 @@
 #include "qlcfile.h"
 #include "qlcconfig.h"
 
-Fixture3d::Fixture3d(quint32 fixID)
-    : _fixtureID(fixID), _invisibleKolor(0.0f)
+Fixture3d::Fixture3d(Doc * doc, quint32 fid)
+    : MonitorFixtureBase(doc, fid)
+    , _invisibleKolor(0.0f)
 {
+    initialize();
 //    _fixture = new osg::Group();
 
-    //osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"PAR64.osgt").toLatin1().constData());
-    osg::Node* head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path()+QDir::separator()+"moving-head.osgt").toLatin1().constData());
+    createParCan();
+}
+MonitorFixtureHead * Fixture3d::createHead(Fixture & fixture, int head)
+{
+    return new MonitorFixtureHead(fixture, head);
+}
+
+void Fixture3d::createParCan()
+{
+    osg::Node * head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "PAR64.osgt").toLatin1().constData());
 //   _fixture->addChild(head);
 
     _lightConeGeode = new osg::Geode();
@@ -106,7 +116,28 @@ Fixture3d::Fixture3d(quint32 fixID)
 
 }
 
-void Fixture3d::changeColor(osg::Vec3 colorValue, bool overwrite)
+void Fixture3d::updateValues(QByteArray const & ua)
+{
+    foreach(MonitorFixtureHead *head, m_heads)
+    {
+        QColor col = head->computeColor(ua);
+        changeColor(osg::Vec3(col.redF(), col.greenF(), col.blueF()), true);
+        
+        changeOpacity(head->computeAlpha(ua)/255.0, true);
+
+        //qreal const panPosition = head->computePanPosition(ua);
+        //qreal const tiltPosition = head->computeTiltPosition(ua);
+        //
+        //if (head->m_panDegrees != panPosition || head->m_tiltDegrees != tiltPosition)
+        //{
+        //    head->m_panDegrees = panPosition;
+        //    head->m_tiltDegrees = tiltPosition;
+        //    needUpdate = true;
+        //}
+    }
+}
+
+void Fixture3d::changeColor(osg::Vec3 const & colorValue, bool overwrite)
 {
     if(_colors){
         float maxValue = ((colorValue.x() > colorValue.y()) ? colorValue.x() : colorValue.y());
@@ -126,7 +157,6 @@ void Fixture3d::changeColor(osg::Vec3 colorValue, bool overwrite)
             }
         }
     }
-
 }
 
 void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
@@ -172,5 +202,4 @@ void Fixture3d::setDraggerRVisibility(bool visible)
         _draggerR->setNodeMask(0);
     }
     _draggerR->setHandleEvents(_visibleR);
-
 }

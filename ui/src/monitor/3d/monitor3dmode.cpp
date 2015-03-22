@@ -271,7 +271,7 @@ void Monitor3dMode::slotAddFixture()
         while (it.hasNext() == true)
         {
             quint32 fid = it.next();
-            m_scene->addFixture(fid);
+            m_scene->addFixture(doc(), fid);
             doc()->setModified();
         }
     }
@@ -288,19 +288,4 @@ void Monitor3dMode::slotShowLabels(bool visible)
 
 void Monitor3dMode::slotDemoButtonPushed()
 {
-    if (m_scene == NULL)
-        return;
-
-    const int numberOfFixtures = 15;
-    const float stageWidth = 15.0;
-    const float space = stageWidth / (float)(numberOfFixtures + 1);
-    float posX = stageWidth * -0.5f;
-    for (int i = 0; i < numberOfFixtures; ++i)
-    {
-        m_scene->addFixture(i);
-        posX += space;
-        m_scene->getFixtures().last().changeColor(osg::Vec3((float)(i + 1)/(float)numberOfFixtures, 1.0f, 0.0f));
-        m_scene->getFixtures().last().moveHead(posX, 4.0f + (float)i / 4, 4.0f);
-        m_scene->getFixtures().last().changeOpacity(0.6);
-    }
 }

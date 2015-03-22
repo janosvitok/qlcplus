@@ -104,6 +104,7 @@ HEADERS += aboutbox.h \
 
 # Monitor headers
 HEADERS += monitor/common/monitorfixturehead.h \
+           monitor/common/monitorfixturebase.h \
            monitor/common/monitor.h \
            monitor/common/monitormode.h \
            monitor/dmx/monitordmxmode.h \
@@ -282,6 +283,7 @@ SOURCES += aboutbox.cpp \
 
 # Monitor sources
 SOURCES += monitor/common/monitorfixturehead.cpp \
+           monitor/common/monitorfixturebase.cpp \
            monitor/common/monitor.cpp \
            monitor/common/monitormode.cpp \
            monitor/dmx/monitordmxmode.cpp \

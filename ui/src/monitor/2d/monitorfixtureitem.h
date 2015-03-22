@@ -24,6 +24,7 @@
 #include <QFont>
 
 #include "monitorfixturehead.h"
+#include "monitorfixturebase.h"
 
 class Doc;
 
@@ -34,6 +35,7 @@ class Doc;
 class GraphicsFixtureHead 
     : public MonitorFixtureHead
 {
+    Q_OBJECT;
 public:
     GraphicsFixtureHead(QGraphicsItem *parent, Fixture &fixture, int head);
 
@@ -44,7 +46,7 @@ public:
     qreal m_tiltDegrees;
 };
 
-class MonitorFixtureItem : public QObject, public QGraphicsItem
+class MonitorFixtureItem : public MonitorFixtureBase, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
@@ -52,10 +54,7 @@ class MonitorFixtureItem : public QObject, public QGraphicsItem
 public:
     MonitorFixtureItem(Doc *doc, quint32 fid);
 
-    ~MonitorFixtureItem();
-
-    /** Get the fixture name as displayed on the label */
-    QString name() const { return m_name; }
+    MonitorFixtureHead * createHead(Fixture & fixture, int head);
 
     /** Set the position of this fixture using the monitor measure units */
     void setRealPosition(QPointF pos) { m_realPos = pos; }
@@ -65,15 +64,6 @@ public:
 
     /** Sets the dimension of this fixture */
     void setSize(QSize size);
-
-    void setGelColor(QColor color);
-    QColor getColor() { return m_gelColor; }
-
-    /** Return the fixture ID associated to this item */
-    quint32 fixtureID() { return m_fid; }
-
-    /** Return the number of heads represented by this item */
-    int headsCount() { return m_heads.count(); }
 
     /** Update the fixture values for rendering, passing the
      *  universe array of values */
@@ -93,14 +83,6 @@ signals:
     void itemDropped(MonitorFixtureItem *);
 
 private:
-    Doc *m_doc;
-
-    /** The Fixture ID this item is associated to */
-    quint32 m_fid;
-
-    /** The fixture name */
-    QString m_name;
-
     /** Width of the item */
     int m_width;
 
@@ -109,11 +91,6 @@ private:
 
     /** Position of the item top-left corner in millimeters */
     QPointF m_realPos;
-
-    QList <GraphicsFixtureHead *> m_heads;
-
-    /** In case of a dimmer, this hold the gel color to apply */
-    QColor m_gelColor;
 
     /** Flag to show/hide a fixture label */
     bool m_labelVisibility;

@@ -140,6 +140,15 @@ MyScene::MyScene()
     _root->setUpdateCallback(new FixturesCallback(this) );
 }
 
+MyScene::~MyScene()
+{
+    foreach(Fixture3d * fixture, _fixtures3d)
+    {
+        delete fixture;
+    }
+    _fixtures3d.clear();
+}
+
 void MyScene::update(const QByteArray &ua)
 {
     QMutexLocker locker(&_mutex);
@@ -149,44 +158,42 @@ void MyScene::update(const QByteArray &ua)
 
 void MyScene::setToBeMovable(osg::Drawable *shape)
 {
-    QList<Fixture3d>::iterator i;
-    for (i = _fixtures3d.begin(); i != _fixtures3d.end(); ++i)
+    foreach(Fixture3d * fixture, _fixtures3d)
     {
-        if( shape == i->getDrawable() )
+        if( shape == fixture->getDrawable() )
         {
-            i->setDraggerGVisibility(true);
+            fixture->setDraggerGVisibility(true);
         }
         else
         {
-            i->setDraggerGVisibility(false);
+            fixture->setDraggerGVisibility(false);
         }
-        i->setDraggerRVisibility(false);
+        fixture->setDraggerRVisibility(false);
     }
 }
 
 void MyScene::setToBeRotatable(osg::Drawable *shape)
 {
-    QList<Fixture3d>::iterator i;
-    for (i = _fixtures3d.begin(); i != _fixtures3d.end(); ++i)
+    foreach(Fixture3d * fixture, _fixtures3d)
     {
-        if( shape == i->getDrawable() )
+        if( shape == fixture->getDrawable() )
         {
-            i->setDraggerRVisibility(true);
+            fixture->setDraggerRVisibility(true);
         }
         else
         {
-            i->setDraggerRVisibility(false);
+            fixture->setDraggerRVisibility(false);
         }
-        i->setDraggerGVisibility(false);
+        fixture->setDraggerGVisibility(false);
     }
 }
 
-void MyScene::addFixture(quint32 fid)
+void MyScene::addFixture(Doc * doc, quint32 fid)
 {
-    _fixtures3d.append(Fixture3d(fid));
-    _root->addChild( _fixtures3d.last().getFixture() );
-    _fixtures3d.last().changeColor(osg::Vec3(0.4f, 0.0f, 1.0f));
-
+    Fixture3d * fixture = new Fixture3d(doc, fid);
+    _fixtures3d.append(fixture);
+    _root->addChild( fixture->getFixture() );
+    fixture->changeColor(osg::Vec3(0.4f, 0.0f, 1.0f));
 }
 
 void MyScene::setFixturesChanges()
@@ -201,14 +208,8 @@ void MyScene::setFixturesChanges()
         _changed = false;
     }
 
-    for( int i=0; i < _fixtures3d.count(); ++i)
+    foreach(Fixture3d * fixture, _fixtures3d)
     {
-        uchar value = 0;
-        quint32 addressOfFixture = _fixtures3d[i].getID();
-
-        if (ua.size() > (signed int)addressOfFixture )
-            value = (uchar)ua.at(addressOfFixture);
-
-        _fixtures3d[i].changeOpacity( (float)value/255.0f );
+        fixture->updateValues(ua);
     }
 }

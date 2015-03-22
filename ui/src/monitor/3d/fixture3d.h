@@ -9,20 +9,32 @@
 #include <osgManipulator/TranslateAxisDragger>
 #include <osgManipulator/TrackballDragger>
 
-class Fixture3d
+#include "monitorfixturebase.h"
+
+class QByteArray;
+
+class Fixture3d : MonitorFixtureBase
 {
+    Q_OBJECT;
 public:
-    Fixture3d(quint32 fixID);
+    Fixture3d(Doc * doc, quint32 fid);
+
+    MonitorFixtureHead * createHead(Fixture & fixture, int head);
+   
     osg::ref_ptr<osg::Group> getFixture(){ return _transG; }
     osg::ref_ptr<osg::Drawable> getDrawable() {return _lightConeGeode->getDrawable(0); }
-    quint32 getID() { return _fixtureID; }
 
-    void changeColor(osg::Vec3 colorValue, bool overwrite = 1 );
+    void updateValues(QByteArray const & ua);
+
+    void changeColor(osg::Vec3 const & colorValue, bool overwrite = 1 );
     void changeOpacity( float opacityValue, bool overwrite = 1 );
     void moveHead(float posX, float posY, float posZ);
 
     void setDraggerGVisibility(bool visible);
     void setDraggerRVisibility(bool visible);
+
+private:
+    void createParCan();
 
 private:
     osg::ref_ptr<osg::Vec4Array> _colors;
@@ -38,11 +50,8 @@ private:
     bool _visibleG;
     bool _visibleR;
 
-    quint32 _fixtureID;
     float _invisibleKolor; //simmilar as K in CMYK -> to avoid visible gray or black light
     float _alpha;
-
-
 };
 
 #endif // FIXTURE3D_H

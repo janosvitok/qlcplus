@@ -33,7 +33,6 @@
 #include "doc.h"
 
 #define MOVEMENT_THICKNESS    3
-#define STROBE_PERIOD 30
 
 GraphicsFixtureHead::GraphicsFixtureHead(QGraphicsItem *parent, Fixture & fixture, int h)
     : MonitorFixtureHead(fixture, h)
@@ -55,39 +54,24 @@ GraphicsFixtureHead::GraphicsFixtureHead(QGraphicsItem *parent, Fixture & fixtur
 }
 
 MonitorFixtureItem::MonitorFixtureItem(Doc *doc, quint32 fid)
-    : m_doc(doc)
-    , m_fid(fid)
+    : MonitorFixtureBase(doc, fid)
     , m_labelVisibility(false)
 {
-    Q_ASSERT(doc != NULL);
-
     setCursor(Qt::OpenHandCursor);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
-    Fixture *fxi = m_doc->fixture(fid);
-    Q_ASSERT(fxi != NULL);
+    initialize();
 
-    m_name = fxi->name();
-
-    setToolTip(m_name);
+    setToolTip(name());
 
     m_font = qApp->font();
     m_font.setPixelSize(8);
-
-    for (int i = 0; i < fxi->heads(); i++)
-    {
-        m_heads.append(new GraphicsFixtureHead(this, *fxi, i));
-    }
 }
 
-MonitorFixtureItem::~MonitorFixtureItem()
+MonitorFixtureHead * MonitorFixtureItem::createHead(Fixture & fixture, int head)
 {
-    foreach(GraphicsFixtureHead *head, m_heads)
-    {
-        delete head;
-    }
-    m_heads.clear();
+    return new GraphicsFixtureHead(this, fixture, head);
 }
 
 void MonitorFixtureItem::setSize(QSize size)
@@ -140,7 +124,8 @@ void MonitorFixtureItem::setSize(QSize size)
             int index = i * columns + j;
             if (index < m_heads.size())
             {
-		GraphicsFixtureHead * h = m_heads.at(index);
+		GraphicsFixtureHead * h = qobject_cast<GraphicsFixtureHead*>(m_heads.at(index));
+                Q_ASSERT(h != 0);
                 QGraphicsEllipseItem *head = h->m_item;
                 head->setRect(xpos, ypos, headDiam, headDiam);
 
@@ -154,7 +139,7 @@ void MonitorFixtureItem::setSize(QSize size)
                 }
  
                 head->setZValue(2);
-                QGraphicsEllipseItem *back = m_heads.at(index)->m_back;
+                QGraphicsEllipseItem *back = qobject_cast<GraphicsFixtureHead*>(m_heads.at(index))->m_back;
                 if (back != NULL)
                 {
                     back->setRect(head->rect());
@@ -168,29 +153,20 @@ void MonitorFixtureItem::setSize(QSize size)
 
     QFontMetrics fm(m_font);
     m_labelRect = fm.boundingRect(QRect(-10, m_height + 2, m_width + 20, 30),
-                                  Qt::AlignHCenter | Qt::TextWrapAnywhere, m_name);
+                                  Qt::AlignHCenter | Qt::TextWrapAnywhere, name());
 
     setTransformOriginPoint(m_width / 2, m_height / 2);
     update();
-}
-
-void MonitorFixtureItem::setGelColor(QColor color)
-{
-    m_gelColor = color;
-
-    foreach(GraphicsFixtureHead *head, m_heads)
-    {
-        head->setGelColor(color);
-    }
 }
 
 void MonitorFixtureItem::updateValues(const QByteArray & ua)
 {
     bool needUpdate = false;
 
-    foreach(GraphicsFixtureHead *head, m_heads)
+    foreach(MonitorFixtureHead *h, m_heads)
     {
-
+        GraphicsFixtureHead * head = qobject_cast<GraphicsFixtureHead*>(h);
+        Q_ASSERT(head);
         QColor col = head->computeColor(ua);
         col.setAlpha(head->computeAlpha(ua));
         head->m_item->setBrush(QBrush(col));
@@ -238,10 +214,12 @@ void MonitorFixtureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     // draw item background
     painter->setBrush(QBrush(QColor(33, 33, 33)));
     painter->drawRect(0, 0, m_width, m_height);
-    foreach (GraphicsFixtureHead *head, m_heads)
+    foreach (MonitorFixtureHead *h, m_heads)
     {
+        GraphicsFixtureHead * head = qobject_cast<GraphicsFixtureHead*>(h);
+        Q_ASSERT(head);
+ 
         QRectF rect = head->m_item->rect();
-
         if (head->hasTilt())
         {
             rect.adjust(-MOVEMENT_THICKNESS, -MOVEMENT_THICKNESS, MOVEMENT_THICKNESS, MOVEMENT_THICKNESS);
@@ -272,7 +250,7 @@ void MonitorFixtureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
         painter->setBrush(QBrush(QColor(33, 33, 33)));
         painter->drawRoundedRect(m_labelRect, 2, 2);
         painter->setPen(QPen(Qt::white, 1));
-        painter->drawText(m_labelRect, Qt::AlignHCenter | Qt::TextWrapAnywhere, m_name);
+        painter->drawText(m_labelRect, Qt::AlignHCenter | Qt::TextWrapAnywhere, name());
     }
 }
 
