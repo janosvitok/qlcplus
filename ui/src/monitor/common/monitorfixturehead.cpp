@@ -249,14 +249,14 @@ qreal MonitorFixtureHead::computeTiltPosition(const QByteArray & ua)
 
     if (m_tiltChannel < (quint32)ua.size())
     {
-        value = ((qreal)ua.at(m_tiltChannel) * m_tiltMaxDegrees) / (256.0 - 1/256) - (m_tiltMaxDegrees / 2);
+        value = ((uchar)ua.at(m_tiltChannel) * m_tiltMaxDegrees) / 255.0 - (m_tiltMaxDegrees / 2.0);
     }
     else
     {
-        value = -(m_tiltMaxDegrees / 2);
+        value = -(m_tiltMaxDegrees / 2.0);
     }
 
-    //qDebug() << "TILT degrees:" << value;
+    // qDebug() << "TILT degrees:" << value;
     return value;
 }
 
@@ -268,14 +268,14 @@ qreal MonitorFixtureHead::computePanPosition(const QByteArray & ua)
 
     if (m_panChannel < (quint32)ua.size())
     {
-        value = ((qreal)ua.at(m_panChannel) * m_panMaxDegrees) / (256.0 - 1/256) - (m_panMaxDegrees / 2);
+        value = ((uchar)ua.at(m_panChannel) * m_panMaxDegrees) / 255.0 - (m_panMaxDegrees / 2.0);
     }
     else
     {
-        value = -(m_panMaxDegrees / 2);
+        value = -(m_panMaxDegrees / 2.0);
     }
 
-    //qDebug() << "PAN degrees:" << value;
+    // qDebug() << "PAN degrees:" << value;
     return value;
 }
 

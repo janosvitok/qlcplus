@@ -5,6 +5,8 @@
 #include "qlcfile.h"
 #include "qlcconfig.h"
 
+#include <QDebug>
+
 Fixture3d::Fixture3d(Doc * doc, quint32 fid)
     : MonitorFixtureBase(doc, fid)
     , _invisibleKolor(0.0f)
@@ -89,7 +91,7 @@ void Fixture3d::createParCan()
     _transG->setMatrix(osg::Matrix::translate( osg::Vec3(0.0f, 8.0f, 7.0f) ) );
 
     _transR = new osg::MatrixTransform;
-    //_transR->setMatrix( osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0,  0) ) );
+    _transR->setMatrix( osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0,  0) ) );
     _transR->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
 
@@ -132,12 +134,12 @@ void Fixture3d::updateValues(QByteArray const & ua)
 
         if (head->hasPan())
         {
-            changePan(osg::inDegrees(head->computePanPosition(ua)));
+            changePan(head->computePanPosition(ua));
         }
 
         if (head->hasTilt())
         {
-            changeTilt(osg::inDegrees(head->computeTiltPosition(ua)));
+            changeTilt(head->computeTiltPosition(ua));
         }
         break; // currently supports only one head
     }
@@ -179,12 +181,12 @@ void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
 
 void Fixture3d::changePan(double angle)
 {
-    _transPan->setMatrix(osg::Matrix::rotate(angle, osg::Z_AXIS));
+    _transPan->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::Z_AXIS));
 }
 
 void Fixture3d::changeTilt(double angle)
 {
-    _transTilt->setMatrix(osg::Matrix::rotate(angle, osg::X_AXIS));
+    _transTilt->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::X_AXIS));
 }
 
 void Fixture3d::moveHead(float posX, float posY, float posZ)
