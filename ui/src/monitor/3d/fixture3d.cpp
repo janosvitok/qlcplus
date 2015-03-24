@@ -78,42 +78,47 @@ void Fixture3d::createParCan()
     cull->setMode(osg::CullFace::FRONT);
     stateset->setAttributeAndModes(cull, osg::StateAttribute::ON);
     //all fixture transformations
-    _transG = new osg::MatrixTransform;
-    _transR = new osg::MatrixTransform;
-    _transQLC = new osg::MatrixTransform;
-    _transG->setMatrix(osg::Matrix::translate( osg::Vec3(0.0f, 8.0f, 7.0f) ) );
-    _transR->setMatrix( osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0,  0) ) );
-    _transQLC->addChild( head );
-    _transQLC->addChild( _lightConeGeode );
-    _transR->addChild( _transQLC );
 
-/// translation by user with mouse
+    _transPan = new osg::MatrixTransform;
+    _transPan->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+
+    _transTilt = new osg::MatrixTransform;
+    _transTilt->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+
+    _transG = new osg::MatrixTransform;
+    _transG->setMatrix(osg::Matrix::translate( osg::Vec3(0.0f, 8.0f, 7.0f) ) );
+
+    _transR = new osg::MatrixTransform;
+    //_transR->setMatrix( osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0,  0) ) );
     _transR->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
-    _transG->addChild( _transR );
+
+
     _draggerG = new osgManipulator::TranslateAxisDragger();
     _draggerG->setupDefaultGeometry();
-    _transG->addChild(_draggerG);
     _draggerG->setHandleEvents(false);
-//    _draggerG->setActivationKeyEvent('g');
+    // _draggerG->setActivationKeyEvent('g');
     _draggerG->addTransformUpdating( _transR );
     _draggerG->setNodeMask(0);
 
-///// rotation by user with mouse
-    _transQLC->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
-    _transR->addChild( _transQLC );
     _draggerR = new osgManipulator::TrackballDragger();
     _draggerR->setupDefaultGeometry();
     float scale = head->getBound().radius() * 1.6;
     _draggerR->setMatrix(osg::Matrix::scale(scale, scale, scale) *
                        osg::Matrix::translate(head->getBound().center()));
-    _transR->addChild(_draggerR);
     _draggerR->setHandleEvents(false);
-////    _draggerR->setActivationKeyEvent('r');
-    _draggerR->addTransformUpdating( _transQLC );
+    // _draggerR->setActivationKeyEvent('r');
+    //_draggerR->addTransformUpdating( _transQLC );
     _draggerR->setNodeMask(0);
-    osg::StateSet* draggerR_stateset = _draggerR->getOrCreateStateSet();
-    draggerR_stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+    _draggerR->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
+    _transTilt->addChild(head );
+    _transTilt->addChild( _lightConeGeode );
+    _transPan->addChild( _transTilt );
+    _transR->addChild( _transPan );
+
+    ///_transR->addChild(_draggerR);
+    _transG->addChild( _transR );
+    //_transG->addChild(_draggerG);
 }
 
 void Fixture3d::updateValues(QByteArray const & ua)
@@ -125,15 +130,16 @@ void Fixture3d::updateValues(QByteArray const & ua)
         
         changeOpacity(head->computeAlpha(ua)/255.0, true);
 
-        //qreal const panPosition = head->computePanPosition(ua);
-        //qreal const tiltPosition = head->computeTiltPosition(ua);
-        //
-        //if (head->m_panDegrees != panPosition || head->m_tiltDegrees != tiltPosition)
-        //{
-        //    head->m_panDegrees = panPosition;
-        //    head->m_tiltDegrees = tiltPosition;
-        //    needUpdate = true;
-        //}
+        if (head->hasPan())
+        {
+            changePan(osg::inDegrees(head->computePanPosition(ua)));
+        }
+
+        if (head->hasTilt())
+        {
+            changeTilt(osg::inDegrees(head->computeTiltPosition(ua)));
+        }
+        break; // currently supports only one head
     }
 }
 
@@ -169,6 +175,16 @@ void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
     else{
         color->w() = opacityValue - _invisibleKolor + _alpha;
     }
+}
+
+void Fixture3d::changePan(double angle)
+{
+    _transPan->setMatrix(osg::Matrix::rotate(angle, osg::Z_AXIS));
+}
+
+void Fixture3d::changeTilt(double angle)
+{
+    _transTilt->setMatrix(osg::Matrix::rotate(angle, osg::X_AXIS));
 }
 
 void Fixture3d::moveHead(float posX, float posY, float posZ)

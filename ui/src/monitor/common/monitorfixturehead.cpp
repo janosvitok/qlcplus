@@ -244,7 +244,7 @@ uchar MonitorFixtureHead::computeAlpha(const QByteArray & ua)
 qreal MonitorFixtureHead::computeTiltPosition(const QByteArray & ua)
 {
     qreal value = 0.0;
-    if (hasTilt())
+    if (!hasTilt())
         return value;
 
     if (m_tiltChannel < (quint32)ua.size())

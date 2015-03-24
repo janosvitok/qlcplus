@@ -26,8 +26,10 @@ public:
 
     void updateValues(QByteArray const & ua);
 
-    void changeColor(osg::Vec3 const & colorValue, bool overwrite = 1 );
-    void changeOpacity( float opacityValue, bool overwrite = 1 );
+    void changeColor(osg::Vec3 const & colorValue, bool overwrite = 1);
+    void changeOpacity(float opacityValue, bool overwrite = 1);
+    void changePan(double angle);
+    void changeTilt(double angle);
     void moveHead(float posX, float posY, float posZ);
 
     void setDraggerGVisibility(bool visible);
@@ -43,7 +45,8 @@ private:
 
     osg::ref_ptr<osg::MatrixTransform> _transG;
     osg::ref_ptr<osg::MatrixTransform> _transR;
-    osg::ref_ptr<osg::MatrixTransform> _transQLC;
+    osg::ref_ptr<osg::MatrixTransform> _transPan;
+    osg::ref_ptr<osg::MatrixTransform> _transTilt;
 
     osg::ref_ptr<osgManipulator::TranslateAxisDragger> _draggerG;
     osg::ref_ptr<osgManipulator::TrackballDragger> _draggerR;
