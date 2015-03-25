@@ -20,7 +20,7 @@ public:
     ~MyScene();
      
     osg::ref_ptr<osg::Group> getRoot() { return _root; }
-    QList<Fixture3d *> getFixtures() { return _fixtures3d; }
+    Fixture3d * getFixture(quint32 fid) { return m_fixtures[fid]; }
 
 //    void doUserOperation(osg::Drawable *shape); //raz, ked bude hmatatelny priestor
 
@@ -34,7 +34,7 @@ public:
 
 private:
     osg::ref_ptr<osg::Group> _root;
-    QList<Fixture3d*> _fixtures3d;
+    QHash<quint32, Fixture3d*> m_fixtures;
     float _stageWidth;
     float _stageHeight;
     float _stageDepth;

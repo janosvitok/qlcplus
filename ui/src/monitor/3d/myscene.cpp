@@ -142,11 +142,11 @@ MyScene::MyScene()
 
 MyScene::~MyScene()
 {
-    foreach(Fixture3d * fixture, _fixtures3d)
+    foreach(Fixture3d * fixture, m_fixtures)
     {
         delete fixture;
     }
-    _fixtures3d.clear();
+    m_fixtures.clear();
 }
 
 void MyScene::update(const QByteArray &ua)
@@ -158,7 +158,7 @@ void MyScene::update(const QByteArray &ua)
 
 void MyScene::setToBeMovable(osg::Drawable *shape)
 {
-    foreach(Fixture3d * fixture, _fixtures3d)
+    foreach(Fixture3d * fixture, m_fixtures)
     {
         if( shape == fixture->getDrawable() )
         {
@@ -174,7 +174,7 @@ void MyScene::setToBeMovable(osg::Drawable *shape)
 
 void MyScene::setToBeRotatable(osg::Drawable *shape)
 {
-    foreach(Fixture3d * fixture, _fixtures3d)
+    foreach(Fixture3d * fixture, m_fixtures)
     {
         if( shape == fixture->getDrawable() )
         {
@@ -191,9 +191,8 @@ void MyScene::setToBeRotatable(osg::Drawable *shape)
 void MyScene::addFixture(Doc * doc, quint32 fid)
 {
     Fixture3d * fixture = new Fixture3d(doc, fid);
-    _fixtures3d.append(fixture);
+    m_fixtures[fid] = fixture;
     _root->addChild( fixture->getFixture() );
-    fixture->changeColor(osg::Vec3(0.4f, 0.0f, 1.0f));
 }
 
 void MyScene::setFixturesChanges()
@@ -208,7 +207,7 @@ void MyScene::setFixturesChanges()
         _changed = false;
     }
 
-    foreach(Fixture3d * fixture, _fixtures3d)
+    foreach(Fixture3d * fixture, m_fixtures)
     {
         fixture->updateValues(ua);
     }

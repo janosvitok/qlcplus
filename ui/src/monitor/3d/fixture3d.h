@@ -26,11 +26,12 @@ public:
 
     void updateValues(QByteArray const & ua);
 
-    void changeColor(osg::Vec3 const & colorValue, bool overwrite = 1);
-    void changeOpacity(float opacityValue, bool overwrite = 1);
-    void changePan(double angle);
-    void changeTilt(double angle);
-    void moveHead(float posX, float posY, float posZ);
+    void setColor(osg::Vec3 const & colorValue, bool overwrite = 1);
+    void setOpacity(float opacityValue, bool overwrite = 1);
+    void setPan(double angle);
+    void setTilt(double angle);
+    void setPosition(double posX, double posY, double posZ);
+    void setRotation(double rotX, double rotY, double rotZ);
 
     void setDraggerGVisibility(bool visible);
     void setDraggerRVisibility(bool visible);

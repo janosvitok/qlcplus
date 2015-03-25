@@ -183,6 +183,15 @@ void Monitor3dMode::initUi()
     if (var2.isValid() == true)
         m_splitter->restoreState(var2.toByteArray());
 
+    foreach(quint32 fid, props()->fixture3dID())
+    {
+        Fixture3dProperties p = props()->fixture3dProperties(fid);
+        m_scene->addFixture(doc(), fid);
+        Fixture3d * fixture = m_scene->getFixture(fid);
+        fixture->setPosition(p.m_posX, p.m_posY, p.m_posZ);
+        fixture->setRotation(p.m_rotX, p.m_rotY, p.m_rotZ);
+    }
+
     setMonitorUniverse(Universe::invalid());
 }
 
@@ -272,6 +281,7 @@ void Monitor3dMode::slotAddFixture()
         {
             quint32 fid = it.next();
             m_scene->addFixture(doc(), fid);
+            props()->setFixture3dProperties(fid, Fixture3dProperties());
             doc()->setModified();
         }
     }

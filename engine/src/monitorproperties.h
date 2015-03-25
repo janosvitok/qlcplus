@@ -37,12 +37,25 @@ class Doc;
 
 #define KXMLQLCMonitorProperties "Monitor"
 
-typedef struct
+struct FixtureItemProperties
 {
     QPointF m_position;
     ushort m_rotation;
     QColor m_gelColor;
-} FixtureItemProperties;
+};
+
+struct Fixture3dProperties
+{
+    double m_posX;
+    double m_posY;
+    double m_posZ;
+
+    double m_rotX;
+    double m_rotY;
+    double m_rotZ;
+
+    QColor m_gelColor;
+};
 
 class MonitorProperties
 {
@@ -73,6 +86,7 @@ public:
     GridUnits gridUnits() const { return m_gridUnits; }
 
     void removeFixture(quint32 fid);
+    void removeFixture3d(quint32 fid);
 
     void setFixturePosition(quint32 fid, QPointF pos);
     QPointF fixturePosition(quint32 fid) const { return m_fixtureItems[fid].m_position; }
@@ -96,9 +110,13 @@ public:
     QString customBackground(quint32 id);
 
     FixtureItemProperties fixtureProperties(quint32 fid) const { return m_fixtureItems[fid]; }
-    void setFixtureProperties(quint32 fid, FixtureItemProperties props) { m_fixtureItems[fid] = props; }
+    void setFixtureProperties(quint32 fid, FixtureItemProperties const & props) { m_fixtureItems[fid] = props; }
+
+    Fixture3dProperties fixture3dProperties(quint32 fid) const { return m_fixture3dItems[fid]; }
+    void setFixture3dProperties(quint32 fid, Fixture3dProperties const & props) { m_fixture3dItems[fid] = props; }
 
     QList <quint32> fixtureItemsID() const { return m_fixtureItems.keys(); }
+    QList <quint32> fixture3dID() const { return m_fixture3dItems.keys(); }
 
     void reset();
 
@@ -113,6 +131,7 @@ private:
     QString m_commonBackgroundImage;
     QHash <quint32, QString> m_customBackgroundImages;
     QHash <quint32, FixtureItemProperties> m_fixtureItems;
+    QHash <quint32, Fixture3dProperties> m_fixture3dItems;
 
     /*********************************************************************
      * Load & Save

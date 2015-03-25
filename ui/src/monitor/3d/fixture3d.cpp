@@ -128,24 +128,24 @@ void Fixture3d::updateValues(QByteArray const & ua)
     foreach(MonitorFixtureHead *head, m_heads)
     {
         QColor col = head->computeColor(ua);
-        changeColor(osg::Vec3(col.redF(), col.greenF(), col.blueF()), true);
+        setColor(osg::Vec3(col.redF(), col.greenF(), col.blueF()), true);
         
-        changeOpacity(head->computeAlpha(ua)/255.0, true);
+        setOpacity(head->computeAlpha(ua)/255.0, true);
 
         if (head->hasPan())
         {
-            changePan(head->computePanPosition(ua));
+            setPan(head->computePanPosition(ua));
         }
 
         if (head->hasTilt())
         {
-            changeTilt(head->computeTiltPosition(ua));
+            setTilt(head->computeTiltPosition(ua));
         }
         break; // currently supports only one head
     }
 }
 
-void Fixture3d::changeColor(osg::Vec3 const & colorValue, bool overwrite)
+void Fixture3d::setColor(osg::Vec3 const & colorValue, bool overwrite)
 {
     if(_colors){
         float maxValue = ((colorValue.x() > colorValue.y()) ? colorValue.x() : colorValue.y());
@@ -167,7 +167,7 @@ void Fixture3d::changeColor(osg::Vec3 const & colorValue, bool overwrite)
     }
 }
 
-void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
+void Fixture3d::setOpacity(float opacityValue, bool overwrite)
 {
     osg::Vec4 *color = &_colors->operator [](0);
 
@@ -179,19 +179,24 @@ void Fixture3d::changeOpacity(float opacityValue, bool overwrite)
     }
 }
 
-void Fixture3d::changePan(double angle)
+void Fixture3d::setPan(double angle)
 {
     _transPan->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::Z_AXIS));
 }
 
-void Fixture3d::changeTilt(double angle)
+void Fixture3d::setTilt(double angle)
 {
     _transTilt->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::X_AXIS));
 }
 
-void Fixture3d::moveHead(float posX, float posY, float posZ)
+void Fixture3d::setPosition(double posX, double posY, double posZ)
 {
     _transG->setMatrix( osg::Matrix::translate( osg::Vec3(posX, posY, posZ)) );
+}
+
+void Fixture3d::setRotation(double rotX, double rotY, double rotZ)
+{
+    _transR->setMatrix(osg::Matrix::rotate(rotX, osg::X_AXIS, rotY, osg::Y_AXIS, rotZ, osg::Z_AXIS));
 }
 
 void Fixture3d::setDraggerGVisibility(bool visible)
