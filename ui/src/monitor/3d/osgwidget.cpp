@@ -81,7 +81,7 @@ OSGWidget::OSGWidget( MyScene * scene,
 
   osg::Camera* camera = new osg::Camera;
   camera->setViewport( 0, 0, this->width(), this->height() );
-  camera->setClearColor( osg::Vec4( 0.f, 0.f, 1.f, 1.f ) );
+  camera->setClearColor( osg::Vec4( 0.125f, 0.117f, 0.137f, 1.f ) );
   camera->setProjectionMatrixAsPerspective( 30.f, aspectRatio, 1.f, 1000.f );
   camera->setGraphicsContext( graphicsWindow_ );
 
