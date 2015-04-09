@@ -22,6 +22,7 @@
 #define MONITOR3DMODE_H
 
 #include "monitormode.h"
+#include <osgViewer/Viewer>
 
 class QAction;
 class QComboBox;
@@ -33,7 +34,6 @@ class Doc;
 class Fixture;
 
 class MyScene;
-class OSGWidget;
 
 /** \addtogroup ui_mon_3d 3D View
  * @{
@@ -106,7 +106,7 @@ protected:
     QComboBox *m_unitsCombo;
     QAction *m_labelsAction;
 
-    OSGWidget *m_osgWidget;
+    osgViewer::Viewer m_viewer;
     MyScene *m_scene;
 };
 

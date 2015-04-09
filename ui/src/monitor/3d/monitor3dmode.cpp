@@ -32,6 +32,9 @@
 #include <QtXml>
 
 #include <osg/Geode>
+#include <osgQt/GraphicsWindowQt>
+#include <osgViewer/ViewerEventHandlers>
+#include <osgGA/TrackballManipulator>
 
 #include "fixture.h"
 #include "fixtureselection.h"
@@ -42,8 +45,9 @@
 #include "qlcfile.h"
 
 #include "monitor3dmode.h"
-#include "osgwidget.h"
 #include "myscene.h"
+#include "pickhandler.h"
+#include "osgviewerwidget.h"
 
 #define SETTINGS_3D_VSPLITTER "monitor/3d_vsplitter"
 
@@ -163,8 +167,18 @@ void Monitor3dMode::initUi()
     gcontainer->layout()->setContentsMargins(0, 0, 0, 0);
 
     m_scene = new MyScene();
-    m_osgWidget = new OSGWidget(m_scene, m_splitter->widget(0));
-    m_splitter->widget(0)->layout()->addWidget(m_osgWidget);
+
+    osg::ref_ptr<osg::GraphicsContext::Traits> t = new osg::GraphicsContext::Traits;
+    t->windowDecoration = false;
+    t->x = 0;
+    t->y = 0;
+    t->width = gcontainer->width();
+    t->height = gcontainer->height();
+    t->doubleBuffer = true;
+
+    osgQt::GraphicsWindowQt* gw = new osgQt::GraphicsWindowQt(t.get(), m_splitter->widget(0));
+    OsgViewerWidget * osgWidget = new OsgViewerWidget(m_splitter->widget(0), gw, m_scene);
+    m_splitter->widget(0)->layout()->addWidget(osgWidget);
 
     // add container for chaser editor
     QWidget* econtainer = new QWidget(monitor());
@@ -206,11 +220,6 @@ void Monitor3dMode::destroyUi()
     }
 
     m_scene = NULL;
-    if (m_osgWidget != NULL)
-    {
-        m_osgWidget->deleteLater();
-        m_osgWidget = NULL;
-    }
 
     if (m_splitter != NULL)
     {
@@ -243,7 +252,7 @@ void Monitor3dMode::slotUniversesWritten(int index, const QByteArray& ua)
         return;
     
     m_scene->update(ua);
-    m_osgWidget->update();
+    m_splitter->widget(0)->update();
 }
 
 /********************************************************************

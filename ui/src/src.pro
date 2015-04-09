@@ -116,10 +116,10 @@ HEADERS += monitor/common/monitorfixturehead.h \
            monitor/2d/monitorgraphicsview.h \
            monitor/2d/monitorfixturepropertieseditor.h \
            monitor/3d/monitor3dmode.h \
-           monitor/3d/osgwidget.h \
            monitor/3d/myscene.h \
            monitor/3d/fixture3d.h \
-           monitor/3d/pickhandler.h
+           monitor/3d/pickhandler.h \
+           monitor/3d/osgviewerwidget.h
 
 # Show Manager headers
 HEADERS += showmanager/multitrackview.h \
@@ -295,10 +295,10 @@ SOURCES += monitor/common/monitorfixturehead.cpp \
            monitor/2d/monitorgraphicsview.cpp \
            monitor/2d/monitorfixturepropertieseditor.cpp \
            monitor/3d/monitor3dmode.cpp \
-           monitor/3d/osgwidget.cpp \
            monitor/3d/myscene.cpp \
            monitor/3d/fixture3d.cpp \
-           monitor/3d/pickhandler.cpp
+           monitor/3d/pickhandler.cpp \
+           monitor/3d/osgviewerwidget.cpp
 
 # Show Manager sources
 SOURCES += showmanager/multitrackview.cpp \
