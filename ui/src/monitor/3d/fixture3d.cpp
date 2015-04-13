@@ -9,10 +9,13 @@
 
 Fixture3d::Fixture3d(Doc * doc, quint32 fid)
     : MonitorFixtureBase(doc, fid)
-    , _invisibleKolor(0.0f)
+    , m_visibleG(false)
+    , m_visibleR(false)
+    , m_invisibleKolor(0.0f)
+    , m_alpha(0.0f)
 {
     initialize();
-//    _fixture = new osg::Group();
+//    m_fixture = new osg::Group();
 
     createParCan();
 }
@@ -24,103 +27,104 @@ MonitorFixtureHead * Fixture3d::createHead(Fixture & fixture, int head)
 void Fixture3d::createParCan()
 {
     osg::Node * head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "PAR64.osgt").toLatin1().constData());
-//   _fixture->addChild(head);
+//   m_fixture->addChild(head);
 
-    _lightConeGeode = new osg::Geode();
+    m_lightConeGeode = new osg::Geode();
     osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry();
-    _lightConeGeode->addDrawable(pyramidGeometry);
-    pyramidGeometry->setDataVariance( osg::Object::DYNAMIC );
-    pyramidGeometry->setUseDisplayList( false );
-//    _fixture->addChild(_lightConeGeode);
+    m_lightConeGeode->addDrawable(pyramidGeometry);
+    pyramidGeometry->setDataVariance(osg::Object::DYNAMIC);
+    pyramidGeometry->setUseDisplayList(false);
+//    m_fixture->addChild(m_lightConeGeode);
 
     osg::ref_ptr<osg::Vec3Array> pyramidVertices = new osg::Vec3Array();
-    pyramidVertices->push_back( osg::Vec3(  0,  0, 0) ); // peak
+    pyramidVertices->push_back(osg::Vec3(0, 0, 0)); // peak
     int faces = 16;
     float width = 1.26492; //http://www.fas.harvard.edu/~loebinfo/loebinfo/lighting/lighting.html#PAR MFL transformed to metrics
-    float height =  1.26492;
+    float height = 1.26492;
     float lenght = 6.096;
     double partOfCircle = osg::PI * 2.0 / (double)faces ;
     double position = 0.0;
-    for (int i = 0; i < faces; ++i){
-        pyramidVertices->push_back( osg::Vec3( sin(position) * width, cos(position) * height, -(lenght)) ); // points at base
+    for (int i = 0; i < faces; ++i)
+    {
+        pyramidVertices->push_back(osg::Vec3(sin(position) * width, cos(position) * height, -(lenght))); // points at base
         position += partOfCircle;
     }
-    pyramidGeometry->setVertexArray( pyramidVertices );
+    pyramidGeometry->setVertexArray(pyramidVertices);
 
     //cone faces creation
     osg::ref_ptr<osg::DrawElementsUInt> pyramidFace =
         new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLE_FAN, 0);
     pyramidFace->push_back(0);
-    for(int i = 1; i <= faces; ++i){
+    for (int i = 1; i <= faces; ++i)
+    {
         pyramidFace->push_back(i);
     }
     pyramidFace->push_back(1);
     pyramidGeometry->addPrimitiveSet(pyramidFace);
 
 
-    _colors = new osg::Vec4Array();
-    _colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) ); //index 0 white
+    m_colors = new osg::Vec4Array();
+    m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) ); //index 0 white
     for (int i = 0; i < faces; ++i)
     {
-    _colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 0.0f) ); //index i off
+        m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 0.0f) ); //index i off
     }
 
-    pyramidGeometry->setColorArray(_colors);
+    pyramidGeometry->setColorArray(m_colors);
     pyramidGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 
-    osg::StateSet* stateset = _lightConeGeode->getOrCreateStateSet();
-    stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    osg::StateSet* stateset = m_lightConeGeode->getOrCreateStateSet();
+    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
     osg::ref_ptr<osg::BlendFunc> blendFunc = new osg::BlendFunc;
-    blendFunc->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    stateset->setAttributeAndModes( blendFunc );
+    blendFunc->setFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    stateset->setAttributeAndModes(blendFunc);
 
     osg::CullFace* cull = new osg::CullFace();
     cull->setMode(osg::CullFace::FRONT);
     stateset->setAttributeAndModes(cull, osg::StateAttribute::ON);
     //all fixture transformations
 
-    _transPan = new osg::MatrixTransform;
-    _transPan->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+    m_transPan = new osg::MatrixTransform;
+    m_transPan->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
-    _transTilt = new osg::MatrixTransform;
-    _transTilt->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+    m_transTilt = new osg::MatrixTransform;
+    m_transTilt->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
-    _transG = new osg::MatrixTransform;
-    _transG->setMatrix(osg::Matrix::translate( osg::Vec3(0.0f, 8.0f, 7.0f) ) );
+    m_transG = new osg::MatrixTransform;
+    m_transG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
 
-    _transR = new osg::MatrixTransform;
-    _transR->setMatrix( osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0,  0) ) );
-    _transR->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+    m_transR = new osg::MatrixTransform;
+    m_transR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));
+    m_transR->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
+    m_draggerG = new osgManipulator::TranslateAxisDragger();
+    m_draggerG->setupDefaultGeometry();
+    m_draggerG->setHandleEvents(false);
+    m_draggerG->setActivationKeyEvent('g');
+    m_draggerG->addTransformUpdating(m_transR);
+    m_draggerG->setNodeMask(0);
 
-    _draggerG = new osgManipulator::TranslateAxisDragger();
-    _draggerG->setupDefaultGeometry();
-    _draggerG->setHandleEvents(false);
-    // _draggerG->setActivationKeyEvent('g');
-    _draggerG->addTransformUpdating( _transR );
-    _draggerG->setNodeMask(0);
-
-    _draggerR = new osgManipulator::TrackballDragger();
-    _draggerR->setupDefaultGeometry();
+    m_draggerR = new osgManipulator::TrackballDragger();
+    m_draggerR->setupDefaultGeometry();
     float scale = head->getBound().radius() * 1.6;
-    _draggerR->setMatrix(osg::Matrix::scale(scale, scale, scale) *
+    m_draggerR->setMatrix(osg::Matrix::scale(scale, scale, scale) *
                        osg::Matrix::translate(head->getBound().center()));
-    _draggerR->setHandleEvents(false);
-    // _draggerR->setActivationKeyEvent('r');
-    //_draggerR->addTransformUpdating( _transQLC );
-    _draggerR->setNodeMask(0);
-    _draggerR->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+    m_draggerR->setHandleEvents(false);
+    m_draggerR->setActivationKeyEvent('r');
+    m_draggerR->addTransformUpdating(m_transPan);
+    m_draggerR->setNodeMask(0);
+    m_draggerR->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
-    _transTilt->addChild(head );
-    _transTilt->addChild( _lightConeGeode );
-    _transPan->addChild( _transTilt );
-    _transR->addChild( _transPan );
+    m_transTilt->addChild(head );
+    m_transTilt->addChild(m_lightConeGeode);
+    m_transPan->addChild(m_transTilt);
+    m_transR->addChild(m_transPan);
 
-    ///_transR->addChild(_draggerR);
-    _transG->addChild( _transR );
-    //_transG->addChild(_draggerG);
+    m_transR->addChild(m_draggerR);
+    m_transG->addChild(m_transR );
+    m_transG->addChild(m_draggerG);
 }
 
 void Fixture3d::updateValues(QByteArray const & ua)
@@ -147,16 +151,19 @@ void Fixture3d::updateValues(QByteArray const & ua)
 
 void Fixture3d::setColor(osg::Vec3 const & colorValue, bool overwrite)
 {
-    if(_colors){
+    if (m_colors)
+    {
         float maxValue = ((colorValue.x() > colorValue.y()) ? colorValue.x() : colorValue.y());
         maxValue = ((maxValue > colorValue.z()) ? maxValue : colorValue.z());
-        _invisibleKolor = 1.0 - maxValue;
-        for(unsigned int i = 0; i < _colors->size(); ++i){
-            osg::Vec4 *color = &_colors->operator [](i);
-            if(overwrite){
-                color->x() = colorValue.x() + _invisibleKolor;
-                color->y() = colorValue.y() + _invisibleKolor;
-                color->z() = colorValue.z() + _invisibleKolor;
+        m_invisibleKolor = 1.0 - maxValue;
+        for (unsigned int i = 0; i < m_colors->size(); ++i )
+        {
+            osg::Vec4 *color = &m_colors->operator [](i);
+            if (overwrite)
+            {
+                color->x() = colorValue.x() + m_invisibleKolor;
+                color->y() = colorValue.y() + m_invisibleKolor;
+                color->z() = colorValue.z() + m_invisibleKolor;
             }
             else{
                 color->x() += colorValue.x();
@@ -169,60 +176,68 @@ void Fixture3d::setColor(osg::Vec3 const & colorValue, bool overwrite)
 
 void Fixture3d::setOpacity(float opacityValue, bool overwrite)
 {
-    osg::Vec4 *color = &_colors->operator [](0);
+    osg::Vec4 *color = &m_colors->operator [](0);
 
-    if (overwrite){
-        color->w() = opacityValue - _invisibleKolor ;
+    if (overwrite)
+    {
+        color->w() = opacityValue - m_invisibleKolor;
     }
     else{
-        color->w() = opacityValue - _invisibleKolor + _alpha;
+        color->w() = opacityValue - m_invisibleKolor + m_alpha;
     }
 }
 
 void Fixture3d::setPan(double angle)
 {
-    _transPan->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::Z_AXIS));
+    m_transPan->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::Z_AXIS));
 }
 
 void Fixture3d::setTilt(double angle)
 {
-    _transTilt->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::X_AXIS));
+    m_transTilt->setMatrix(osg::Matrix::rotate(osg::inDegrees(angle), osg::X_AXIS));
 }
 
 void Fixture3d::setPosition(double posX, double posY, double posZ)
 {
-    _transG->setMatrix( osg::Matrix::translate( osg::Vec3(posX, posY, posZ)) );
+    m_transG->setMatrix( osg::Matrix::translate( osg::Vec3(posX, posY, posZ)) );
 }
 
 void Fixture3d::setRotation(double rotX, double rotY, double rotZ)
 {
-    _transR->setMatrix(osg::Matrix::rotate(rotX, osg::X_AXIS, rotY, osg::Y_AXIS, rotZ, osg::Z_AXIS));
+    m_transR->setMatrix(osg::Matrix::rotate(rotX, osg::X_AXIS, rotY, osg::Y_AXIS, rotZ, osg::Z_AXIS));
 }
 
 void Fixture3d::setDraggerGVisibility(bool visible)
 {
-    if(_visibleG == visible){ return; }
-    _visibleG = visible;
-    if(_visibleG){
-        _draggerG->setNodeMask(~0);
+    if (m_visibleG == visible)
+        return;
+
+    m_visibleG = visible;
+    if (m_visibleG)
+    {
+        m_draggerG->setNodeMask(~0);
         setDraggerRVisibility(false);
     }
-    else{
-        _draggerG->setNodeMask(0);
+    else
+    {
+        m_draggerG->setNodeMask(0);
     }
-    _draggerG->setHandleEvents(_visibleG);
+    m_draggerG->setHandleEvents(m_visibleG);
 }
 
 void Fixture3d::setDraggerRVisibility(bool visible)
 {
-    if(_visibleR == visible){ return; }
-    _visibleR = visible;
-    if(_visibleR){
-        _draggerR->setNodeMask(~0);
+    if (m_visibleR == visible)
+        return;
+
+    m_visibleR = visible;
+    if (m_visibleR)
+    {
+        m_draggerR->setNodeMask(~0);
         setDraggerGVisibility(false);
     }
     else{
-        _draggerR->setNodeMask(0);
+        m_draggerR->setNodeMask(0);
     }
-    _draggerR->setHandleEvents(_visibleR);
+    m_draggerR->setHandleEvents(m_visibleR);
 }

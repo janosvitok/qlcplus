@@ -21,8 +21,8 @@ public:
 
     MonitorFixtureHead * createHead(Fixture & fixture, int head);
    
-    osg::ref_ptr<osg::Group> getFixture(){ return _transG; }
-    osg::ref_ptr<osg::Drawable> getDrawable() {return _lightConeGeode->getDrawable(0); }
+    osg::ref_ptr<osg::Group> getFixture() { return m_transG; }
+    osg::ref_ptr<osg::Drawable> getDrawable() { return m_lightConeGeode->getDrawable(0); }
 
     void updateValues(QByteArray const & ua);
 
@@ -40,22 +40,22 @@ private:
     void createParCan();
 
 private:
-    osg::ref_ptr<osg::Vec4Array> _colors;
-    osg::ref_ptr<osg::Geode> _lightConeGeode;
-//    osg::ref_ptr<osg::Group> _fixture;
+    osg::ref_ptr<osg::Vec4Array> m_colors;
+    osg::ref_ptr<osg::Geode> m_lightConeGeode;
+//    osg::ref_ptr<osg::Group> m_fixture;
 
-    osg::ref_ptr<osg::MatrixTransform> _transG;
-    osg::ref_ptr<osg::MatrixTransform> _transR;
-    osg::ref_ptr<osg::MatrixTransform> _transPan;
-    osg::ref_ptr<osg::MatrixTransform> _transTilt;
+    osg::ref_ptr<osg::MatrixTransform> m_transG;
+    osg::ref_ptr<osg::MatrixTransform> m_transR;
+    osg::ref_ptr<osg::MatrixTransform> m_transPan;
+    osg::ref_ptr<osg::MatrixTransform> m_transTilt;
 
-    osg::ref_ptr<osgManipulator::TranslateAxisDragger> _draggerG;
-    osg::ref_ptr<osgManipulator::TrackballDragger> _draggerR;
-    bool _visibleG;
-    bool _visibleR;
+    osg::ref_ptr<osgManipulator::TranslateAxisDragger> m_draggerG;
+    osg::ref_ptr<osgManipulator::TrackballDragger> m_draggerR;
+    bool m_visibleG;
+    bool m_visibleR;
 
-    float _invisibleKolor; //simmilar as K in CMYK -> to avoid visible gray or black light
-    float _alpha;
+    float m_invisibleKolor; //simmilar as K in CMYK -> to avoid visible gray or black light
+    float m_alpha;
 };
 
 #endif // FIXTURE3D_H
