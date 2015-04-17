@@ -90,20 +90,22 @@ void Fixture3d::createFixture()
 {
     m_fixture = createParCan();
     createLightBeam();
+    m_root = new osg::Group();
 
     //all fixture transformations
     m_transPan = new osg::MatrixTransform;
-    m_transPan->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+//    m_transPan->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
     m_transTilt = new osg::MatrixTransform;
-    m_transTilt->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+//    m_transTilt->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
     m_transG = new osg::MatrixTransform;
-    m_transG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
+//    m_transG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
+//    m_trans->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
     m_transR = new osg::MatrixTransform;
-    m_transR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));
-    m_transR->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+//    m_transR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));;
+//    m_transG->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
     m_draggerG = new osgManipulator::TranslateAxisDragger();
     m_draggerG->setupDefaultGeometry();
@@ -117,11 +119,10 @@ void Fixture3d::createFixture()
     m_draggerR->setMatrix(osg::Matrix::scale(scale, scale, scale) *
                        osg::Matrix::translate(m_fixture->getBound().center()));
     m_draggerR->setHandleEvents(false);
-    m_draggerR->addTransformUpdating(m_transG);
+    m_draggerR->addTransformUpdating(m_transR);
     m_draggerR->setNodeMask(0);
     m_draggerR->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
-    m_root = new osg::Group();
     m_root->addChild(m_transG);
     m_root->addChild(m_draggerG);
 
@@ -133,6 +134,12 @@ void Fixture3d::createFixture()
 
     m_transPan->addChild(m_transTilt);
     m_transTilt->addChild(m_lightConeGeode);
+
+    m_draggerG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
+    m_draggerR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));
+    m_transG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
+    m_transR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));
+
 }
 
 void Fixture3d::updateValues(QByteArray const & ua)
