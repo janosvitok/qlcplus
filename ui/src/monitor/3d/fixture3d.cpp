@@ -15,26 +15,27 @@ Fixture3d::Fixture3d(Doc * doc, quint32 fid)
     , m_alpha(0.0f)
 {
     initialize();
-//    m_fixture = new osg::Group();
-
-    createParCan();
+    createFixture();
 }
+
 MonitorFixtureHead * Fixture3d::createHead(Fixture & fixture, int head)
 {
     return new MonitorFixtureHead(fixture, head);
 }
 
-void Fixture3d::createParCan()
+osg::Node * Fixture3d::createParCan()
 {
-    osg::Node * head = osgDB::readNodeFile((QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "PAR64.osgt").toLatin1().constData());
-//   m_fixture->addChild(head);
+    return osgDB::readNodeFile(
+        (QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "PAR64.osgt").toLatin1().constData());
+}
 
+void Fixture3d::createLightBeam()
+{
     m_lightConeGeode = new osg::Geode();
     osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry();
     m_lightConeGeode->addDrawable(pyramidGeometry);
     pyramidGeometry->setDataVariance(osg::Object::DYNAMIC);
     pyramidGeometry->setUseDisplayList(false);
-//    m_fixture->addChild(m_lightConeGeode);
 
     osg::ref_ptr<osg::Vec3Array> pyramidVertices = new osg::Vec3Array();
     pyramidVertices->push_back(osg::Vec3(0, 0, 0)); // peak
@@ -62,7 +63,6 @@ void Fixture3d::createParCan()
     pyramidFace->push_back(1);
     pyramidGeometry->addPrimitiveSet(pyramidFace);
 
-
     m_colors = new osg::Vec4Array();
     m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) ); //index 0 white
     for (int i = 0; i < faces; ++i)
@@ -84,8 +84,14 @@ void Fixture3d::createParCan()
     osg::CullFace* cull = new osg::CullFace();
     cull->setMode(osg::CullFace::FRONT);
     stateset->setAttributeAndModes(cull, osg::StateAttribute::ON);
-    //all fixture transformations
+}
 
+void Fixture3d::createFixture()
+{
+    m_fixture = createParCan();
+    createLightBeam();
+
+    //all fixture transformations
     m_transPan = new osg::MatrixTransform;
     m_transPan->getOrCreateStateSet()->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
 
@@ -102,29 +108,31 @@ void Fixture3d::createParCan()
     m_draggerG = new osgManipulator::TranslateAxisDragger();
     m_draggerG->setupDefaultGeometry();
     m_draggerG->setHandleEvents(false);
-    m_draggerG->setActivationKeyEvent('g');
-    m_draggerG->addTransformUpdating(m_transR);
+    m_draggerG->addTransformUpdating(m_transG);
     m_draggerG->setNodeMask(0);
 
     m_draggerR = new osgManipulator::TrackballDragger();
     m_draggerR->setupDefaultGeometry();
-    float scale = head->getBound().radius() * 1.6;
+    float scale = m_fixture->getBound().radius() * 1.6;
     m_draggerR->setMatrix(osg::Matrix::scale(scale, scale, scale) *
-                       osg::Matrix::translate(head->getBound().center()));
+                       osg::Matrix::translate(m_fixture->getBound().center()));
     m_draggerR->setHandleEvents(false);
-    m_draggerR->setActivationKeyEvent('r');
-    m_draggerR->addTransformUpdating(m_transPan);
+    m_draggerR->addTransformUpdating(m_transG);
     m_draggerR->setNodeMask(0);
     m_draggerR->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
-    m_transTilt->addChild(head );
-    m_transTilt->addChild(m_lightConeGeode);
-    m_transPan->addChild(m_transTilt);
+    m_root = new osg::Group();
+    m_root->addChild(m_transG);
+    m_root->addChild(m_draggerG);
+
+    m_transG->addChild(m_transR);
+    m_transG->addChild(m_draggerR);
+
+    m_transR->addChild(m_fixture);
     m_transR->addChild(m_transPan);
 
-    m_transR->addChild(m_draggerR);
-    m_transG->addChild(m_transR );
-    m_transG->addChild(m_draggerG);
+    m_transPan->addChild(m_transTilt);
+    m_transTilt->addChild(m_lightConeGeode);
 }
 
 void Fixture3d::updateValues(QByteArray const & ua)

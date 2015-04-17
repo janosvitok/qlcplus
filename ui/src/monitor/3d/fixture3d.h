@@ -21,7 +21,7 @@ public:
 
     MonitorFixtureHead * createHead(Fixture & fixture, int head);
    
-    osg::ref_ptr<osg::Group> getFixture() { return m_transG; }
+    osg::ref_ptr<osg::Group> getFixture() { return m_root; }
     osg::ref_ptr<osg::Drawable> getDrawable() { return m_lightConeGeode->getDrawable(0); }
 
     void updateValues(QByteArray const & ua);
@@ -37,12 +37,15 @@ public:
     void setDraggerRVisibility(bool visible);
 
 private:
-    void createParCan();
+    osg::Node * createParCan();
+    void createLightBeam();
+    void createFixture();
 
 private:
     osg::ref_ptr<osg::Vec4Array> m_colors;
+    osg::ref_ptr<osg::Group> m_root;
     osg::ref_ptr<osg::Geode> m_lightConeGeode;
-//    osg::ref_ptr<osg::Group> m_fixture;
+    osg::ref_ptr<osg::Node> m_fixture;
 
     osg::ref_ptr<osg::MatrixTransform> m_transG;
     osg::ref_ptr<osg::MatrixTransform> m_transR;
