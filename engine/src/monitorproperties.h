@@ -39,6 +39,13 @@ class Doc;
 
 struct FixtureItemProperties
 {
+    FixtureItemProperties()
+        : m_position()
+        , m_rotation()
+        , m_gelColor()
+    {
+    }
+
     QPointF m_position;
     ushort m_rotation;
     QColor m_gelColor;
@@ -46,6 +53,17 @@ struct FixtureItemProperties
 
 struct Fixture3dProperties
 {
+    Fixture3dProperties()
+        : m_posX()
+        , m_posY()
+        , m_posZ()
+        , m_rotX()
+        , m_rotY()
+        , m_rotZ()
+        , m_gelColor()
+    {
+    }
+
     double m_posX;
     double m_posY;
     double m_posZ;
@@ -115,6 +133,9 @@ public:
     Fixture3dProperties fixture3dProperties(quint32 fid) const { return m_fixture3dItems[fid]; }
     void setFixture3dProperties(quint32 fid, Fixture3dProperties const & props) { m_fixture3dItems[fid] = props; }
 
+    Fixture3dProperties cameraProperties() const { return m_cameraProperties; }
+    void setCameraProperties(Fixture3dProperties const & props) { m_cameraProperties = props; }
+
     QList <quint32> fixtureItemsID() const { return m_fixtureItems.keys(); }
     QList <quint32> fixture3dID() const { return m_fixture3dItems.keys(); }
 
@@ -132,6 +153,7 @@ private:
     QHash <quint32, QString> m_customBackgroundImages;
     QHash <quint32, FixtureItemProperties> m_fixtureItems;
     QHash <quint32, Fixture3dProperties> m_fixture3dItems;
+    Fixture3dProperties m_cameraProperties;
 
     /*********************************************************************
      * Load & Save

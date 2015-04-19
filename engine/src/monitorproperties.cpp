@@ -41,6 +41,7 @@
 
 #define KXMLQLCMonitorFixtureItem "FxItem"
 #define KXMLQLCMonitorFixture3dItem "Fx3dItem"
+#define KXMLQLCMonitorCamera "Camera"
 #define KXMLQLCMonitorFixtureID "ID"
 #define KXMLQLCMonitorFixtureXPos "XPos"
 #define KXMLQLCMonitorFixtureYPos "YPos"
@@ -52,14 +53,14 @@
 #define KXMLQLCMonitorFixtureGelColor "GelColor"
 
 MonitorProperties::MonitorProperties()
+    : m_font("Arial", 12)
+    , m_displayMode(DMX)
+    , m_channelStyle(DMXChannels)
+    , m_valueStyle(DMXValues)
+    , m_gridSize(5, 5)
+    , m_gridUnits(Meters)
+    , m_showLabels(false)
 {
-    m_font = QFont("Arial", 12);
-    m_displayMode = DMX;
-    m_channelStyle = DMXChannels;
-    m_valueStyle = DMXValues;
-    m_gridSize = QSize(5, 5);
-    m_gridUnits = Meters;
-    m_showLabels = false;
 }
 
 void MonitorProperties::removeFixture(quint32 fid)
@@ -217,6 +218,27 @@ bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocumen
                 setFixture3dProperties(fid, p);
             }
         }
+        else if (tag.tagName() == KXMLQLCMonitorCamera)
+        {
+            Fixture3dProperties p = cameraProperties();
+
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureXPos))
+                p.m_posX = tag.attribute(KXMLQLCMonitorFixtureXPos).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureYPos))
+                p.m_posY = tag.attribute(KXMLQLCMonitorFixtureYPos).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureZPos))
+                p.m_posZ = tag.attribute(KXMLQLCMonitorFixtureZPos).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureXRot))
+                p.m_rotX = tag.attribute(KXMLQLCMonitorFixtureXRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureYRot))
+                p.m_rotY = tag.attribute(KXMLQLCMonitorFixtureYRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureZRot))
+                p.m_rotZ = tag.attribute(KXMLQLCMonitorFixtureZRot).toDouble();
+
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureGelColor))
+                p.m_gelColor = QColor(tag.attribute(KXMLQLCMonitorFixtureGelColor));
+            setCameraProperties(p);
+        }
 
         node = node.nextSibling();
     }
@@ -316,6 +338,18 @@ bool MonitorProperties::saveXML(QDomDocument *doc, QDomElement *wksp_root, const
             tag.setAttribute(KXMLQLCMonitorFixtureGelColor, p.m_gelColor.name());
         root.appendChild(tag);
     }
+
+    tag = doc->createElement(KXMLQLCMonitorCamera);
+    tag.setAttribute(KXMLQLCMonitorFixtureXPos, QString::number(m_cameraProperties.m_posX));
+    tag.setAttribute(KXMLQLCMonitorFixtureYPos, QString::number(m_cameraProperties.m_posY));
+    tag.setAttribute(KXMLQLCMonitorFixtureZPos, QString::number(m_cameraProperties.m_posZ));
+    tag.setAttribute(KXMLQLCMonitorFixtureXRot, QString::number(m_cameraProperties.m_rotX));
+    tag.setAttribute(KXMLQLCMonitorFixtureYRot, QString::number(m_cameraProperties.m_rotY));
+    tag.setAttribute(KXMLQLCMonitorFixtureZRot, QString::number(m_cameraProperties.m_rotZ));
+
+    if (m_cameraProperties.m_gelColor.isValid())
+        tag.setAttribute(KXMLQLCMonitorFixtureGelColor, m_cameraProperties.m_gelColor.name());
+    root.appendChild(tag);
 
     return true;
 }
