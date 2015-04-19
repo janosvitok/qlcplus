@@ -214,12 +214,16 @@ void Fixture3d::setTilt(double angle)
 
 void Fixture3d::setPosition(double posX, double posY, double posZ)
 {
-    m_transG->setMatrix( osg::Matrix::translate( osg::Vec3(posX, posY, posZ)) );
+    osg::Matrixd translation = osg::Matrix::translate(osg::Vec3(posX, posY, posZ));
+    m_draggerG->setMatrix(translation);
+    m_transG->setMatrix(translation);
 }
 
 void Fixture3d::setRotation(double rotX, double rotY, double rotZ)
 {
-    m_transR->setMatrix(osg::Matrix::rotate(rotX, osg::X_AXIS, rotY, osg::Y_AXIS, rotZ, osg::Z_AXIS));
+    osg::Matrixd rotation = osg::Matrix::rotate(rotX, osg::X_AXIS, rotY, osg::Y_AXIS, rotZ, osg::Z_AXIS);
+    m_draggerR->setMatrix(rotation);
+    m_transR->setMatrix(rotation);
 }
 
 void Fixture3d::setDraggerGVisibility(bool visible)
