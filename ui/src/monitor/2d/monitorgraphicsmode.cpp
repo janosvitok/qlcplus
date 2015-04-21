@@ -233,7 +233,7 @@ void MonitorGraphicsMode::initUi()
     connect(m_graphicsView, SIGNAL(fixtureMoved(quint32,QPointF)),
             this, SLOT(slotFixtureMoved(quint32,QPointF)));
     connect(m_graphicsView, SIGNAL(viewClicked(QMouseEvent*)),
-            this, SLOT(slotViewCliked()));
+            this, SLOT(slotViewClicked()));
 
     // add container for chaser editor
     QWidget* econtainer = new QWidget(monitor());
@@ -257,7 +257,7 @@ void MonitorGraphicsMode::destroyUi()
         disconnect(m_graphicsView, SIGNAL(fixtureMoved(quint32,QPointF)),
             this, SLOT(slotFixtureMoved(quint32,QPointF)));
         disconnect(m_graphicsView, SIGNAL(viewClicked(QMouseEvent*)),
-            this, SLOT(slotViewCliked()));
+            this, SLOT(slotViewClicked()));
 
         m_graphicsView->deleteLater();
         m_graphicsView = NULL;
@@ -402,7 +402,7 @@ void MonitorGraphicsMode::slotFixtureMoved(quint32 fid, QPointF pos)
     doc()->setModified();
 }
 
-void MonitorGraphicsMode::slotViewCliked()
+void MonitorGraphicsMode::slotViewClicked()
 {
     hideFixtureItemEditor();
 }
