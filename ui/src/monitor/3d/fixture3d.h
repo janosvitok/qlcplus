@@ -31,7 +31,10 @@ public:
     void setPan(double angle);
     void setTilt(double angle);
     void setPosition(double posX, double posY, double posZ);
-    void setRotation(double rotX, double rotY, double rotZ);
+    void setRotation(double rotX, double rotY, double rotZ, double rotW);
+
+    void getPosition(double & posX, double & posY, double & posZ);
+    void getRotation(double & rotX, double & rotY, double & rotZ, double & rotW);
 
     void setDraggerGVisibility(bool visible);
     void setDraggerRVisibility(bool visible);

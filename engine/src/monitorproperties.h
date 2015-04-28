@@ -71,6 +71,7 @@ struct Fixture3dProperties
     double m_rotX;
     double m_rotY;
     double m_rotZ;
+    double m_rotW;
 
     QColor m_gelColor;
 };

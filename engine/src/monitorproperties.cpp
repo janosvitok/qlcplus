@@ -49,6 +49,7 @@
 #define KXMLQLCMonitorFixtureXRot "XRot"
 #define KXMLQLCMonitorFixtureYRot "YRot"
 #define KXMLQLCMonitorFixtureZRot "ZRot"
+#define KXMLQLCMonitorFixtureWRot "WRot"
 #define KXMLQLCMonitorFixtureRotation "Rotation"
 #define KXMLQLCMonitorFixtureGelColor "GelColor"
 
@@ -212,6 +213,8 @@ bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocumen
                     p.m_rotY = tag.attribute(KXMLQLCMonitorFixtureYRot).toDouble();
                 if (tag.hasAttribute(KXMLQLCMonitorFixtureZRot))
                     p.m_rotZ = tag.attribute(KXMLQLCMonitorFixtureZRot).toDouble();
+                if (tag.hasAttribute(KXMLQLCMonitorFixtureWRot))
+                    p.m_rotW = tag.attribute(KXMLQLCMonitorFixtureWRot).toDouble();
 
                 if (tag.hasAttribute(KXMLQLCMonitorFixtureGelColor))
                     p.m_gelColor = QColor(tag.attribute(KXMLQLCMonitorFixtureGelColor));
@@ -234,6 +237,8 @@ bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocumen
                 p.m_rotY = tag.attribute(KXMLQLCMonitorFixtureYRot).toDouble();
             if (tag.hasAttribute(KXMLQLCMonitorFixtureZRot))
                 p.m_rotZ = tag.attribute(KXMLQLCMonitorFixtureZRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureWRot))
+                p.m_rotW = tag.attribute(KXMLQLCMonitorFixtureWRot).toDouble();
 
             if (tag.hasAttribute(KXMLQLCMonitorFixtureGelColor))
                 p.m_gelColor = QColor(tag.attribute(KXMLQLCMonitorFixtureGelColor));
@@ -333,6 +338,7 @@ bool MonitorProperties::saveXML(QDomDocument *doc, QDomElement *wksp_root, const
         tag.setAttribute(KXMLQLCMonitorFixtureXRot, QString::number(p.m_rotX));
         tag.setAttribute(KXMLQLCMonitorFixtureYRot, QString::number(p.m_rotY));
         tag.setAttribute(KXMLQLCMonitorFixtureZRot, QString::number(p.m_rotZ));
+        tag.setAttribute(KXMLQLCMonitorFixtureWRot, QString::number(p.m_rotW));
 
         if (p.m_gelColor.isValid())
             tag.setAttribute(KXMLQLCMonitorFixtureGelColor, p.m_gelColor.name());
@@ -346,6 +352,7 @@ bool MonitorProperties::saveXML(QDomDocument *doc, QDomElement *wksp_root, const
     tag.setAttribute(KXMLQLCMonitorFixtureXRot, QString::number(m_cameraProperties.m_rotX));
     tag.setAttribute(KXMLQLCMonitorFixtureYRot, QString::number(m_cameraProperties.m_rotY));
     tag.setAttribute(KXMLQLCMonitorFixtureZRot, QString::number(m_cameraProperties.m_rotZ));
+    tag.setAttribute(KXMLQLCMonitorFixtureWRot, QString::number(m_cameraProperties.m_rotW));
 
     if (m_cameraProperties.m_gelColor.isValid())
         tag.setAttribute(KXMLQLCMonitorFixtureGelColor, m_cameraProperties.m_gelColor.name());

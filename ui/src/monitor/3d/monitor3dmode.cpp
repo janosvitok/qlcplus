@@ -99,6 +99,18 @@ void Monitor3dMode::disconnectSignals()
 
 void Monitor3dMode::saveSettings()
 {
+    if (m_scene != NULL)
+    {
+	foreach(quint32 fid, m_scene->fixtureIds())
+        {
+            Fixture3dProperties p = props()->fixture3dProperties(fid);
+            Fixture3d * fixture = m_scene->getFixture(fid);
+            fixture->getPosition(p.m_posX, p.m_posY, p.m_posZ);
+            fixture->getRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+            props()->setFixture3dProperties(fid, p);
+        }
+    }
+ 
     if (m_splitter != NULL)
     {
         QSettings settings;
@@ -203,7 +215,7 @@ void Monitor3dMode::initUi()
         m_scene->addFixture(doc(), fid);
         Fixture3d * fixture = m_scene->getFixture(fid);
         fixture->setPosition(p.m_posX, p.m_posY, p.m_posZ);
-        fixture->setRotation(p.m_rotX, p.m_rotY, p.m_rotZ);
+        fixture->setRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
     }
 
     setMonitorUniverse(Universe::invalid());
@@ -211,6 +223,8 @@ void Monitor3dMode::initUi()
 
 void Monitor3dMode::destroyUi()
 {
+    saveSettings();
+
     if (m_fixtureItemEditor != NULL)
     {
         m_splitter->widget(1)->layout()->removeWidget(m_fixtureItemEditor);
@@ -223,7 +237,6 @@ void Monitor3dMode::destroyUi()
 
     if (m_splitter != NULL)
     {
-        saveSettings();
         m_splitter->deleteLater();
         m_splitter = NULL;
     }
@@ -240,7 +253,8 @@ void Monitor3dMode::slotFixtureChanged(quint32 fxi_id)
 
 void Monitor3dMode::slotFixtureRemoved(quint32 fxi_id)
 {
-    Q_UNUSED(fxi_id);
+    props()->removeFixture3d(fxi_id);
+    m_scene->removeFixture(fxi_id);
 }
 
 void Monitor3dMode::slotUniversesWritten(int index, const QByteArray& ua)

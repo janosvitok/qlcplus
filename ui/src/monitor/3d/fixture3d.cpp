@@ -136,9 +136,9 @@ void Fixture3d::createFixture()
     m_transTilt->addChild(m_lightConeGeode);
 
     m_draggerG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
-    m_draggerR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));
+    m_draggerR->setMatrix(osg::Matrix::rotate(0, osg::Vec3d(-1, 0, 0)));
     m_transG->setMatrix(osg::Matrix::translate(osg::Vec3(0.0f, 8.0f, 7.0f)));
-    m_transR->setMatrix(osg::Matrix::rotate( osg::PI / 8, osg::Vec3d(-1, 0, 0)));
+    m_transR->setMatrix(osg::Matrix::rotate(0, osg::Vec3d(-1, 0, 0)));
 
 }
 
@@ -219,11 +219,31 @@ void Fixture3d::setPosition(double posX, double posY, double posZ)
     m_transG->setMatrix(translation);
 }
 
-void Fixture3d::setRotation(double rotX, double rotY, double rotZ)
+void Fixture3d::setRotation(double rotX, double rotY, double rotZ, double rotW)
 {
-    osg::Matrixd rotation = osg::Matrix::rotate(rotX, osg::X_AXIS, rotY, osg::Y_AXIS, rotZ, osg::Z_AXIS);
+    osg::Quat q(rotX, rotY, rotZ, rotW);
+    osg::Matrixd rotation = osg::Matrix::rotate(q);
     m_draggerR->setMatrix(rotation);
     m_transR->setMatrix(rotation);
+}
+
+void Fixture3d::getPosition(double & posX, double & posY, double & posZ)
+{
+    osg::Vec3d trans = m_transG->getMatrix().getTrans();
+    
+    posX = trans.x();
+    posY = trans.y();
+    posZ = trans.z();
+}
+
+void Fixture3d::getRotation(double & rotX, double & rotY, double & rotZ, double & rotW)
+{
+    osg::Quat rot = m_transR->getMatrix().getRotate();
+
+    rotX = rot.x();
+    rotY = rot.y();
+    rotZ = rot.z();
+    rotW = rot.w();
 }
 
 void Fixture3d::setDraggerGVisibility(bool visible)

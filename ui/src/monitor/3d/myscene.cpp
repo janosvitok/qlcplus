@@ -195,6 +195,15 @@ void MyScene::addFixture(Doc * doc, quint32 fid)
     _root->addChild( fixture->getFixture() );
 }
 
+void MyScene::removeFixture(quint32 fid)
+{
+    Fixture3d * fixture = m_fixtures[fid];
+    if (fixture == NULL)
+        return;
+    _root->removeChild(fixture->getFixture());
+    m_fixtures.remove(fid);
+}
+
 void MyScene::setFixturesChanges()
 {
     QByteArray ua;

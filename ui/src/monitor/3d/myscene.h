@@ -11,7 +11,6 @@
 
 #include "fixture3d.h"
 
-
 class MyScene : public QObject
 {
     Q_OBJECT;
@@ -21,6 +20,7 @@ public:
      
     osg::ref_ptr<osg::Group> getRoot() { return _root; }
     Fixture3d * getFixture(quint32 fid) { return m_fixtures[fid]; }
+    QList<quint32> fixtureIds() const { return m_fixtures.keys(); }
 
 //    void doUserOperation(osg::Drawable *shape); //raz, ked bude hmatatelny priestor
 
@@ -31,6 +31,7 @@ public:
     void setToBeMovable(osg::Drawable *shape);
     void setToBeRotatable(osg::Drawable *shape);
     void addFixture(Doc * doc, quint32 fid);
+    void removeFixture(quint32 fid);
 
 private:
     osg::ref_ptr<osg::Group> _root;
