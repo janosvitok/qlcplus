@@ -37,3 +37,32 @@ void OsgViewerWidget::paintEvent(QPaintEvent*)
 {
     m_viewer.frame();
 }
+
+void OsgViewerWidget::setCameraPosition(double posX, double posY, double posZ)
+{
+    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(posX, posY, posZ));
+}
+
+void OsgViewerWidget::setCameraRotation(double rotX, double rotY, double rotZ, double rotW)
+{
+    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setRotation(osg::Quat(rotX, rotY, rotZ, rotW));
+}
+
+void OsgViewerWidget::getCameraPosition(double & posX, double & posY, double & posZ)
+{
+    osg::Vec3d const & trans = static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->getCenter();
+
+    posX = trans.x();
+    posY = trans.y();
+    posZ = trans.z();
+}
+
+void OsgViewerWidget::getCameraRotation(double & rotX, double & rotY, double & rotZ, double & rotW)
+{
+    osg::Quat const & rot = static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->getRotation();
+
+    rotX = rot.x();
+    rotY = rot.y();
+    rotZ = rot.z();
+    rotW = rot.w();
+}

@@ -34,6 +34,7 @@ class Doc;
 class Fixture;
 
 class MyScene;
+class OsgViewerWidget;
 
 /** \addtogroup ui_mon_3d 3D View
  * @{
@@ -106,7 +107,7 @@ protected:
     QComboBox *m_unitsCombo;
     QAction *m_labelsAction;
 
-    osgViewer::Viewer m_viewer;
+    OsgViewerWidget * m_osgWidget;
     MyScene *m_scene;
 };
 

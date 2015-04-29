@@ -57,6 +57,7 @@
 
 Monitor3dMode::Monitor3dMode(QWidget* monitor, Doc* doc)
     : MonitorMode(monitor, doc)
+    , m_osgWidget(NULL)
 {
 }
 
@@ -99,6 +100,14 @@ void Monitor3dMode::disconnectSignals()
 
 void Monitor3dMode::saveSettings()
 {
+    if (m_osgWidget != NULL)
+    {
+        Fixture3dProperties p = props()->cameraProperties();
+        m_osgWidget->getCameraPosition(p.m_posX, p.m_posY, p.m_posZ);
+        m_osgWidget->getCameraRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+        props()->setCameraProperties(p);
+    }
+
     if (m_scene != NULL)
     {
 	foreach(quint32 fid, m_scene->fixtureIds())
@@ -189,8 +198,8 @@ void Monitor3dMode::initUi()
     t->doubleBuffer = true;
 
     osgQt::GraphicsWindowQt* gw = new osgQt::GraphicsWindowQt(t.get(), m_splitter->widget(0));
-    OsgViewerWidget * osgWidget = new OsgViewerWidget(m_splitter->widget(0), gw, m_scene);
-    m_splitter->widget(0)->layout()->addWidget(osgWidget);
+    m_osgWidget = new OsgViewerWidget(m_splitter->widget(0), gw, m_scene);
+    m_splitter->widget(0)->layout()->addWidget(m_osgWidget);
 
     // add container for chaser editor
     QWidget* econtainer = new QWidget(monitor());
@@ -208,6 +217,12 @@ void Monitor3dMode::initUi()
     QVariant var2 = settings.value(SETTINGS_3D_VSPLITTER);
     if (var2.isValid() == true)
         m_splitter->restoreState(var2.toByteArray());
+
+    {
+        Fixture3dProperties p = props()->cameraProperties();
+        m_osgWidget->setCameraPosition(p.m_posX, p.m_posY, p.m_posZ);
+        m_osgWidget->setCameraRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+    }
 
     foreach(quint32 fid, props()->fixture3dID())
     {
@@ -229,7 +244,6 @@ void Monitor3dMode::destroyUi()
     {
         m_splitter->widget(1)->layout()->removeWidget(m_fixtureItemEditor);
         m_splitter->widget(1)->hide();
-        //m_fixtureItemEditor->deleteLater();
         m_fixtureItemEditor = NULL;
     }
 

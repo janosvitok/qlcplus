@@ -15,6 +15,12 @@ class OsgViewerWidget : public QWidget
 public:
     OsgViewerWidget(QWidget *parent, osgQt::GraphicsWindowQt* gw, MyScene *scene);
 
+    void setCameraPosition(double posX, double posY, double posZ);
+    void setCameraRotation(double rotX, double rotY, double rotZ, double rotW);
+
+    void getCameraPosition(double & posX, double & posY, double & posZ);
+    void getCameraRotation(double & rotX, double & rotY, double & rotZ, double & rotW);
+
 signals:
 
 public slots:
