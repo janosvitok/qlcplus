@@ -26,7 +26,7 @@ INCLUDEPATH     += ../../webaccess
 
 # monitor3d - osg
 INCLUDEPATH += . /usr/include
-LIBS += -Lusr/lib -losg -losgViewer -lOpenThreads -losgUtil -losgDB -losgGA -losgQt -losgManipulator
+LIBS += -Lusr/lib -losg -losgViewer -lOpenThreads -losgUtil -losgDB -losgGA -losgQt -losgManipulator -losgShadow
 QT       += opengl
 
 # Resources

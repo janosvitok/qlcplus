@@ -8,7 +8,7 @@
 #include <qlist.h>
 #include <qmutex.h>
 #include <qbytearray.h>
-
+#include <osgShadow/ShadowedScene>
 #include "fixture3d.h"
 
 class OsgScene : public QObject
@@ -34,7 +34,7 @@ public:
     void removeFixture(quint32 fid);
 
 private:
-    osg::ref_ptr<osg::Group> _root;
+    osg::ref_ptr<osgShadow::ShadowedScene> _root;
     QHash<quint32, Fixture3d*> m_fixtures;
     float _stageWidth;
     float _stageHeight;

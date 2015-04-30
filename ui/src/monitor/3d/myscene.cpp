@@ -3,6 +3,8 @@
 #include "qlcfile.h"
 #include "qlcconfig.h"
 
+#include <osgShadow/ShadowMap>
+
 class FixturesCallback : public osg::NodeCallback
 {
 public:
@@ -21,7 +23,7 @@ private:
 OsgScene::OsgScene()
     : _changed(false)
 {
-    _root = new osg::Group;
+    _root = new osgShadow::ShadowedScene;
 
 ////floor creation
     float radius = 20.0f;
@@ -53,7 +55,6 @@ OsgScene::OsgScene()
     floorGeometry->setColorArray(colors);
     floorGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
 
-    _root->addChild( floorGeode );
 ////end of floor creation
 
 //////stage creation
@@ -62,80 +63,39 @@ OsgScene::OsgScene()
                                  +QDir::separator()+"stage.osgt").toLatin1().constData());
 
     _stageWidth = stage->getBound().radius();
-//    _stageDepth = 20.0;
-//    _stageHeight = 1.0;
+    //////end of stage creation
 
-//    osg::ref_ptr<osg::Geometry> stageGeometry = new osg::Geometry();
-//    stage->addDrawable( stageGeometry );
-
-//    osg::ref_ptr<osg::Vec3Array> stageVertices = new osg::Vec3Array();
-//    stageVertices->push_back( osg::Vec3( -0.5 * _stageWidth, 0, 0 ) );
-//    stageVertices->push_back( osg::Vec3(  0.5 * _stageWidth, 0, 0 ) );
-//    stageVertices->push_back( osg::Vec3(  0.5 * _stageWidth, _stageDepth, 0 ) );
-//    stageVertices->push_back( osg::Vec3( -0.5 * _stageWidth, _stageDepth, 0 ) );
-//    stageVertices->push_back( osg::Vec3( -0.5 * _stageWidth, 0, _stageHeight ) );
-//    stageVertices->push_back( osg::Vec3(  0.5 * _stageWidth, 0, _stageHeight ) );
-//    stageVertices->push_back( osg::Vec3(  0.5 * _stageWidth, _stageDepth, _stageHeight ) );
-//    stageVertices->push_back( osg::Vec3( -0.5 * _stageWidth, _stageDepth, _stageHeight ) );
-//    stageGeometry->setVertexArray( stageVertices );
-
-//    osg::ref_ptr<osg::DrawElementsUInt> frontFace =
-//            new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS);
-//    frontFace->push_back( 0 );
-//    frontFace->push_back( 1 );
-//    frontFace->push_back( 5 );
-//    frontFace->push_back( 4 );
-//    stageGeometry->addPrimitiveSet( frontFace );
-
-//    osg::ref_ptr<osg::DrawElementsUInt> rightFace =
-//            new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS);
-//    rightFace->push_back( 1 );
-//    rightFace->push_back( 2 );
-//    rightFace->push_back( 6 );
-//    rightFace->push_back( 5 );
-//    stageGeometry->addPrimitiveSet( rightFace );
-
-//    osg::ref_ptr<osg::DrawElementsUInt> leftFace =
-//            new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS);
-//    leftFace->push_back( 0 );
-//    leftFace->push_back( 4 );
-//    leftFace->push_back( 7 );
-//    leftFace->push_back( 3 );
-//    stageGeometry->addPrimitiveSet( leftFace );
-
-//    osg::ref_ptr<osg::DrawElementsUInt> backFace =
-//            new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS);
-//    backFace->push_back( 2 );
-//    backFace->push_back( 3 );
-//    backFace->push_back( 7 );
-//    backFace->push_back( 6 );
-//    stageGeometry->addPrimitiveSet( backFace );
-
-//    osg::ref_ptr<osg::DrawElementsUInt> topFace =
-//            new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS);
-//    topFace->push_back( 4 );
-//    topFace->push_back( 5 );
-//    topFace->push_back( 6 );
-//    topFace->push_back( 7 );
-//    stageGeometry->addPrimitiveSet( topFace );
-
+    _root->addChild( floorGeode );
     _root->addChild( stage );
 
-//////end of stage creation
+    //initializing shadows, lights maybe
 
-//    int numberOfFixtures = 15;
-//    float space = _stageWidth / (float)(numberOfFixtures + 1);
-//    float posX = _stageWidth * -0.5f;
-//    for( int i = 0; i < numberOfFixtures; ++i){
-//    _fixtures3d.append(Fixture3d());
-//        osg::ref_ptr<osg::MatrixTransform> trans = new osg::MatrixTransform;
-//        posX += space;
-//        trans->setMatrix( osg::Matrix::rotate(osg::PI / 4, osg::Vec3d(-1, 0,  0)) * osg::Matrix::translate( osg::Vec3(posX, 20.0f, 7.0f)) );
-//        trans->addChild( _fixtures3d.last().getFixture() );
-//        _root->addChild( trans );
-//        _fixtures3d.last().changeColor(osg::Vec3((float)(i+ 1)/(float)numberOfFixtures, 1.0f, 0.0f));
-//        _fixtures3d.last().changeOpacity(0.6f);
-//    }
+    const int ReceivesShadowTraversalMask = 0x1;
+    const int CastsShadowTraversalMask = 0x2;
+
+
+    _root->setReceivesShadowTraversalMask(ReceivesShadowTraversalMask);
+    _root->setCastsShadowTraversalMask(CastsShadowTraversalMask);
+
+    osg::ref_ptr<osgShadow::ShadowMap> sm = new osgShadow::ShadowMap;
+    _root->setShadowTechnique(sm.get());
+
+    int mapres = 1024;
+    sm->setTextureSize(osg::Vec2s(mapres,mapres));
+
+    stage->setNodeMask(CastsShadowTraversalMask);
+    floorGeode->setNodeMask(ReceivesShadowTraversalMask);
+
+    //skuska svetla
+    osg::ref_ptr<osg::LightSource> ls = new osg::LightSource;
+    ls->getLight()->setPosition(osg::Vec4(0, 8.0f, 7.0f, 0));
+    osg::Vec3 lightdir = osg::Vec3(0, -8.0f, -7.0f);
+    lightdir.normalize();
+    ls->getLight()->setDirection(lightdir);
+    ls->getLight()->setSpotCutoff(25.0f);
+    _root->addChild(ls.get());
+    sm->setLight(ls.get());
+    //koniec skusky svetla
 
     _root->setUpdateCallback(new FixturesCallback(this) );
 }

@@ -104,7 +104,7 @@ void Fixture3d::createLightBeam()
     m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) ); //index 0 white
     for (int i = 0; i < faces; ++i)
     {
-        m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 0.1f) ); //index i off
+        m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 0.0f) ); //index i off
     }
 
     pyramidGeometry->setColorArray(m_colors);
