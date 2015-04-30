@@ -58,6 +58,14 @@ void Fixture3d::createMovingHead()
 
 }
 
+//void Fixture3d::createLedBar()
+//{
+//    osg::Node * bar = osgDB::readNodeFile(
+//        (QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "ledBar.osgt").toLatin1().constData());
+
+    //sirka ledBar je 965 mm. hlavy treba posuvat z = 0.01, x o 0.12 + rozpocitat zvysnych 5mm. Mozno je opacne pomer sirka/vyska
+//}
+
 void Fixture3d::createLightBeam()
 {
     m_lightConeGeode = new osg::Geode();
@@ -114,6 +122,65 @@ void Fixture3d::createLightBeam()
     cull->setMode(osg::CullFace::FRONT);
     stateset->setAttributeAndModes(cull, osg::StateAttribute::ON);
 }
+
+//void Fixture3d::createLightSqare( int head)
+//{
+//    m_lightConeGeode = new osg::Geode();
+//    osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry();
+//    m_lightConeGeode->addDrawable(pyramidGeometry);
+//    pyramidGeometry->setDataVariance(osg::Object::DYNAMIC);
+//    pyramidGeometry->setUseDisplayList(false);
+
+//    osg::ref_ptr<osg::Vec3Array> pyramidVertices = new osg::Vec3Array();
+//    pyramidVertices->push_back(osg::Vec3(0, 0, 0)); // peak
+//    int faces = 4;
+//    float width = 0.03; //http://www.fas.harvard.edu/~loebinfo/loebinfo/lighting/lighting.html#PAR MFL transformed to metrics
+//    float height = 0.12;
+//    float lenght = -0.001;
+//    double partOfCircle = osg::PI * 2.0 / (double)faces ;
+//    double position = 0.0;
+//    for (int i = 0; i < faces; ++i)
+//    {
+//        pyramidVertices->push_back(osg::Vec3(sin(position) * width, cos(position) * height, (lenght))); // points at base
+//        position += partOfCircle;
+//    }
+//    pyramidGeometry->setVertexArray(pyramidVertices);
+
+//    //cone faces creation
+//    osg::ref_ptr<osg::DrawElementsUInt> pyramidFace =
+//        new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLE_FAN, 0);
+//    pyramidFace->push_back(0);
+//    for (int i = 1; i <= faces; ++i)
+//    {
+//        pyramidFace->push_back(i);
+//    }
+//    pyramidFace->push_back(1);
+//    pyramidGeometry->addPrimitiveSet(pyramidFace);
+
+//    m_colors = new osg::Vec4Array();
+//    m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) ); //index 0 white
+//    for (int i = 0; i < faces; ++i)
+//    {
+//        m_colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 0.9f) ); //index i off
+//    }
+
+//    pyramidGeometry->setColorArray(m_colors);
+//    pyramidGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+
+//    osg::StateSet* stateset = m_lightConeGeode->getOrCreateStateSet();
+//    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+//    stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+
+//    osg::ref_ptr<osg::BlendFunc> blendFunc = new osg::BlendFunc;
+//    blendFunc->setFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    stateset->setAttributeAndModes(blendFunc);
+
+//    osg::CullFace* cull = new osg::CullFace();
+//    cull->setMode(osg::CullFace::FRONT);
+//    stateset->setAttributeAndModes(cull, osg::StateAttribute::ON);
+//}
+
+
 
 void Fixture3d::createFixture()
 {

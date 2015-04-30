@@ -10,6 +10,7 @@ models.files += moving-head.osgt
 models.files += moving_fixture-head.osgt
 models.files += moving_fixture-yoke.osgt
 models.files += moving_fixture-base.osgt
+models.files += ledBar.osgt
 
 models.path = $$INSTALLROOT/$$MODELSDIR
 INSTALLS += models

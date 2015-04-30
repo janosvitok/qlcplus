@@ -42,7 +42,9 @@ public:
 private:
     void createParCan();
     void createMovingHead();
+//    void createLedBar();
     void createLightBeam();
+//    void createLightSqare(int Head);
     void createFixture();
 
 private:
@@ -54,6 +56,7 @@ private:
     osg::ref_ptr<osg::MatrixTransform> m_transR;
     osg::ref_ptr<osg::MatrixTransform> m_transPan;
     osg::ref_ptr<osg::MatrixTransform> m_transTilt;
+    osg::ref_ptr<osg::MatrixTransform> m_transHead;
 
     osg::ref_ptr<osgManipulator::TranslateAxisDragger> m_draggerG;
     osg::ref_ptr<osgManipulator::TrackballDragger> m_draggerR;
