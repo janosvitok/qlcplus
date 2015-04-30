@@ -40,8 +40,8 @@ public:
     void setDraggerRVisibility(bool visible);
 
 private:
-    osg::Node * createParCan();
-    osg::Node * createMovingHead();
+    void createParCan();
+    void createMovingHead();
     void createLightBeam();
     void createFixture();
 
@@ -49,7 +49,6 @@ private:
     osg::ref_ptr<osg::Vec4Array> m_colors;
     osg::ref_ptr<osg::Group> m_root;
     osg::ref_ptr<osg::Geode> m_lightConeGeode;
-    osg::ref_ptr<osg::Node> m_fixture;
 
     osg::ref_ptr<osg::MatrixTransform> m_transG;
     osg::ref_ptr<osg::MatrixTransform> m_transR;
