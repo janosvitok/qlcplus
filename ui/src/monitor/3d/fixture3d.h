@@ -41,6 +41,7 @@ public:
 
 private:
     osg::Node * createParCan();
+    osg::Node * createMovingHead();
     void createLightBeam();
     void createFixture();
 

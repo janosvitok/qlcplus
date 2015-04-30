@@ -29,6 +29,12 @@ osg::Node * Fixture3d::createParCan()
         (QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "PAR64.osgt").toLatin1().constData());
 }
 
+osg::Node * Fixture3d::createMovingHead()
+{
+    return osgDB::readNodeFile(
+        (QLCFile::systemDirectory(MODELSDIR).path() + QDir::separator() + "moving-head.osgt").toLatin1().constData());
+}
+
 void Fixture3d::createLightBeam()
 {
     m_lightConeGeode = new osg::Geode();
@@ -47,7 +53,7 @@ void Fixture3d::createLightBeam()
     double position = 0.0;
     for (int i = 0; i < faces; ++i)
     {
-        pyramidVertices->push_back(osg::Vec3(sin(position) * width, cos(position) * height, -(lenght))); // points at base
+        pyramidVertices->push_back(osg::Vec3(sin(position) * width, cos(position) * height, (lenght))); // points at base
         position += partOfCircle;
     }
     pyramidGeometry->setVertexArray(pyramidVertices);
@@ -88,7 +94,8 @@ void Fixture3d::createLightBeam()
 
 void Fixture3d::createFixture()
 {
-    m_fixture = createParCan();
+//    m_fixture = createParCan();
+    m_fixture = createMovingHead();
     createLightBeam();
     m_root = new osg::Group();
 

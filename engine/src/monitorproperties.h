@@ -60,6 +60,7 @@ struct Fixture3dProperties
         , m_rotX()
         , m_rotY()
         , m_rotZ()
+        , m_rotW(1)
         , m_gelColor()
     {
     }
