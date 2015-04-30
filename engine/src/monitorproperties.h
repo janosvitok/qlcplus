@@ -77,6 +77,34 @@ struct Fixture3dProperties
     QColor m_gelColor;
 };
 
+struct Camera3dProperties
+{
+    Camera3dProperties()
+        : m_eyeX(1000.0f)
+        , m_eyeY(1000.0f)
+        , m_eyeZ()
+        , m_centerX()
+        , m_centerY()
+        , m_centerZ()
+        , m_upX()
+        , m_upY()
+        , m_upZ(0.0f)
+    {
+    }
+
+    float m_eyeX;
+    float m_eyeY;
+    float m_eyeZ;
+
+    float m_centerX;
+    float m_centerY;
+    float m_centerZ;
+
+    float m_upX;
+    float m_upY;
+    float m_upZ;
+};
+
 class MonitorProperties
 {
 public:
@@ -135,8 +163,8 @@ public:
     Fixture3dProperties fixture3dProperties(quint32 fid) const { return m_fixture3dItems[fid]; }
     void setFixture3dProperties(quint32 fid, Fixture3dProperties const & props) { m_fixture3dItems[fid] = props; }
 
-    Fixture3dProperties cameraProperties() const { return m_cameraProperties; }
-    void setCameraProperties(Fixture3dProperties const & props) { m_cameraProperties = props; }
+    Camera3dProperties cameraProperties() const { return m_cameraProperties; }
+    void setCameraProperties(Camera3dProperties const & props) { m_cameraProperties = props; }
 
     QList <quint32> fixtureItemsID() const { return m_fixtureItems.keys(); }
     QList <quint32> fixture3dID() const { return m_fixture3dItems.keys(); }
@@ -155,7 +183,7 @@ private:
     QHash <quint32, QString> m_customBackgroundImages;
     QHash <quint32, FixtureItemProperties> m_fixtureItems;
     QHash <quint32, Fixture3dProperties> m_fixture3dItems;
-    Fixture3dProperties m_cameraProperties;
+    Camera3dProperties m_cameraProperties;
 
     /*********************************************************************
      * Load & Save

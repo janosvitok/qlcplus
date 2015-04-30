@@ -38,12 +38,30 @@ void OsgViewerWidget::paintEvent(QPaintEvent*)
     m_viewer.frame();
 }
 
-void OsgViewerWidget::setCameraPosition(double posX, double posY, double posZ)
+void OsgViewerWidget::setCameraPosition(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
 {
-    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(posX, posY, posZ));
+//    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(eyeX, eyeY, eyeZ));
+//    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(centerX, centerY, centerZ));
+//    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(upX, upY, upZ));
+
+    osg::Vec3f eye( eyeX, eyeY, eyeZ );
+    osg::Vec3f center( centerX, centerY, centerZ );
+    osg::Vec3f up( upX, upY, upZ );
+
+    m_viewer.getCamera()->setViewMatrixAsLookAt( eye, center, up );
 }
 
-void OsgViewerWidget::setCameraRotation(double rotX, double rotY, double rotZ, double rotW)
+void OsgViewerWidget::getCameraPosition(float &eyeX, float &eyeY, float &eyeZ, float &centerX, float &centerY, float &centerZ, float &upX, float &upY, float &upZ)
+{
+    osg::Vec3f eye( eyeX, eyeY, eyeZ );
+    osg::Vec3f center( centerX, centerY, centerZ );
+    osg::Vec3f up( upX, upY, upZ );
+
+    m_viewer.getCamera()->getViewMatrixAsLookAt( eye, center, up );
+
+}
+
+/*void OsgViewerWidget::setCameraRotation(double rotX, double rotY, double rotZ, double rotW)
 {
     static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setRotation(osg::Quat(rotX, rotY, rotZ, rotW));
 }
@@ -65,4 +83,4 @@ void OsgViewerWidget::getCameraRotation(double & rotX, double & rotY, double & r
     rotY = rot.y();
     rotZ = rot.z();
     rotW = rot.w();
-}
+}*/

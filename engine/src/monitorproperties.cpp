@@ -42,6 +42,15 @@
 #define KXMLQLCMonitorFixtureItem "FxItem"
 #define KXMLQLCMonitorFixture3dItem "Fx3dItem"
 #define KXMLQLCMonitorCamera "Camera"
+#define KXMLQLCMonitorCameraXEye "XEye"
+#define KXMLQLCMonitorCameraYEye "YEye"
+#define KXMLQLCMonitorCameraZEye "ZEye"
+#define KXMLQLCMonitorCameraXCenter "XCenter"
+#define KXMLQLCMonitorCameraYCenter "YCenter"
+#define KXMLQLCMonitorCameraZCenter "ZCenter"
+#define KXMLQLCMonitorCameraXUp "XUp"
+#define KXMLQLCMonitorCameraYUp "YUp"
+#define KXMLQLCMonitorCameraZUp "ZUp"
 #define KXMLQLCMonitorFixtureID "ID"
 #define KXMLQLCMonitorFixtureXPos "XPos"
 #define KXMLQLCMonitorFixtureYPos "YPos"
@@ -223,25 +232,28 @@ bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocumen
         }
         else if (tag.tagName() == KXMLQLCMonitorCamera)
         {
-            Fixture3dProperties p = cameraProperties();
+            Camera3dProperties p = cameraProperties();
 
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureXPos))
-                p.m_posX = tag.attribute(KXMLQLCMonitorFixtureXPos).toDouble();
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureYPos))
-                p.m_posY = tag.attribute(KXMLQLCMonitorFixtureYPos).toDouble();
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureZPos))
-                p.m_posZ = tag.attribute(KXMLQLCMonitorFixtureZPos).toDouble();
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureXRot))
-                p.m_rotX = tag.attribute(KXMLQLCMonitorFixtureXRot).toDouble();
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureYRot))
-                p.m_rotY = tag.attribute(KXMLQLCMonitorFixtureYRot).toDouble();
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureZRot))
-                p.m_rotZ = tag.attribute(KXMLQLCMonitorFixtureZRot).toDouble();
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureWRot))
-                p.m_rotW = tag.attribute(KXMLQLCMonitorFixtureWRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraXEye))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraXEye).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraYEye))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraYEye).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraZEye))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraZEye).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraXCenter))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraXCenter).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraYCenter))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraYCenter).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraZCenter))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraZCenter).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraXUp))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraXUp).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraYUp))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraYUp).toFloat();
+            if (tag.hasAttribute(KXMLQLCMonitorCameraZUp))
+                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraZUp).toFloat();
 
-            if (tag.hasAttribute(KXMLQLCMonitorFixtureGelColor))
-                p.m_gelColor = QColor(tag.attribute(KXMLQLCMonitorFixtureGelColor));
+
             setCameraProperties(p);
         }
 
@@ -346,16 +358,16 @@ bool MonitorProperties::saveXML(QDomDocument *doc, QDomElement *wksp_root, const
     }
 
     tag = doc->createElement(KXMLQLCMonitorCamera);
-    tag.setAttribute(KXMLQLCMonitorFixtureXPos, QString::number(m_cameraProperties.m_posX));
-    tag.setAttribute(KXMLQLCMonitorFixtureYPos, QString::number(m_cameraProperties.m_posY));
-    tag.setAttribute(KXMLQLCMonitorFixtureZPos, QString::number(m_cameraProperties.m_posZ));
-    tag.setAttribute(KXMLQLCMonitorFixtureXRot, QString::number(m_cameraProperties.m_rotX));
-    tag.setAttribute(KXMLQLCMonitorFixtureYRot, QString::number(m_cameraProperties.m_rotY));
-    tag.setAttribute(KXMLQLCMonitorFixtureZRot, QString::number(m_cameraProperties.m_rotZ));
-    tag.setAttribute(KXMLQLCMonitorFixtureWRot, QString::number(m_cameraProperties.m_rotW));
+    tag.setAttribute(KXMLQLCMonitorCameraXEye, QString::number(m_cameraProperties.m_eyeX));
+    tag.setAttribute(KXMLQLCMonitorCameraYEye, QString::number(m_cameraProperties.m_eyeY));
+    tag.setAttribute(KXMLQLCMonitorCameraZEye, QString::number(m_cameraProperties.m_eyeZ));
+    tag.setAttribute(KXMLQLCMonitorCameraXCenter, QString::number(m_cameraProperties.m_centerX));
+    tag.setAttribute(KXMLQLCMonitorCameraYCenter, QString::number(m_cameraProperties.m_centerY));
+    tag.setAttribute(KXMLQLCMonitorCameraZCenter, QString::number(m_cameraProperties.m_centerZ));
+    tag.setAttribute(KXMLQLCMonitorCameraXUp, QString::number(m_cameraProperties.m_upX));
+    tag.setAttribute(KXMLQLCMonitorCameraYUp, QString::number(m_cameraProperties.m_upY));
+    tag.setAttribute(KXMLQLCMonitorCameraZUp, QString::number(m_cameraProperties.m_upZ));
 
-    if (m_cameraProperties.m_gelColor.isValid())
-        tag.setAttribute(KXMLQLCMonitorFixtureGelColor, m_cameraProperties.m_gelColor.name());
     root.appendChild(tag);
 
     return true;

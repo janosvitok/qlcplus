@@ -102,9 +102,10 @@ void Monitor3dMode::saveSettings()
 {
     if (m_osgWidget != NULL)
     {
-        Fixture3dProperties p = props()->cameraProperties();
-        m_osgWidget->getCameraPosition(p.m_posX, p.m_posY, p.m_posZ);
-        m_osgWidget->getCameraRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+        Camera3dProperties p = props()->cameraProperties();
+        m_osgWidget->getCameraPosition( p.m_eyeX, p.m_eyeY, p.m_eyeZ,
+                                        p.m_centerX, p.m_centerY, p.m_centerZ,
+                                        p.m_upX, p.m_upY, p.m_upZ);
         props()->setCameraProperties(p);
     }
 
@@ -219,9 +220,10 @@ void Monitor3dMode::initUi()
         m_splitter->restoreState(var2.toByteArray());
 
     {
-        Fixture3dProperties p = props()->cameraProperties();
-        m_osgWidget->setCameraPosition(p.m_posX, p.m_posY, p.m_posZ);
-        m_osgWidget->setCameraRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+        Camera3dProperties p = props()->cameraProperties();
+        m_osgWidget->setCameraPosition( p.m_eyeX, p.m_eyeY, p.m_eyeZ,
+                                        p.m_centerX, p.m_centerY, p.m_centerZ,
+                                        p.m_upX, p.m_upY, p.m_upZ);
     }
 
     foreach(quint32 fid, props()->fixture3dID())
