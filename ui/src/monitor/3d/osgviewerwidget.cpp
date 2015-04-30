@@ -14,7 +14,7 @@ OsgViewerWidget::OsgViewerWidget(QWidget * parent, osgQt::GraphicsWindowQt *gw, 
     const osg::GraphicsContext::Traits* traits = gw->getTraits();
     osg::Camera* camera = m_viewer.getCamera();
     camera->setGraphicsContext(gw);
-    camera->setClearColor(osg::Vec4(0.2, 0.2, 0.6, 1.0));
+    camera->setClearColor(osg::Vec4(0.125f, 0.117f, 0.137f, 1.f ));
     camera->setViewport( new osg::Viewport(0, 0, traits->width, traits->height));
     camera->setProjectionMatrixAsPerspective(
         30.0f, static_cast<double>(traits->width)/static_cast<double>(traits->height), 1.0f, 10000.0f);
@@ -40,9 +40,6 @@ void OsgViewerWidget::paintEvent(QPaintEvent*)
 
 void OsgViewerWidget::setCameraPosition(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
 {
-//    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(eyeX, eyeY, eyeZ));
-//    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(centerX, centerY, centerZ));
-//    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setCenter(osg::Vec3(upX, upY, upZ));
 
     osg::Vec3f eye( eyeX, eyeY, eyeZ );
     osg::Vec3f center( centerX, centerY, centerZ );
@@ -61,26 +58,4 @@ void OsgViewerWidget::getCameraPosition(float &eyeX, float &eyeY, float &eyeZ, f
 
 }
 
-/*void OsgViewerWidget::setCameraRotation(double rotX, double rotY, double rotZ, double rotW)
-{
-    static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->setRotation(osg::Quat(rotX, rotY, rotZ, rotW));
-}
 
-void OsgViewerWidget::getCameraPosition(double & posX, double & posY, double & posZ)
-{
-    osg::Vec3d const & trans = static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->getCenter();
-
-    posX = trans.x();
-    posY = trans.y();
-    posZ = trans.z();
-}
-
-void OsgViewerWidget::getCameraRotation(double & rotX, double & rotY, double & rotZ, double & rotW)
-{
-    osg::Quat const & rot = static_cast<osgGA::TrackballManipulator*>(m_viewer.getCameraManipulator())->getRotation();
-
-    rotX = rot.x();
-    rotY = rot.y();
-    rotZ = rot.z();
-    rotW = rot.w();
-}*/
