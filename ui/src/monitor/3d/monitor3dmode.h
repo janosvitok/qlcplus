@@ -33,7 +33,7 @@ class QSplitter;
 class Doc;
 class Fixture;
 
-class MyScene;
+class OsgScene;
 class OsgViewerWidget;
 
 /** \addtogroup ui_mon_3d 3D View
@@ -108,7 +108,7 @@ protected:
     QAction *m_labelsAction;
 
     OsgViewerWidget * m_osgWidget;
-    MyScene *m_scene;
+    OsgScene *m_scene;
 };
 
 /** @} */

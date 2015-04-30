@@ -188,7 +188,7 @@ void Monitor3dMode::initUi()
     gcontainer->setLayout(new QVBoxLayout);
     gcontainer->layout()->setContentsMargins(0, 0, 0, 0);
 
-    m_scene = new MyScene();
+    m_scene = new OsgScene();
 
     osg::ref_ptr<osg::GraphicsContext::Traits> t = new osg::GraphicsContext::Traits;
     t->windowDecoration = false;

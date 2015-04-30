@@ -11,12 +11,12 @@
 
 #include "fixture3d.h"
 
-class MyScene : public QObject
+class OsgScene : public QObject
 {
     Q_OBJECT;
 public:
-    MyScene();
-    ~MyScene();
+    OsgScene();
+    ~OsgScene();
      
     osg::ref_ptr<osg::Group> getRoot() { return _root; }
     Fixture3d * getFixture(quint32 fid) { return m_fixtures[fid]; }

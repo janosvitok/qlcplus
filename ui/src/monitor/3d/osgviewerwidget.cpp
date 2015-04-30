@@ -7,7 +7,7 @@
 #include <osgViewer/ViewerEventHandlers>
 #include "pickhandler.h"
 
-OsgViewerWidget::OsgViewerWidget(QWidget * parent, osgQt::GraphicsWindowQt *gw, MyScene *scene) 
+OsgViewerWidget::OsgViewerWidget(QWidget * parent, osgQt::GraphicsWindowQt *gw, OsgScene *scene) 
     : QWidget(parent)
     , m_scene(scene)
 {

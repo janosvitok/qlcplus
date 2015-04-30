@@ -1,7 +1,7 @@
 #include "pickhandler.h"
 #include <osgViewer/Viewer>
 
-PickHandler::PickHandler(MyScene * scene)
+PickHandler::PickHandler(OsgScene * scene)
     : m_scene(scene)
 {
 

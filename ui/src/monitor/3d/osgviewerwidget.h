@@ -13,7 +13,7 @@ class OsgViewerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    OsgViewerWidget(QWidget *parent, osgQt::GraphicsWindowQt* gw, MyScene *scene);
+    OsgViewerWidget(QWidget *parent, osgQt::GraphicsWindowQt* gw, OsgScene *scene);
 
     void setCameraPosition(float eyeX,    float eyeY,    float eyeZ,
                            float centerX, float centerY, float centerZ,
@@ -31,7 +31,7 @@ protected:
     virtual void paintEvent(QPaintEvent*);
 
 private:
-    MyScene *m_scene;
+    OsgScene *m_scene;
     osgViewer::Viewer m_viewer;
     QTimer m_timer;
 };

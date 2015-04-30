@@ -6,7 +6,7 @@
 class FixturesCallback : public osg::NodeCallback
 {
 public:
-   FixturesCallback( MyScene * scene )
+   FixturesCallback( OsgScene * scene )
     : _scene(scene) {}
 
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv){
@@ -15,10 +15,10 @@ public:
     }
 
 private:
-    MyScene * _scene;
+    OsgScene * _scene;
 };
 
-MyScene::MyScene()
+OsgScene::OsgScene()
     : _changed(false)
 {
     _root = new osg::Group;
@@ -140,7 +140,7 @@ MyScene::MyScene()
     _root->setUpdateCallback(new FixturesCallback(this) );
 }
 
-MyScene::~MyScene()
+OsgScene::~OsgScene()
 {
     foreach(Fixture3d * fixture, m_fixtures)
     {
@@ -149,14 +149,14 @@ MyScene::~MyScene()
     m_fixtures.clear();
 }
 
-void MyScene::update(const QByteArray &ua)
+void OsgScene::update(const QByteArray &ua)
 {
     QMutexLocker locker(&_mutex);
     _ua = ua;
     _changed = true;
 }
 
-void MyScene::setToBeMovable(osg::Drawable *shape)
+void OsgScene::setToBeMovable(osg::Drawable *shape)
 {
     foreach(Fixture3d * fixture, m_fixtures)
     {
@@ -172,7 +172,7 @@ void MyScene::setToBeMovable(osg::Drawable *shape)
     }
 }
 
-void MyScene::setToBeRotatable(osg::Drawable *shape)
+void OsgScene::setToBeRotatable(osg::Drawable *shape)
 {
     foreach(Fixture3d * fixture, m_fixtures)
     {
@@ -188,14 +188,14 @@ void MyScene::setToBeRotatable(osg::Drawable *shape)
     }
 }
 
-void MyScene::addFixture(Doc * doc, quint32 fid)
+void OsgScene::addFixture(Doc * doc, quint32 fid)
 {
     Fixture3d * fixture = new Fixture3d(doc, fid);
     m_fixtures[fid] = fixture;
     _root->addChild( fixture->getFixture() );
 }
 
-void MyScene::removeFixture(quint32 fid)
+void OsgScene::removeFixture(quint32 fid)
 {
     Fixture3d * fixture = m_fixtures[fid];
     if (fixture == NULL)
@@ -204,7 +204,7 @@ void MyScene::removeFixture(quint32 fid)
     m_fixtures.remove(fid);
 }
 
-void MyScene::setFixturesChanges()
+void OsgScene::setFixturesChanges()
 {
     QByteArray ua;
 

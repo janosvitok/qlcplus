@@ -8,11 +8,11 @@
 class PickHandler : public osgGA::GUIEventHandler
 {
 public:
-    PickHandler(MyScene * scene);
+    PickHandler(OsgScene * scene);
     bool handle(const osgGA::GUIEventAdapter & ea, osgGA::GUIActionAdapter & aa);
 
 private:
-    MyScene * m_scene;
+    OsgScene * m_scene;
     void doUserOperations(
         osgUtil::LineSegmentIntersector::Intersection & result,
         const osgGA::GUIEventAdapter & ea);
