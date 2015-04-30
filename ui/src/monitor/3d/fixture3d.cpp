@@ -145,9 +145,20 @@ void Fixture3d::createFixture()
     m_draggerR->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
 
+    /* ak by sa chcelo riesit pridanie viacerych hlav,
+     * treba pridat na zaciatku este 1 trasformaciu,
+     * ktora by posunula jednotlive hlavy vedla seba,
+     * aby bolo mozne posuvat a inak nimi manipulovat rucne vsetkymi spolu.
+     * Len treba dodat info o ich vzajomnej vzdialenosti
+     */
+
     //depending on flexibility of the head get the right one
-//    createMovingHead();
-    createParCan();
+    if(m_heads[0]->hasPan() || m_heads[0]->hasTilt()){
+        createMovingHead();
+    }
+    else{
+        createParCan();
+    }
 
     m_root = new osg::Group();
 
