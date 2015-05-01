@@ -10,6 +10,7 @@
 #include <qbytearray.h>
 #include <osgShadow/ShadowedScene>
 #include "fixture3d.h"
+#include "object3d.h"
 
 class OsgScene : public QObject
 {
@@ -31,11 +32,13 @@ public:
     void setToBeMovable(osg::Drawable *shape);
     void setToBeRotatable(osg::Drawable *shape);
     void addFixture(Doc * doc, quint32 fid);
+    void addObject(QString const & modelPath);
     void removeFixture(quint32 fid);
 
 private:
     osg::ref_ptr<osgShadow::ShadowedScene> _root;
     QHash<quint32, Fixture3d*> m_fixtures;
+    QList<Object3d*> m_objects;
     float _stageWidth;
     float _stageHeight;
     float _stageDepth;

@@ -99,7 +99,7 @@ protected slots:
      *  or hide fixtures labels */
     void slotShowLabels(bool visible);
 
-    void slotDemoButtonPushed();
+    void slotAddObject();
 
 protected:
     QSplitter* m_splitter;

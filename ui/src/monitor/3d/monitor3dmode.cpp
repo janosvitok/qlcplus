@@ -30,6 +30,7 @@
 #include <QFont>
 #include <QIcon>
 #include <QtXml>
+#include <QFileDialog>
 
 #include <osg/Geode>
 #include <osgQt/GraphicsWindowQt>
@@ -43,6 +44,7 @@
 #include "apputil.h"
 #include "doc.h"
 #include "qlcfile.h"
+#include "qlcconfig.h"
 
 #include "monitor3dmode.h"
 #include "myscene.h"
@@ -156,8 +158,8 @@ void Monitor3dMode::initToolBar(QToolBar* toolBar)
 
     toolBar->addSeparator();
 
-    toolBar->addAction(QIcon(":/wizard.png"), tr("Demo"),
-        this, SLOT(slotDemoButtonPushed()));
+    toolBar->addAction(QIcon(":/edit_add.png"), tr("Add object"),
+        this, SLOT(slotAddObject()));
 }
 
 void Monitor3dMode::destroyToolBar()
@@ -171,7 +173,7 @@ void Monitor3dMode::destroyToolBar()
     }
 
     if (m_labelsAction)
-        {
+    {
         disconnect(m_labelsAction, SIGNAL(triggered(bool)),
             this, SLOT(slotShowLabels(bool)));
         m_labelsAction->deleteLater();
@@ -330,11 +332,26 @@ void Monitor3dMode::slotRemoveFixture()
 {
 }
 
+void Monitor3dMode::slotAddObject()
+{
+    if (m_scene == NULL)
+        return;
+
+    QString modelPath = QFileDialog::getOpenFileName(
+        0,
+        tr("Select model"),
+        QLCFile::systemDirectory(MODELSDIR).path(),
+        tr("3D models (*.osgt *.osgb *.3ds)"));
+
+    if (modelPath.isEmpty())
+        return; 
+
+    m_scene->addObject(modelPath);
+    doc()->setModified();
+}
+
 void Monitor3dMode::slotShowLabels(bool visible)
 {
     props()->setLabelsVisible(visible);
 }
 
-void Monitor3dMode::slotDemoButtonPushed()
-{
-}

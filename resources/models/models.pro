@@ -12,5 +12,10 @@ models.files += moving_fixture-yoke.osgt
 models.files += moving_fixture-base.osgt
 models.files += ledBar.osgt
 
+models.files += mic.3ds
+models.files += truss-horiz.3ds
+models.files += truss-vertical.3ds
+models.files += truss-corner.3ds
+
 models.path = $$INSTALLROOT/$$MODELSDIR
 INSTALLS += models

@@ -118,6 +118,7 @@ HEADERS += monitor/common/monitorfixturehead.h \
            monitor/3d/monitor3dmode.h \
            monitor/3d/myscene.h \
            monitor/3d/fixture3d.h \
+           monitor/3d/object3d.h \
            monitor/3d/pickhandler.h \
            monitor/3d/osgviewerwidget.h
 
@@ -297,6 +298,7 @@ SOURCES += monitor/common/monitorfixturehead.cpp \
            monitor/3d/monitor3dmode.cpp \
            monitor/3d/myscene.cpp \
            monitor/3d/fixture3d.cpp \
+           monitor/3d/object3d.cpp \
            monitor/3d/pickhandler.cpp \
            monitor/3d/osgviewerwidget.cpp
 

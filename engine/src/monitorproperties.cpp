@@ -61,6 +61,8 @@
 #define KXMLQLCMonitorFixtureWRot "WRot"
 #define KXMLQLCMonitorFixtureRotation "Rotation"
 #define KXMLQLCMonitorFixtureGelColor "GelColor"
+#define KXMLQLCMonitorObject "Object"
+#define KXMLQLCMonitorObjectModelPath "ModelPath"
 
 MonitorProperties::MonitorProperties()
     : m_font("Arial", 12)
@@ -125,6 +127,8 @@ void MonitorProperties::reset()
 
 bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocument)
 {
+    m_objects.clear();
+
     if (root.tagName() != KXMLQLCMonitorProperties)
     {
         qWarning() << Q_FUNC_INFO << "Monitor node not found";
@@ -229,6 +233,30 @@ bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocumen
                     p.m_gelColor = QColor(tag.attribute(KXMLQLCMonitorFixtureGelColor));
                 setFixture3dProperties(fid, p);
             }
+        }
+        else if (tag.tagName() == KXMLQLCMonitorObject)
+        {
+            Object3dProperties p;
+
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureXPos))
+                p.m_posX = tag.attribute(KXMLQLCMonitorFixtureXPos).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureYPos))
+                p.m_posY = tag.attribute(KXMLQLCMonitorFixtureYPos).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureZPos))
+                p.m_posZ = tag.attribute(KXMLQLCMonitorFixtureZPos).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureXRot))
+                p.m_rotX = tag.attribute(KXMLQLCMonitorFixtureXRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureYRot))
+                p.m_rotY = tag.attribute(KXMLQLCMonitorFixtureYRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureZRot))
+                p.m_rotZ = tag.attribute(KXMLQLCMonitorFixtureZRot).toDouble();
+            if (tag.hasAttribute(KXMLQLCMonitorFixtureWRot))
+                p.m_rotW = tag.attribute(KXMLQLCMonitorFixtureWRot).toDouble();
+
+            if (tag.hasAttribute(KXMLQLCMonitorObjectModelPath))
+                p.m_modelPath = tag.attribute(KXMLQLCMonitorObjectModelPath);
+            
+            m_objects.push_back(p);
         }
         else if (tag.tagName() == KXMLQLCMonitorCamera)
         {
@@ -353,6 +381,21 @@ bool MonitorProperties::saveXML(QDomDocument *doc, QDomElement *wksp_root, const
 
         if (p.m_gelColor.isValid())
             tag.setAttribute(KXMLQLCMonitorFixtureGelColor, p.m_gelColor.name());
+        root.appendChild(tag);
+    }
+
+    foreach (Object3dProperties const & p, m_objects)
+    {
+        tag = doc->createElement(KXMLQLCMonitorObject);
+        tag.setAttribute(KXMLQLCMonitorFixtureXPos, QString::number(p.m_posX));
+        tag.setAttribute(KXMLQLCMonitorFixtureYPos, QString::number(p.m_posY));
+        tag.setAttribute(KXMLQLCMonitorFixtureZPos, QString::number(p.m_posZ));
+        tag.setAttribute(KXMLQLCMonitorFixtureXRot, QString::number(p.m_rotX));
+        tag.setAttribute(KXMLQLCMonitorFixtureYRot, QString::number(p.m_rotY));
+        tag.setAttribute(KXMLQLCMonitorFixtureZRot, QString::number(p.m_rotZ));
+        tag.setAttribute(KXMLQLCMonitorFixtureWRot, QString::number(p.m_rotW));
+        tag.setAttribute(KXMLQLCMonitorObjectModelPath, p.m_modelPath);
+
         root.appendChild(tag);
     }
 

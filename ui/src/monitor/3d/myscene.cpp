@@ -107,6 +107,12 @@ OsgScene::~OsgScene()
         delete fixture;
     }
     m_fixtures.clear();
+
+    foreach(Object3d * obj, m_objects)
+    {
+        delete obj;
+    }
+    m_objects.clear();
 }
 
 void OsgScene::update(const QByteArray &ua)
@@ -153,6 +159,13 @@ void OsgScene::addFixture(Doc * doc, quint32 fid)
     Fixture3d * fixture = new Fixture3d(doc, fid);
     m_fixtures[fid] = fixture;
     _root->addChild( fixture->getFixture() );
+}
+
+void OsgScene::addObject(QString const & modelPath)
+{
+    Object3d * obj = new Object3d(modelPath);
+    m_objects.push_back(obj);
+    _root->addChild(obj->node());
 }
 
 void OsgScene::removeFixture(quint32 fid)
