@@ -50,12 +50,23 @@ void OsgViewerWidget::setCameraPosition(float eyeX, float eyeY, float eyeZ, floa
 
 void OsgViewerWidget::getCameraPosition(float &eyeX, float &eyeY, float &eyeZ, float &centerX, float &centerY, float &centerZ, float &upX, float &upY, float &upZ)
 {
-    osg::Vec3f eye( eyeX, eyeY, eyeZ );
-    osg::Vec3f center( centerX, centerY, centerZ );
-    osg::Vec3f up( upX, upY, upZ );
+    osg::Vec3f eye;
+    osg::Vec3f center;
+    osg::Vec3f up;
 
     m_viewer.getCamera()->getViewMatrixAsLookAt( eye, center, up );
 
+    eyeX = eye.x();
+    eyeY = eye.y();
+    eyeZ = eye.z();
+
+    centerX = center.x();
+    centerY = center.y();
+    centerZ = center.z();
+
+    upX = up.x();
+    upY = up.y();
+    upZ = up.z();
 }
 
 

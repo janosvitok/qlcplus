@@ -237,22 +237,21 @@ bool MonitorProperties::loadXML(const QDomElement &root, const Doc * mainDocumen
             if (tag.hasAttribute(KXMLQLCMonitorCameraXEye))
                 p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraXEye).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraYEye))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraYEye).toFloat();
+                p.m_eyeY = tag.attribute(KXMLQLCMonitorCameraYEye).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraZEye))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraZEye).toFloat();
+                p.m_eyeZ = tag.attribute(KXMLQLCMonitorCameraZEye).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraXCenter))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraXCenter).toFloat();
+                p.m_centerX = tag.attribute(KXMLQLCMonitorCameraXCenter).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraYCenter))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraYCenter).toFloat();
+                p.m_centerY = tag.attribute(KXMLQLCMonitorCameraYCenter).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraZCenter))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraZCenter).toFloat();
+                p.m_centerZ = tag.attribute(KXMLQLCMonitorCameraZCenter).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraXUp))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraXUp).toFloat();
+                p.m_upX = tag.attribute(KXMLQLCMonitorCameraXUp).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraYUp))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraYUp).toFloat();
+                p.m_upY = tag.attribute(KXMLQLCMonitorCameraYUp).toFloat();
             if (tag.hasAttribute(KXMLQLCMonitorCameraZUp))
-                p.m_eyeX = tag.attribute(KXMLQLCMonitorCameraZUp).toFloat();
-
+                p.m_upZ = tag.attribute(KXMLQLCMonitorCameraZUp).toFloat();
 
             setCameraProperties(p);
         }
