@@ -22,12 +22,12 @@ public:
     MonitorFixtureHead * createHead(Fixture & fixture, int head);
    
     osg::ref_ptr<osg::Group> getFixture() { return m_root; }
-    osg::ref_ptr<osg::Drawable> getDrawable() { return m_lightConeGeode->getDrawable(0); }
+    bool contains(osg::Drawable * shape) const;
 
     void updateValues(QByteArray const & ua);
 
-    void setColor(osg::Vec3 const & colorValue, bool overwrite = 1);
-    void setOpacity(float opacityValue, bool overwrite = 1);
+    void setColor(int head, osg::Vec3 const & colorValue, bool overwrite = 1);
+    void setOpacity(int head, float opacityValue, bool overwrite = 1);
     void setPan(double angle);
     void setTilt(double angle);
     void setPosition(double posX, double posY, double posZ);
@@ -42,15 +42,15 @@ public:
 private:
     void createParCan();
     void createMovingHead();
-//    void createLedBar();
+    void createLedBar();
     void createLightBeam();
-//    void createLightSqare(int Head);
+    void createLightSquare(const osg::Vec3 &origin, float x, float y, float angle);
     void createFixture();
 
 private:
-    osg::ref_ptr<osg::Vec4Array> m_colors;
+    QList<osg::ref_ptr<osg::Vec4Array> > m_colors;
     osg::ref_ptr<osg::Group> m_root;
-    osg::ref_ptr<osg::Geode> m_lightConeGeode;
+    QList<osg::ref_ptr<osg::Geode> > m_lightConeGeodes;
 
     osg::ref_ptr<osg::MatrixTransform> m_transG;
     osg::ref_ptr<osg::MatrixTransform> m_transR;
@@ -63,8 +63,8 @@ private:
     bool m_visibleG;
     bool m_visibleR;
 
-    float m_invisibleKolor; //simmilar as K in CMYK -> to avoid visible gray or black light
-    float m_alpha;
+    QList<float> m_invisibleKolor; //simmilar as K in CMYK -> to avoid visible gray or black light
+    QList<float> m_alpha;
 };
 
 #endif // FIXTURE3D_H

@@ -120,7 +120,7 @@ void OsgScene::setToBeMovable(osg::Drawable *shape)
 {
     foreach(Fixture3d * fixture, m_fixtures)
     {
-        if( shape == fixture->getDrawable() )
+        if (fixture->contains(shape))
         {
             fixture->setDraggerGVisibility(true);
         }
@@ -136,7 +136,7 @@ void OsgScene::setToBeRotatable(osg::Drawable *shape)
 {
     foreach(Fixture3d * fixture, m_fixtures)
     {
-        if( shape == fixture->getDrawable() )
+        if (fixture->contains(shape))
         {
             fixture->setDraggerRVisibility(true);
         }
