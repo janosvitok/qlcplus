@@ -51,12 +51,17 @@ Object3d::Object3d(QString const & modelPath)
 
 bool Object3d::contains(osg::Drawable * shape) const
 {
+    if (shape->getNumParents() < 1)
+        return false;
+
     osg::Node const * node = shape->getParent(0);
 
     while (node != NULL)
     {
         if (node == m_root)
             return true;
+        if (node->getNumParents() < 1)
+            return false;
         node = node->getParent(0);
     }
     return false;

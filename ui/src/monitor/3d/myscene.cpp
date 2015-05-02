@@ -136,6 +136,18 @@ void OsgScene::setToBeMovable(osg::Drawable *shape)
         }
         fixture->setDraggerRVisibility(false);
     }
+    foreach(Object3d * obj, m_objects)
+    {
+        if (obj->contains(shape))
+        {
+            obj->setDraggerGVisibility(true);
+        }
+        else
+        {
+            obj->setDraggerGVisibility(false);
+        }
+        obj->setDraggerRVisibility(false);
+    }
 }
 
 void OsgScene::setToBeRotatable(osg::Drawable *shape)
@@ -151,6 +163,18 @@ void OsgScene::setToBeRotatable(osg::Drawable *shape)
             fixture->setDraggerRVisibility(false);
         }
         fixture->setDraggerGVisibility(false);
+    }
+    foreach(Object3d * obj, m_objects)
+    {
+        if (obj->contains(shape))
+        {
+            obj->setDraggerRVisibility(true);
+        }
+        else
+        {
+            obj->setDraggerRVisibility(false);
+        }
+        obj->setDraggerGVisibility(false);
     }
 }
 
