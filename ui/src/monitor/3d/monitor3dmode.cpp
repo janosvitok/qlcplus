@@ -121,6 +121,16 @@ void Monitor3dMode::saveSettings()
             fixture->getRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
             props()->setFixture3dProperties(fid, p);
         }
+
+        props()->objectProperties().clear();
+	foreach(Object3d * obj, m_scene->objects())
+        {
+            Object3dProperties p;
+            obj->getPosition(p.m_posX, p.m_posY, p.m_posZ);
+            obj->getRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+            p.m_modelPath = obj->modelPath();
+            props()->objectProperties().push_back(p);
+        }
     }
  
     if (m_splitter != NULL)
@@ -235,6 +245,14 @@ void Monitor3dMode::initUi()
         Fixture3d * fixture = m_scene->getFixture(fid);
         fixture->setPosition(p.m_posX, p.m_posY, p.m_posZ);
         fixture->setRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
+    }
+
+    foreach(Object3dProperties const & p, props()->objectProperties())
+    {
+        m_scene->addObject(p.m_modelPath);
+        Object3d * obj = m_scene->objects().back();
+        obj->setPosition(p.m_posX, p.m_posY, p.m_posZ);
+        obj->setRotation(p.m_rotX, p.m_rotY, p.m_rotZ, p.m_rotW);
     }
 
     setMonitorUniverse(Universe::invalid());

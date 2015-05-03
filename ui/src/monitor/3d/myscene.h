@@ -22,6 +22,7 @@ public:
     osg::ref_ptr<osg::Group> getRoot() { return _root; }
     Fixture3d * getFixture(quint32 fid) { return m_fixtures[fid]; }
     QList<quint32> fixtureIds() const { return m_fixtures.keys(); }
+    QList<Object3d*> & objects() { return m_objects; }
 
 //    void doUserOperation(osg::Drawable *shape); //raz, ked bude hmatatelny priestor
 
