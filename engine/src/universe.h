@@ -342,6 +342,8 @@ protected:
     /** Array of the last preGM values written before the zeroIntensityChannels call  */
     QByteArray* m_lastPreGMValues;
 
+    QByteArray* m_passthroughValues;
+
     QVector<short> m_relativeValues;
 
     /************************************************************************

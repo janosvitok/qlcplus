@@ -51,6 +51,7 @@ Universe::Universe(quint32 id, GrandMaster *gm, QObject *parent)
     , m_preGMValues(new QByteArray(UNIVERSE_SIZE, char(0)))
     , m_postGMValues(new QByteArray(UNIVERSE_SIZE, char(0)))
     , m_lastPreGMValues(new QByteArray(UNIVERSE_SIZE, char(0)))
+    , m_passthroughValues(NULL)
 {
     m_relativeValues.fill(0, UNIVERSE_SIZE);
     m_modifiers.fill(NULL, UNIVERSE_SIZE);
@@ -63,6 +64,7 @@ Universe::Universe(quint32 id, GrandMaster *gm, QObject *parent)
 
 Universe::~Universe()
 {
+    delete m_passthroughValues;
     delete m_preGMValues;
     delete m_postGMValues;
     if (m_inputPatch != NULL)
@@ -137,6 +139,11 @@ void Universe::setPassthrough(bool enable)
                        this, SLOT(slotInputValueChanged(quint32,quint32,uchar,const QString&)));
     }
 
+    if (enable && m_passthroughValues == NULL)
+    {
+        m_passthroughValues = new QByteArray(UNIVERSE_SIZE, char(0));
+    }
+
     m_passthrough = enable;
 
     if (m_inputPatch != NULL)
@@ -197,7 +204,14 @@ void Universe::slotGMValueChanged()
 void Universe::reset()
 {
     m_preGMValues->fill(0);
-    m_postGMValues->fill(0);
+    if (m_passthrough && m_passthroughValues != NULL)
+    {
+        (*m_postGMValues) = (*m_passthroughValues);
+    }
+    else
+    {
+        m_postGMValues->fill(0);
+    }
     zeroRelativeValues();
     m_modifiers.fill(NULL, UNIVERSE_SIZE);
     m_passthrough = false;
@@ -208,7 +222,15 @@ void Universe::reset(int address, int range)
     for (int i = address; i < address + range && i < UNIVERSE_SIZE; i++)
     {
         (*m_preGMValues)[i] = 0;
-        (*m_postGMValues)[i] = 0;
+        if (m_passthrough && m_passthroughValues != NULL)
+        {
+            (*m_postGMValues)[i] = (*m_passthroughValues)[i];
+        }
+        else
+        {
+            (*m_postGMValues)[i] = 0;
+        }
+
         m_relativeValues[i] = 0;
     }
 }
@@ -221,7 +243,14 @@ void Universe::zeroIntensityChannels()
     {
         int channel(it.next());
         (*m_preGMValues)[channel] = 0;
-        (*m_postGMValues)[channel] = 0;
+        if (m_passthrough && m_passthroughValues != NULL)
+        {
+            (*m_postGMValues)[channel] = (*m_passthroughValues)[channel];
+        }
+        else
+        {
+            (*m_postGMValues)[channel] = 0;
+        }
         m_relativeValues[channel] = 0;
     }
 }
@@ -419,7 +448,35 @@ void Universe::slotInputValueChanged(quint32 universe, quint32 channel, uchar va
     if (m_passthrough == true)
     {
         if (universe == m_id)
-            write(channel, value);
+        {
+            qDebug() << "write" << channel << value;
+
+            if (channel >= UNIVERSE_SIZE)
+                return;
+
+            if (channel >= m_usedChannels)
+                m_usedChannels = channel + 1;
+
+            if (m_passthroughValues != NULL)
+                (*m_passthroughValues)[channel] = value;
+
+            uchar v = 0;
+            if (m_preGMValues != NULL)
+                v = (uchar)m_preGMValues->at(channel);
+
+            if (m_relativeValues[channel] != 0)
+            {
+                int val = m_relativeValues[channel];
+                    val += v;
+                v = CLAMP(val, 0, (int)UCHAR_MAX);
+            }
+
+            v = applyGM(channel, v);
+            if (value > v)
+                v = value;
+            (*m_postGMValues)[channel] = char(v);
+            m_hasChanged = true;
+        }
     }
     else
         emit inputValueChanged(universe, channel, value, key);
@@ -555,6 +612,14 @@ bool Universe::writeRelative(int channel, uchar value)
     value = CLAMP(val, 0, (int)UCHAR_MAX);
 
     value = applyGM(channel, value);
+
+    uchar passthroughValue = 0;
+    if ( m_passthroughValues != NULL)
+        passthroughValue = (uchar)m_passthroughValues->at(channel);
+
+    if (passthroughValue > value)
+        value = passthroughValue; // alternatively return, since the data didn't change
+
     (*m_postGMValues)[channel] = char(value);
 
     m_hasChanged = true;
