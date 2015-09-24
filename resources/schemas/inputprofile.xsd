@@ -39,6 +39,7 @@ elementFormDefault="qualified"
             <xs:element name="Manufacturer" type="xs:string"/>
             <xs:element name="Model" type="xs:string"/>
             <xs:element name="Type" type="profileTypeEnum"/>
+            <xs:element name="Feedback" type="feedbackType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Channel" type="channelType" maxOccurs="unbounded"/>
         </xs:sequence>
      </xs:complexType>
@@ -62,10 +63,44 @@ elementFormDefault="qualified"
     </xs:restriction>
 </xs:simpleType>
 
+<xs:complexType name="feedbackType">
+    <xs:sequence>
+         <xs:element name="Value" type="valueType" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="valueType">
+  <xs:simpleContent>
+    <xs:extension base="xs:string">
+      <xs:attribute name="Min" type="dmxValueType" use="required"/>
+      <xs:attribute name="Max" type="dmxValueType" use="required"/>
+      <xs:attribute name="State" type="stateType" use="required"/>
+      <xs:attribute name="Color" type="xs:string"/>
+    </xs:extension>
+  </xs:simpleContent>
+</xs:complexType>
+
+<xs:simpleType name="dmxValueType">
+    <xs:restriction base="xs:nonNegativeInteger">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="255" />
+    </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="stateType">
+    <xs:restriction base="xs:string">
+        <xs:enumeration value="On"/>
+        <xs:enumeration value="Off"/>
+        <xs:enumeration value="Blink"/>
+    </xs:restriction>
+</xs:simpleType>
+
 <xs:complexType name="channelType">
     <xs:sequence>
         <xs:element name="Name" type="xs:string"/>
         <xs:element name="Type" type="channelTypeEnum"/>
+        <xs:element name="Feedback" type="xs:string" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="Number" type="xs:integer" use="required"/>
 </xs:complexType>
