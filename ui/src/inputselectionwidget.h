@@ -43,6 +43,11 @@ public:
     void stopAutoDetection();
     void emitOddValues(bool enable);
 
+    void setFeedbackVisibility(bool visible);
+    void setFeedbackValues(int on, int off);
+    int onValue() const;
+    int offValue() const;
+
     void setKeySequence(const QKeySequence& keySequence);
     QKeySequence keySequence() const;
 
@@ -72,6 +77,8 @@ private:
     int m_widgetPage;
     bool m_emitOdd;
     quint32 m_signalsReceived;
+    int m_feedbackOn;
+    int m_feedbackOff;
 };
 
 #endif // INPUTSELECTIONWIDGET_H

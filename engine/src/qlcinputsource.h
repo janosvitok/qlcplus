@@ -27,6 +27,9 @@
  * @{
  */
 
+#define DEFAULT_FEEDBACK_ON 255
+#define DEFAULT_FEEDBACK_OFF 0
+
 class QLCInputSource: public QThread
 {
     Q_OBJECT

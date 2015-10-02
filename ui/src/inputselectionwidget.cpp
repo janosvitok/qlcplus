@@ -29,6 +29,8 @@ InputSelectionWidget::InputSelectionWidget(Doc *doc, QWidget *parent)
     , m_widgetPage(0)
     , m_emitOdd(false)
     , m_signalsReceived(0)
+    , m_feedbackOn(DEFAULT_FEEDBACK_ON)
+    , m_feedbackOff(DEFAULT_FEEDBACK_OFF)
 {
     Q_ASSERT(doc != NULL);
 
@@ -77,6 +79,28 @@ void InputSelectionWidget::stopAutoDetection()
 void InputSelectionWidget::emitOddValues(bool enable)
 {
     m_emitOdd = enable;
+}
+
+void InputSelectionWidget::setFeedbackVisibility(bool visible)
+{
+    m_feedbackLabel->setVisible(visible);
+    m_feedbackLayout->setVisible(visible);
+}
+
+void InputSelectionWidget::setFeedbackvalues(int on, int off)
+{
+    m_onValue-> = on;
+    m_feedbackOff = off;
+}
+
+int InputSelectionWidget::onValue() const
+{
+    return m_feedbackOn;
+}
+
+int InputSelectionWidget::offValue() const
+{
+    return m_feedbackOff;
 }
 
 void InputSelectionWidget::setKeySequence(const QKeySequence &keySequence)

@@ -6,24 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>466</width>
-    <height>131</height>
+    <width>532</width>
+    <height>164</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -38,28 +29,28 @@
       <string>External Input</string>
      </property>
      <layout class="QGridLayout" name="gridLayoutExternalInput">
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Input Channel</string>
+      <item row="0" column="1" colspan="4">
+       <widget class="QLineEdit" name="m_inputUniverseEdit">
+        <property name="toolTip">
+         <string>The input universe that sends data to this widget</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
-       <widget class="QPushButton" name="m_chooseInputButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="2" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="toolTip">
-         <string>Choose an external input universe &amp; channel that this widget should listen to.</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
         </property>
-        <property name="text">
-         <string>Choose...</string>
-        </property>
-       </widget>
+       </spacer>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
@@ -87,13 +78,19 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="4">
-       <widget class="QLineEdit" name="m_inputUniverseEdit">
-        <property name="toolTip">
-         <string>The input universe that sends data to this widget</string>
+      <item row="2" column="4">
+       <widget class="QPushButton" name="m_chooseInputButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="toolTip">
+         <string>Choose an external input universe &amp; channel that this widget should listen to.</string>
+        </property>
+        <property name="text">
+         <string>Choose...</string>
         </property>
        </widget>
       </item>
@@ -107,18 +104,73 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Input Channel</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="m_feedbackLabel">
+        <property name="text">
+         <string>Feedback</string>
         </property>
-       </spacer>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="4">
+       <layout class="QHBoxLayout" name="m_feedbackLayout">
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>On</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="m_onValue">
+          <property name="toolTip">
+           <string>Value to send when widget is on</string>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="value">
+           <number>255</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Off</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="m_offValue">
+          <property name="toolTip">
+           <string>Value to send when widget is off</string>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
