@@ -331,6 +331,18 @@ uchar Universe::applyRelative(int channel, uchar value)
     return value;
 }
 
+uchar Universe::applyRelative(int channel, uchar value, int & overflow)
+{
+    if (m_relativeValues[channel] != 0 || overflow != 0)
+    {
+        int val = m_relativeValues[channel] + value + overflow;
+        value = CLAMP(val, 0, (int)UCHAR_MAX);
+        overflow = (val - value) / 256;
+    }
+
+    return value;
+}
+
 uchar Universe::applyGM(int channel, uchar value)
 {
     if ((m_grandMaster->channelMode() == GrandMaster::Intensity && m_channelsMask->at(channel) & Intensity) ||
@@ -386,6 +398,46 @@ void Universe::updatePostGMValue(int channel)
     value = applyPassthrough(channel, value);
 
     (*m_postGMValues)[channel] = static_cast<char>(value);
+}
+
+void Universe::updatePostGMValue16(int msbChannel, int lsbChannel)
+{
+    uchar msbValue = preGMValue(msbChannel);
+    uchar lsbValue = preGMValue(lsbChannel);
+    int overflow = 0;
+
+    lsbValue = applyRelative(lsbChannel, lsbValue, overflow);
+    msbValue = applyRelative(msbChannel, msbValue, overflow);
+
+
+    if (msbValue == 0)
+    {
+        msbValue = static_cast<uchar>(m_modifiedZeroValues->at(msbChannel));
+    }
+    else
+    {
+        msbValue = applyGM(msbChannel, msbValue);
+        msbValue = applyModifiers(msbChannel, msbValue);
+    }
+
+    msbValue = applyPassthrough(msbChannel, msbValue);
+
+    (*m_postGMValues)[msbChannel] = static_cast<char>(msbValue);
+
+
+    if (lsbValue == 0)
+    {
+        lsbValue = static_cast<uchar>(m_modifiedZeroValues->at(lsbChannel));
+    }
+    else
+    {
+        lsbValue = applyGM(lsbChannel, lsbValue);
+        lsbValue = applyModifiers(lsbChannel, lsbValue);
+    }
+
+    lsbValue = applyPassthrough(lsbChannel, lsbValue);
+
+    (*m_postGMValues)[lsbChannel] = static_cast<char>(lsbValue);
 }
 
 /************************************************************************
@@ -750,6 +802,28 @@ bool Universe::writeRelative(int channel, uchar value)
     m_relativeValues[channel] += value - RELATIVE_ZERO;
 
     updatePostGMValue(channel);
+
+    return true;
+}
+
+bool Universe::writeRelative16(int msbChannel, uchar msbValue, int lsbChannel, uchar lsbValue)
+{
+    Q_ASSERT(msbChannel < UNIVERSE_SIZE);
+    Q_ASSERT(lsbChannel < UNIVERSE_SIZE);
+
+    if (msbChannel >= m_usedChannels)
+        m_usedChannels = msbChannel + 1;
+
+    if (lsbChannel >= m_usedChannels)
+        m_usedChannels = lsbChannel + 1;
+
+    if (msbValue == RELATIVE_ZERO && lsbValue == RELATIVE_ZERO)
+        return true;
+
+    m_relativeValues[msbChannel] += msbValue - RELATIVE_ZERO;
+    m_relativeValues[lsbChannel] += lsbValue - RELATIVE_ZERO;
+
+    updatePostGMValue16(msbChannel, lsbChannel);
 
     return true;
 }

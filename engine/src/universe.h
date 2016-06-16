@@ -164,8 +164,10 @@ protected:
     uchar applyGM(int channel, uchar value);
 
     uchar applyRelative(int channel, uchar value);
+    uchar applyRelative(int channel, uchar value, int & overflow);
     uchar applyModifiers(int channel, uchar value);
     void updatePostGMValue(int channel);
+    void updatePostGMValue16(int msbChannel, int lsbChannel);
 
 signals:
     void nameChanged();
@@ -454,6 +456,20 @@ public:
      * @return true if successful, otherwise false
      */
     bool writeRelative(int channel, uchar value);
+
+
+    /**
+     * Write a relative value to 2 DMX channels, taking Grand Master and HTP into
+     * account, if applicable.
+     *
+     * @param msbChannel The channel number to write to
+     * @param msbValue The value to write
+     * @param lsbChannel The channel number to write to
+     * @param lsbValue The value to write
+     *
+     * @return true if successful, otherwise false
+     */
+    bool writeRelative16(int msbChannel, uchar msbValue, int lsbChannel, uchar lsbValue);
 
     /**
      * Write DMX values with the given blend mode.

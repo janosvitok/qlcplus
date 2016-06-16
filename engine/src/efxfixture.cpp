@@ -447,41 +447,70 @@ void EFXFixture::setPointPanTilt(QList<Universe *> universes, float pan, float t
     Fixture* fxi = doc()->fixture(head().fxi);
     Q_ASSERT(fxi != NULL);
 
-    /* Write coarse point data to universes */
-    if (fxi->panMsbChannel(head().head) != QLCChannel::invalid())
+    if (m_parent->isRelative())
     {
-        if (m_parent->isRelative())
-            universes[fxi->universe()]->writeRelative(fxi->address() + fxi->panMsbChannel(head().head), static_cast<char>(pan));
-        else
+        if (fxi->panMsbChannel(head().head) != QLCChannel::invalid())
+        {
+            if (fxi->panLsbChannel(head().head) != QLCChannel::invalid())
+            {
+                // TODO: move this computation to Universe (i.e. pass one ushort to writeRelative16)
+                char lsbValue = static_cast<char> ((pan - floor(pan)) * double(UCHAR_MAX));
+                universes[fxi->universe()]->writeRelative16(
+                    fxi->address() + fxi->panMsbChannel(head().head), 
+                    static_cast<char>(pan),
+                    fxi->address() + fxi->panLsbChannel(head().head),
+                    lsbValue);
+            }
+            else
+            {
+                universes[fxi->universe()]->writeRelative(fxi->address() + fxi->panMsbChannel(head().head), static_cast<char>(pan));
+            }
+        }
+ 
+        if (fxi->tiltMsbChannel(head().head) != QLCChannel::invalid())
+        {
+            if (fxi->tiltLsbChannel(head().head) != QLCChannel::invalid())
+            {
+                // TODO: move this computation to Universe (i.e. pass one ushort to writeRelative16)
+                char lsbValue = static_cast<char> ((tilt - floor(tilt)) * double(UCHAR_MAX));
+                universes[fxi->universe()]->writeRelative16(
+                    fxi->address() + fxi->tiltMsbChannel(head().head), 
+                    static_cast<char>(tilt),
+                    fxi->address() + fxi->tiltLsbChannel(head().head),
+                    lsbValue);
+            }
+            else
+            {
+                universes[fxi->universe()]->writeRelative(fxi->address() + fxi->tiltMsbChannel(head().head), static_cast<char> (tilt));
+            }
+        }
+    }
+    else
+    {
+        /* Write coarse point data to universes */
+        if (fxi->panMsbChannel(head().head) != QLCChannel::invalid())
+        {
             universes[fxi->universe()]->write(fxi->address() + fxi->panMsbChannel(head().head), static_cast<char>(pan));
-    }
-    if (fxi->tiltMsbChannel(head().head) != QLCChannel::invalid())
-    {
-        if (m_parent->isRelative())
-            universes[fxi->universe()]->writeRelative(fxi->address() + fxi->tiltMsbChannel(head().head), static_cast<char> (tilt));
-        else
+        }
+        if (fxi->tiltMsbChannel(head().head) != QLCChannel::invalid())
+        {
             universes[fxi->universe()]->write(fxi->address() + fxi->tiltMsbChannel(head().head), static_cast<char> (tilt));
-    }
+        }
 
-    /* Write fine point data to universes if applicable */
-    if (fxi->panLsbChannel(head().head) != QLCChannel::invalid())
-    {
-        /* Leave only the fraction */
-        char value = static_cast<char> ((pan - floor(pan)) * double(UCHAR_MAX));
-        if (m_parent->isRelative())
-            universes[fxi->universe()]->writeRelative(fxi->address() + fxi->panLsbChannel(head().head), value);
-        else
+        /* Write fine point data to universes if applicable */
+        if (fxi->panLsbChannel(head().head) != QLCChannel::invalid())
+        {
+            /* Leave only the fraction */
+            char value = static_cast<char> ((pan - floor(pan)) * double(UCHAR_MAX));
             universes[fxi->universe()]->write(fxi->address() + fxi->panLsbChannel(head().head), value);
-    }
+        }
 
-    if (fxi->tiltLsbChannel(head().head) != QLCChannel::invalid())
-    {
-        /* Leave only the fraction */
-        char value = static_cast<char> ((tilt - floor(tilt)) * double(UCHAR_MAX));
-        if (m_parent->isRelative())
-            universes[fxi->universe()]->writeRelative(fxi->address() + fxi->tiltLsbChannel(head().head), value);
-        else
+        if (fxi->tiltLsbChannel(head().head) != QLCChannel::invalid())
+        {
+            /* Leave only the fraction */
+            char value = static_cast<char> ((tilt - floor(tilt)) * double(UCHAR_MAX));
             universes[fxi->universe()]->write(fxi->address() + fxi->tiltLsbChannel(head().head), value);
+        }
     }
 }
 
